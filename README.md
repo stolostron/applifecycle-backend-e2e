@@ -1,1 +1,1 @@
-# applifecyce-backend-e2e
+# applifecycle-backend-e2e
