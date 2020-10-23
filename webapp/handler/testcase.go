@@ -22,7 +22,7 @@ type appliedCase struct {
 	cfg string
 }
 
-func (s *TServer) dispatchTestCase(testID string, tc []e2e.TestCase) ([]appliedCase, error) {
+func (s *TServer) applyTestCases(testID string, tc e2e.TestCases) ([]appliedCase, error) {
 	applied := []appliedCase{}
 	for _, c := range tc {
 		cUnit, ok := s.configs[c.TargetCluster]
@@ -68,6 +68,8 @@ func (s *TServer) TestCasesRunnerHandler(w http.ResponseWriter, r *http.Request)
 	testID := r.URL.Query().Get("id")
 	w.Header().Set("Content-Type", "application/json")
 
+	fmt.Printf("izhang ======  running request testID = %+v, request %+v\n", testID, r.Context())
+
 	tr := &TResponse{
 		TestID: testID,
 		Name:   fmt.Sprintf("run test case id (%s)", testID),
@@ -85,49 +87,52 @@ func (s *TServer) TestCasesRunnerHandler(w http.ResponseWriter, r *http.Request)
 	}
 
 	//make sure unique id is running
-	s.rmux.Lock()
-	if _, ok := s.set[testID]; !ok {
-		s.set[testID] = struct{}{}
-	} else {
+	_, ok := s.set[testID]
+	if ok {
 		tr.Status = Fialed
 		tr.Details = fmt.Sprintf("the request test case (%s) is running", testID)
 		fmt.Fprint(w, tr.String())
+
 		return
 	}
-	s.rmux.Unlock()
+
+	s.set[testID] = struct{}{}
 
 	c, ok := s.testCases[testID]
 	if !ok {
 		tr.Status = Fialed
 		tr.Error = fmt.Errorf("ID (%s) doesn't exist", testID).Error()
 		fmt.Fprint(w, tr.String())
+
 		return
 	}
 
-	applied, err := s.dispatchTestCase(testID, c)
+	applied, err := s.applyTestCases(testID, c)
 	defer s.cleanUp(testID, applied)
 
 	if err != nil {
 		tr.Status = Fialed
 		tr.Error = err.Error()
-
-		fmt.Fprint(w, tr.String())
 		return
 	}
 
+	tr = s.continuousCheck(testID)
+
+	fmt.Fprint(w, tr.String())
+	return
+}
+
+func (s *TServer) continuousCheck(testID string) *TResponse {
 	ticker := time.NewTicker(pullInterval)
 	timeOut := time.After(pullInterval * 3)
-
-	var rsp *TResponse
 
 timoutLoop:
 	for {
 		select {
 		case <-ticker.C:
-			rsp, err = s.dispatchExpectation(testID, s.expectations[testID])
+			rsp, err := s.dispatchExpectation(testID, s.expectations[testID])
 			if err == nil {
-				fmt.Fprint(w, rsp.String())
-				return
+				return rsp
 			}
 
 			s.logger.Error(err, "faild")
@@ -136,24 +141,23 @@ timoutLoop:
 		}
 	}
 
-	rsp.Error = err.Error()
-	fmt.Fprint(w, rsp.String())
-	return
+	out := "failed to successfully check all the expectations due to timeout"
+	return &TResponse{TestID: testID, Status: Fialed, Error: out}
 }
 
 func (s *TServer) cleanUp(testID string, applied []appliedCase) {
-	for _, e := range applied {
-		if err := processResource(e.tc.URL, e.cfg, Delete); err != nil {
-			s.logger.Error(err, fmt.Sprintf("failed to delete applied resource %s on cluster %s",
-				e.tc.Desc, e.tc.TargetCluster))
-		}
+	if applied != nil {
+		for _, e := range applied {
+			if err := processResource(e.tc.URL, e.cfg, Delete); err != nil {
+				s.logger.Error(err, fmt.Sprintf("failed to delete applied resource %s on cluster %s",
+					e.tc.Desc, e.tc.TargetCluster))
+			}
 
-		s.logger.Info(fmt.Sprintf("successfully deleted resource %s on cluster %s", e.tc.Desc, e.tc.TargetCluster))
+			s.logger.Info(fmt.Sprintf("successfully deleted resource %s on cluster %s", e.tc.Desc, e.tc.TargetCluster))
+		}
 	}
 
-	s.rmux.Lock()
 	delete(s.set, testID)
-	s.rmux.Unlock()
 
 	return
 }

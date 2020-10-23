@@ -10,35 +10,53 @@ import (
 func (s *TServer) dispatchExpectation(testID string, exps e2e.Expectations) (*TResponse, error) {
 	s.logger.Info(fmt.Sprintf("running test id %s", testID))
 
+	tr := &TResponse{
+		TestID: testID,
+		Name:   "checked expectations",
+	}
+
+	var err error
+
+	out := e2e.Expectations{}
+
+	defer func() {
+		tr.Details = out
+	}()
+
 	for _, e := range exps {
 		s.logger.V(DebugLevel).Info(fmt.Sprintf("running test id %s, expectation %s", testID, e.Desc))
 
 		cName := e.TargetCluster
 		cUnit, ok := s.configs[cName]
 		if !ok {
-			err := fmt.Errorf("unregister cluster name: (%s)", cName)
-			return &TResponse{TestID: e.TestID, Name: e.Desc,
-				Status: Fialed, Error: err.Error()}, err
+			err = fmt.Errorf("unregister cluster name: (%s)", cName)
+			tr.Error = err.Error()
+			tr.Status = Fialed
+
+			return tr, err
 		}
 
 		mName := e.Matcher
 		matcher := s.getMatcher(mName)
 		if matcher == nil {
 			err := fmt.Errorf("unregister matcher: (%s)", mName)
-			return &TResponse{TestID: e.TestID, Name: e.Desc,
-				Status: Fialed, Error: err.Error()}, err
+			tr.Status = Fialed
+			tr.Error = err.Error()
+			return tr, err
 		}
 
-		if err := matcher.Match(cUnit.Clt, e, s.logger); err != nil {
-			return &TResponse{TestID: e.TestID, Name: e.Desc,
-				Status: Fialed, Error: err.Error()}, err
+		if nerr := matcher.Match(cUnit.Clt, e, s.logger); nerr != nil {
+			tr.Status = Fialed
+			tr.Error = nerr.Error()
+
+			return tr, nerr
 		}
+
+		out = append(out, e)
 	}
 
-	return &TResponse{
-		TestID: testID,
-		Status: Succeed,
-	}, nil
+	tr.Status = Succeed
+	return tr, err
 }
 
 func (s *TServer) ExpectationCheckerHandler(w http.ResponseWriter, r *http.Request) {
@@ -78,7 +96,6 @@ func (s *TServer) ExpectationCheckerHandler(w http.ResponseWriter, r *http.Reque
 	tr, err = s.dispatchExpectation(testID, exps)
 	if err == nil {
 		tr.Status = Succeed
-		tr.Details = exps
 	} else {
 		tr.Status = Fialed
 		tr.Error = err.Error()

@@ -121,6 +121,10 @@ func (e Expectation) GetInstance() *unstructured.Unstructured {
 	ins.SetAPIVersion(e.APIVersion)
 	ins.SetKind(e.Kind)
 	ins.SetName(e.Name)
+	if e.Namepsace == "" {
+		e.Namepsace = "default"
+	}
+
 	ins.SetNamespace(e.Namepsace)
 
 	return ins
@@ -135,6 +139,10 @@ func (e Expectation) GetInstanceList() *unstructured.UnstructuredList {
 }
 
 func (e Expectation) GetKey() types.NamespacedName {
+	if e.Namepsace == "" {
+		e.Namepsace = "default"
+	}
+
 	return types.NamespacedName{Name: e.Name, Namespace: e.Namepsace}
 }
 

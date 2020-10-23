@@ -28,7 +28,6 @@ type TServer struct {
 	expectations e2e.ExpctationReg
 	getMatcher   func(string) e2e.Matcher
 	logger       logr.Logger
-	rmux         *sync.Mutex
 	set          map[string]struct{}
 }
 
@@ -58,7 +57,6 @@ func NewTSever(dir string, logger logr.Logger) (*TServer, error) {
 		expectations: exps,
 		getMatcher:   e2e.MatcherRouter,
 		logger:       logger,
-		rmux:         &sync.Mutex{},
 		set:          map[string]struct{}{},
 	}, nil
 }
