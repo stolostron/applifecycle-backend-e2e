@@ -1,0 +1,8 @@
+[
+    {
+  "test_id": "1",
+  "desc": "git-sub-on-bookinfo",
+  "url": "https://raw.githubusercontent.com/ianzhang366/acm-applifecycle-samples/master/e2e_example/github_channel_e2e.yaml",
+  "target_cluster": "hub"
+}
+]

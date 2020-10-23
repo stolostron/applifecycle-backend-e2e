@@ -1,0 +1,30 @@
+apiVersion: v1
+clusters:
+- cluster:
+    certificate-authority-data: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSUN5RENDQWJDZ0F3SUJBZ0lCQURBTkJna3Foa2lHOXcwQkFRc0ZBREFWTVJNd0VRWURWUVFERXdwcmRXSmwKY201bGRHVnpNQjRYRFRJd01Ea3hOREU0TkRZek5Gb1hEVE13TURreE1qRTRORFl6TkZvd0ZURVRNQkVHQTFVRQpBeE1LYTNWaVpYSnVaWFJsY3pDQ0FTSXdEUVlKS29aSWh2Y05BUUVCQlFBRGdnRVBBRENDQVFvQ2dnRUJBTWVyCnE5VGh6QythOGQ4UnE3N3ZqcVJzOU1hRDljZGI1aE5kZlREd3cxbmRzRXUwZWYyUThXVFlteExHV3NiWEVQQXUKdEM1RGovdFk5VGh6TWRQMWxyaTFNMEQwOWw3K091azlPdEoyYTVPMmNEWVZTMXNpNzZmcHVEakJhSDZ6aklQVwpPejF6WW96NXBtLzJzOWdNTU82RlY0bDVOMmtwSVQwZ0pRaFljRkJYZzQyVjRRUGM4aThmeFZFUTJvRFQvc0JCCis2bWE3Sjg2OVJEamZ3bHFLRWZPTld3eFIvb0hMUEI0ZVJpU1R5VzVXMnMyTlk5R0VJSFpIUk4xM2kzc0xvcm8KYmJEYkw1dUw1Vk90U2J3WThFWHdseVdUUk8rMVpUaGl1UXY4ZnVnMVM0UHVURDI0T1FTSk53cVBiNC81ZGNJWApxQStiOWJkcXdScm1xazc3MXZzQ0F3RUFBYU1qTUNFd0RnWURWUjBQQVFIL0JBUURBZ0trTUE4R0ExVWRFd0VCCi93UUZNQU1CQWY4d0RRWUpLb1pJaHZjTkFRRUxCUUFEZ2dFQkFJejBnUFZGWURxRkg1WmZiVUpMQy9Ec1AzWncKTG1od0NmendIY0o2YTlydlJsZ29ScWdCek5lem4ydXRWYjRmUEFnclZMQzhYOVBNU3dLVy9jRFVaeW1FYWxOZgpmY1BwaFJzY2RyRXFYWEYzcThnalRLQ1RFSmM0MXUrQWRMVzNoTkx2R1hSbXhseDYrRHVJNGFvZ2ZaelNWdWxXCk05SGFPalBMakFmQVZYdEZsUGFtUVBVa3FpRlZneDFrV2dWK2UwU25Sc0JhVTlUUGw5RU5EOXpyQUF6OTVmeWYKRi9EQk9WS29ETUFicHJlU1NVa0VMZzNhYXRlZ29DMlV4MlZLU1RUOURxOEl5Wm5QUzhiTmpLWnIvWnFuWmk0VgpOOWY4WkhNbHF6SDUrRE1JRHY0OTM3d2UrKy83VTJqc0kxN3ZITlZwUC9kNHpCL1IyeUpvblRDd2tqOD0KLS0tLS1FTkQgQ0VSVElGSUNBVEUtLS0tLQo=
+    server: https://042AB15509F956D3DD0A0BDAE2676350.gr7.us-east-2.eks.amazonaws.com
+  name: arn:aws:eks:us-east-2:845690120477:cluster/izhang-spoke
+contexts:
+- context:
+    cluster: arn:aws:eks:us-east-2:845690120477:cluster/izhang-spoke
+    user: arn:aws:eks:us-east-2:845690120477:cluster/izhang-spoke
+  name: arn:aws:eks:us-east-2:845690120477:cluster/izhang-spoke
+current-context: arn:aws:eks:us-east-2:845690120477:cluster/izhang-spoke
+kind: Config
+preferences: {}
+users:
+- name: arn:aws:eks:us-east-2:845690120477:cluster/izhang-spoke
+  user:
+    exec:
+      apiVersion: client.authentication.k8s.io/v1alpha1
+      args:
+      - --region
+      - us-east-2
+      - eks
+      - get-token
+      - --cluster-name
+      - izhang-spoke
+      command: aws
+      env:
+      - name: AWS_PROFILE
+        value: izhang-aws-dev
