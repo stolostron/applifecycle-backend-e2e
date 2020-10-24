@@ -66,9 +66,9 @@ func processResource(tURL, kCfgDir string, subCmd ocCommand) error {
 
 func (s *TServer) TestCasesRunnerHandler(w http.ResponseWriter, r *http.Request) {
 	testID := r.URL.Query().Get("id")
-	w.Header().Set("Content-Type", "application/json")
 
-	fmt.Printf("izhang ======  running request testID = %+v, request %+v\n", testID, r.Context())
+	s.logger.V(0).Info(fmt.Sprintf("Start running %s", testID))
+	w.Header().Set("Content-Type", "application/json")
 
 	tr := &TResponse{
 		TestID: testID,
@@ -119,6 +119,8 @@ func (s *TServer) TestCasesRunnerHandler(w http.ResponseWriter, r *http.Request)
 	tr = s.continuousCheck(testID)
 
 	fmt.Fprint(w, tr.String())
+
+	s.logger.V(0).Info(fmt.Sprintf("DONE servering %s!", testID))
 	return
 }
 
