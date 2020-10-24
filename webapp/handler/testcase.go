@@ -32,8 +32,8 @@ func (s *TServer) applyTestCases(testID string, tc e2e.TestCases) ([]appliedCase
 		}
 
 		kCfg := cUnit.CfgDir
-		if err := processResource(c.URL, kCfg, Apply); err != nil {
-			err := fmt.Errorf("failed to apply test case %s, resource %s on cluster %s, err: %s", testID, c.Desc, c.TargetCluster, err)
+		if kerr := processResource(c.URL, kCfg, Apply); kerr != nil {
+			err := fmt.Errorf("failed to apply test case %s, resource %s on cluster %s, err: %v", testID, c.Desc, c.TargetCluster, kerr)
 			return applied, err
 		}
 
@@ -49,16 +49,16 @@ func processResource(tURL, kCfgDir string, subCmd ocCommand) error {
 	var cmd *exec.Cmd
 	switch subCmd {
 	case Apply:
-		cmd = exec.Command("oc", "apply", "-f", tURL, "--kubeconfig", kCfgDir)
+		cmd = exec.Command("kubectl", "apply", "-f", tURL, "--kubeconfig", kCfgDir)
 	case Delete:
-		cmd = exec.Command("oc", "delete", "-f", tURL, "--kubeconfig", kCfgDir)
+		cmd = exec.Command("kubectl", "delete", "-f", tURL, "--kubeconfig", kCfgDir)
 	}
 
 	var stderr bytes.Buffer
 	cmd.Stderr = &stderr
 
 	if err := cmd.Run(); err != nil {
-		return fmt.Errorf("%s", stderr.String())
+		return err
 	}
 
 	return nil
@@ -68,6 +68,7 @@ func (s *TServer) TestCasesRunnerHandler(w http.ResponseWriter, r *http.Request)
 	testID := r.URL.Query().Get("id")
 
 	s.logger.V(0).Info(fmt.Sprintf("Start running %s", testID))
+
 	w.Header().Set("Content-Type", "application/json")
 
 	tr := &TResponse{
@@ -77,9 +78,17 @@ func (s *TServer) TestCasesRunnerHandler(w http.ResponseWriter, r *http.Request)
 
 	var err error
 
+	defer func() {
+		if err != nil {
+			s.logger.Error(err, "failed on running test")
+		}
+		s.logger.V(0).Info(fmt.Sprintf("DONE servering %s!", testID))
+	}()
+
 	if testID == "" {
 		tr.Status = Unknown
-		tr.Error = fmt.Errorf("unknow id (%s)", testID).Error()
+		err = fmt.Errorf("unknow id (%s)", testID)
+		tr.Error = err.Error()
 
 		fmt.Fprint(w, tr.String())
 
@@ -101,7 +110,9 @@ func (s *TServer) TestCasesRunnerHandler(w http.ResponseWriter, r *http.Request)
 	c, ok := s.testCases[testID]
 	if !ok {
 		tr.Status = Fialed
-		tr.Error = fmt.Errorf("ID (%s) doesn't exist", testID).Error()
+		err = fmt.Errorf("ID (%s) doesn't exist", testID)
+		tr.Error = err.Error()
+
 		fmt.Fprint(w, tr.String())
 
 		return
@@ -120,7 +131,6 @@ func (s *TServer) TestCasesRunnerHandler(w http.ResponseWriter, r *http.Request)
 
 	fmt.Fprint(w, tr.String())
 
-	s.logger.V(0).Info(fmt.Sprintf("DONE servering %s!", testID))
 	return
 }
 
