@@ -66,7 +66,8 @@ publish:
 ## Simple target running a kubectl command to ensure the cluster is up and running
 ## Environment variables are not always recognized by Makefiles, so it's recommended to use the --kubeconfig flag
 test-integration:
-	kubectl get pods -A --kubeconfig KUBECONFIG
+	kind get kubeconfig
+	kubectl get pods -A --kubeconfig "kind get kubeconfig"
 
 
 ############################################################
