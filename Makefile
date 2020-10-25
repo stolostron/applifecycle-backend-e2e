@@ -68,6 +68,8 @@ publish:
 test-integration:
 	kind get kubeconfig > config
 	cat config
+	pwd
+	ls
 	kubectl get pods -A --kubeconfig KUBECONFIG
 
 
