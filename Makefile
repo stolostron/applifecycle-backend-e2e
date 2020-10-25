@@ -68,7 +68,8 @@ publish:
 test-integration:
 	kubectl cluster-info --context kind-kind
 	echo ${KUBECONFIG}
-	#kind get nodes && kubectl get pods -A
+	echo $(KUBECONFIG)
+	kubectl get pods -A --kubeconfig KUBECONFIG
 
 
 ############################################################
