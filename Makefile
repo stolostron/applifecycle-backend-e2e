@@ -68,7 +68,7 @@ publish:
 test-integration:
 	kind get kubeconfig > config
 	cat config
-	kubectl get pods -A --kubeconfig "$(kind get kubeconfig)"
+	kubectl get pods -A --kubeconfig KUBECONFIG
 
 
 ############################################################
