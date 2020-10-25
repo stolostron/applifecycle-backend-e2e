@@ -70,8 +70,7 @@ test-integration:
 	cat config
 	pwd
 	ls
-	kubectl get pods -A --kubeconfig KUBECONFIG
-
+	kubectl get pods -A --kubeconfig config
 
 ############################################################
 # clean section
