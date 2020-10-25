@@ -26,5 +26,5 @@ jobs:
         - kind create cluster
 
         # Set KUBECONFIG environment variable.
-        - export KUBECONFIG="$(kind get kubeconfig-path)"
+        - export KUBECONFIG="$(kind get kubeconfig)"
       script: make test-integration
