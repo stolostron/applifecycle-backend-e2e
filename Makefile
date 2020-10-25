@@ -67,7 +67,7 @@ publish:
 ## Environment variables are not always recognized by Makefiles, so it's recommended to use the --kubeconfig flag
 test-integration:
 	kind get kubeconfig
-	kubectl get pods -A --kubeconfig "kind get kubeconfig"
+	kubectl get pods -A --kubeconfig "$(kind get kubeconfig)"
 
 
 ############################################################
