@@ -29,4 +29,6 @@ jobs:
         - source ./build/setup_kind.sh
         - echo $KUBECONFIG
       script: 
+        - if [ "$TRAVIS_PULL_REQUEST" != "false" ]; then export COMPONENT_TAG_EXTENSION="-PR${TRAVIS_PULL_REQUEST}-${TRAVIS_COMMIT}"; fi;
+        - |
         - ./build/test.sh
