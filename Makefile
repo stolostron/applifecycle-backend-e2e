@@ -6,8 +6,6 @@ REGISTRY ?= quay.io/open-cluster-management
 
 TRAVIS_BUILD_DIR ?= $(shell pwd)
 
-COMPONENT_VERSION ?= $(shell cat COMPONENT_VERSION 2> /dev/null)
-
 VERSION ?= $(shell cat COMPONENT_VERSION 2> /dev/null)
 
 IMAGE_NAME_AND_VERSION ?= $(REGISTRY)/$(IMG)
