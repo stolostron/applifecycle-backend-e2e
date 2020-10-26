@@ -71,16 +71,15 @@ local:
 
 build-images:
 	@echo "build image"
-	@docker build -t $(IMG) .
+	@docker build -t ${IMAGE_NAME_AND_VERSION} .
 
 run: gobuild build-images 
 	docker run -p 8765:8765 --env CONFIG="/e2etest/" --name e2e -d --rm applifecycle-backend-e2e
 
 
 tag:
-	@docker tag $(IMG) ${IMAGE_NAME_AND_VERSION}:latest
+	docker tag ${IMAGE_NAME_AND_VERSION}:latest ${IMAGE_NAME_AND_VERSION}:${COMPONENT_VERSION}${COMPONENT_TAG_EXTENSION}
 	docker images
-	docker tag $(IMG) ${IMAGE_NAME_AND_VERSION}:${COMPONENT_VERSION}${COMPONENT_TAG_EXTENSION}
 
 push: tag
 	docker login ${REGISTRY} -u ${DOCKER_USER} -p ${DOCKER_PASS}
