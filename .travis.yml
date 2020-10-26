@@ -8,10 +8,6 @@ go:
 services:
   - docker
 
-branches:
-  only:
-    - master
-
 # define stages
 stages:
   - build

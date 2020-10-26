@@ -6,6 +6,8 @@ REGISTRY ?= quay.io/open-cluster-management
 
 TRAVIS_BUILD_DIR ?= $(shell pwd)
 
+COMPONENT_VERSION ?= $(shell cat COMPONENT_VERSION 2> /dev/null)
+
 VERSION ?= $(shell cat COMPONENT_VERSION 2> /dev/null)
 
 IMAGE_NAME_AND_VERSION ?= $(REGISTRY)/$(IMG)
@@ -84,17 +86,8 @@ tag:
 push: tag
 	docker login ${REGISTRY} -u ${DOCKER_USER} -p ${DOCKER_PASS}
 	docker images
-	@echo "${COMPONENT_VERSION}${COMPONENT_TAG_EXTENSION}"
 	docker push ${IMAGE_NAME_AND_VERSION}:${COMPONENT_VERSION}${COMPONENT_TAG_EXTENSION}
-	@echo "Pushed the following image: $(REGISTRY)/$(IMG):latest"
-
-## Simple target running a kubectl command to ensure the cluster is up and running
-## Environment variables are not always recognized by Makefiles, so it's recommended to use the --kubeconfig flag
-test-integration:
-	kind get kubeconfig > kindconfig
-	sleep 30
-	kubectl get po -A --kubeconfig kindconfig
-	kubectl get ns -A --kubeconfig kindconfig
+	@echo "Pushed the following image: ${IMAGE_NAME_AND_VERSION}:${COMPONENT_VERSION}${COMPONENT_TAG_EXTENSION}"
 
 ############################################################
 # clean section

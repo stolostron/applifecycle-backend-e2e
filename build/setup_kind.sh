@@ -13,6 +13,3 @@ GO111MODULE=on go get sigs.k8s.io/kind
 # Create a new Kubernetes cluster using KinD
 kind create cluster
 
-# Set KUBECONFIG environment variable.
-export KUBECONFIG="$(kind get kubeconfig)"
-echo $KUBECONFIG
