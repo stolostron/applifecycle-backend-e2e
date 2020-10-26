@@ -4,6 +4,12 @@ IMG ?= $(shell cat COMPONENT_NAME 2> /dev/null)
 # Build the details for the remote destination repo for the image
 REGISTRY ?= quay.io/open-cluster-management
 
+COMPONENT_VERSION ?= $(shell cat COMPONENT_VERSION 2> /dev/null)
+
+VERSION ?= $(shell cat COMPONENT_VERSION 2> /dev/null)
+
+IMAGE_NAME_AND_VERSION ?= $(REGISTRY)/$(IMG)
+
 # Github host to use for checking the source tree;
 # Override this variable ue with your own value if you're working on forked repo.
 GIT_HOST ?= github.com/open-cluster-management
@@ -21,8 +27,6 @@ TESTARGS_DEFAULT := "-v"
 
 export TESTARGS ?= $(TESTARGS_DEFAULT)
 DEST ?= $(GOPATH)/src/$(GIT_HOST)/$(BASE_DIR)
-VERSION ?= $(shell cat COMPONENT_VERSION 2> /dev/null)
-IMAGE_NAME_AND_VERSION ?= $(REGISTRY)/$(IMG)
 
 LOCAL_OS := $(shell uname)
 ifeq ($(LOCAL_OS),Linux)
@@ -63,17 +67,19 @@ local:
 build-images:
 	@docker build -t $(IMG) .
 
-run: build build-images
+run: gobuild build-images
 	docker run -p 8765:8765 --env CONFIG="/e2etest/" --name e2e -d --rm applifecycle-backend-e2e
 
 
 tag:
-	@docker tag $(IMG) $(REGISTRY)/$(IMG):latest
+	@docker tag $(IMG) ${IMAGE_NAME_AND_VERSION}:latest
+	docker images
+	docker tag $(IMG) ${IMAGE_NAME_AND_VERSION}:${COMPONENT_VERSION}${COMPONENT_TAG_EXTENSION}
 
 push: tag
 	docker login ${REGISTRY} -u ${DOCKER_USER} -p ${DOCKER_PASS}
 	docker images
-	docker push $(REGISTRY)/$(IMG):latest
+	docker push ${IMAGE_NAME_AND_VERSION}:${COMPONENT_VERSION}${COMPONENT_TAG_EXTENSION}
 	@echo "Pushed the following image: $(REGISTRY)/$(IMG):latest"
 
 ## Simple target running a kubectl command to ensure the cluster is up and running
