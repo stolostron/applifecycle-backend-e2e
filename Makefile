@@ -1,6 +1,7 @@
 # Image URL to use all building/pushing image targets;
 # Use your own docker registry and image name for dev/test by overridding the IMG and REGISTRY environment variable.
 IMG ?= $(shell cat COMPONENT_NAME 2> /dev/null)
+# Build the details for the remote destination repo for the image
 REGISTRY ?= quay.io/open-cluster-management
 
 # Github host to use for checking the source tree;
@@ -69,8 +70,8 @@ run: build build-images
 tag:
 	@docker tag $(IMG) $(REGISTRY)/$(IMG):latest
 
-publish:
-	docker login ${COMPONENT_DOCKER_REPO} -u ${DOCKER_USER} -p ${DOCKER_PASS}
+push:
+	docker login ${REGISTRY} -u ${DOCKER_USER} -p ${DOCKER_PASS}
 	docker push $(REGISTRY)/$(IMG):latest
 	@echo "Pushed the following image: $(REGISTRY)/$(IMG):latest"
 
