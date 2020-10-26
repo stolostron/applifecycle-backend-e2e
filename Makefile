@@ -39,10 +39,6 @@ endif
 GITHUB_USER := $(shell echo $(GITHUB_USER) | sed 's/@/%40/g')
 GITHUB_TOKEN ?=
 
-# GITHUB_USER containing '@' char must be escaped with '%40'
-GITHUB_USER := $(shell echo $(GITHUB_USER) | sed 's/@/%40/g')
-GITHUB_TOKEN ?=
-
 USE_VENDORIZED_BUILD_HARNESS ?=
 
 ifndef USE_VENDORIZED_BUILD_HARNESS
@@ -84,7 +80,7 @@ test-integration:
 	kind get kubeconfig > kindconfig
 	sleep 30
 	kubectl get po -A --kubeconfig kindconfig
-	kubectl get ns -A --kubeconfig KUBECONFIG
+	kubectl get ns -A --kubeconfig kindconfig
 
 ############################################################
 # clean section
