@@ -8,8 +8,13 @@ RUN chmod +x ./kubectl
 RUN mv ./kubectl /usr/local/bin
 
 # Copy the local package files to the container's workspace.
-COPY ./bin/applifecycle-backend-e2e /go/bin/applifecycle-backend-e2e
-COPY ./e2etest /e2etest
+RUN mkdir -p /opt/applifecycle-backend-e2e
+
+WORKDIR /opt/applifecycle-backend-e2e
+
+COPY /opt/applifecycle-backend-e2e/bin/applifecycle-backend-e2e /go/bin/applifecycle-backend-e2e
+
+COPY /opt/applifecycle-backend-e2e/e2etest /e2etest
 
 # Run the outyet command by default when the container starts.
 ENTRYPOINT /go/bin/applifecycle-backend-e2e

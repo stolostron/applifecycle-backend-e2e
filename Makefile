@@ -59,10 +59,10 @@ default::
 
 
 gobuild:
-	@GOOS=linux GOARCH=amd64 go build -ldflags="-w -s" -o bin
+	@GOOS=linux GOARCH=amd64 go build -ldflags="-w -s" -o ./bin
 
 local:
-	@GOOS=darwin go build -o bin
+	@GOOS=darwin go build -o ./bin
 
 build-images:
 	@docker build -t $(IMG) .
