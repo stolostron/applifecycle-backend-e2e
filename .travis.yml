@@ -28,4 +28,5 @@ jobs:
       before_script:
         - source ./build/setup_kind.sh
         - echo $KUBECONFIG
-      script: make test-integration
+      script: 
+        - ./build/test.sh
