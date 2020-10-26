@@ -61,16 +61,19 @@ default::
 
 
 gobuild:
-	echo ${TRAVIS_BUILD_DIR}
-	@GOOS=linux GOARCH=amd64 go build -ldflags="-w -s" -o ${TRAVIS_BUILD_DIR}/bin
+	@echo "gobuild"
+	@echo ${TRAVIS_BUILD_DIR}
+	mkdir -p build/_output/bin
+	@GOOS=linux GOARCH=amd64 go build -ldflags="-w -s" -o build/_output/bin/$(IMG)
 
 local:
-	@GOOS=darwin go build -o ./bin
+	@GOOS=darwin go build -o build/_output/bin
 
 build-images:
-	@docker build -t $(IMG) ${TRAVIS_BUILD_DIR}
+	@echo "build image"
+	@docker build -t $(IMG) .
 
-run: build-images gobuild 
+run: gobuild build-images 
 	docker run -p 8765:8765 --env CONFIG="/e2etest/" --name e2e -d --rm applifecycle-backend-e2e
 
 
