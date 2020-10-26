@@ -70,8 +70,9 @@ run: build build-images
 tag:
 	@docker tag $(IMG) $(REGISTRY)/$(IMG):latest
 
-push:
+push: tag
 	docker login ${REGISTRY} -u ${DOCKER_USER} -p ${DOCKER_PASS}
+	docker images
 	docker push $(REGISTRY)/$(IMG):latest
 	@echo "Pushed the following image: $(REGISTRY)/$(IMG):latest"
 
