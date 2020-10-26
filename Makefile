@@ -68,7 +68,7 @@ publish:
 test-integration:
 	kind get kubeconfig > config
 	sleep 30
-	echo $(KUBECONFIG)
+	echo "$(KUBECONFIG)"
 	kubectl get po -A --kubeconfig config
 	kubectl get ns -A --kubeconfig config
 
