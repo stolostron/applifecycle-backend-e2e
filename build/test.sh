@@ -1,7 +1,9 @@
 #! /bin/bash
-echo $KUBECONFIG
+# Set KUBECONFIG environment variable.
+export KUBECONFIG="$(kind get kubeconfig)"
 kind get kubeconfig > kindconfig
 sleep 30
 kubectl get po -A --kubeconfig kindconfig
-kubectl get ns -A --kubeconfig $KUBECONFIG
+echo "$KUBECONFIG"
+kubectl get ns -A --kubeconfig="$KUBECONFIG"
 
