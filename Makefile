@@ -4,6 +4,8 @@ IMG ?= $(shell cat COMPONENT_NAME 2> /dev/null)
 # Build the details for the remote destination repo for the image
 REGISTRY ?= quay.io/open-cluster-management
 
+TRAVIS_BUILD_DIR ?= $(shell pwd)
+
 COMPONENT_VERSION ?= $(shell cat COMPONENT_VERSION 2> /dev/null)
 
 VERSION ?= $(shell cat COMPONENT_VERSION 2> /dev/null)
@@ -59,15 +61,16 @@ default::
 
 
 gobuild:
-	@GOOS=linux GOARCH=amd64 go build -ldflags="-w -s" -o ./bin
+	echo ${TRAVIS_BUILD_DIR}
+	@GOOS=linux GOARCH=amd64 go build -ldflags="-w -s" -o ${TRAVIS_BUILD_DIR}/bin
 
 local:
 	@GOOS=darwin go build -o ./bin
 
 build-images:
-	@docker build -t $(IMG) .
+	@docker build -t $(IMG) ${TRAVIS_BUILD_DIR}
 
-run: gobuild build-images
+run: build-images gobuild 
 	docker run -p 8765:8765 --env CONFIG="/e2etest/" --name e2e -d --rm applifecycle-backend-e2e
 
 

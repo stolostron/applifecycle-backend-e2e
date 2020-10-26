@@ -13,9 +13,9 @@ WORKDIR pwd
 
 RUN pwd
 
-COPY ./bin/applifecycle-backend-e2e /go/bin/applifecycle-backend-e2e
+COPY ${TRAVIS_BUILD_DIR}/bin/applifecycle-backend-e2e /go/bin/applifecycle-backend-e2e
 
-COPY ./e2etest /e2etest
+COPY ${TRAVIS_BUILD_DIR}/e2etest /e2etest
 
 # Run the outyet command by default when the container starts.
 ENTRYPOINT /go/bin/applifecycle-backend-e2e
