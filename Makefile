@@ -77,10 +77,10 @@ publish:
 ## Simple target running a kubectl command to ensure the cluster is up and running
 ## Environment variables are not always recognized by Makefiles, so it's recommended to use the --kubeconfig flag
 test-integration:
-	kind get kubeconfig > config
+	kind get kubeconfig > kindconfig
 	sleep 30
-	kubectl get po -A --kubeconfig config
-	kubectl get ns -A --kubeconfig config
+	kubectl get po -A --kubeconfig kindconfig
+	kubectl get ns -A --kubeconfig KUBECONFIG
 
 ############################################################
 # clean section
