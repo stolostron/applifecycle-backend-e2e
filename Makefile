@@ -63,6 +63,8 @@ default::
 gobuild:
 	@echo "gobuild"
 	@echo ${TRAVIS_BUILD_DIR}
+	
+	# create the directory for hosting the go binary
 	mkdir -p build/_output/bin
 	@GOOS=linux GOARCH=amd64 go build -ldflags="-w -s" -o build/_output/bin/$(IMG)
 
