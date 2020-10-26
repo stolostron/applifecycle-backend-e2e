@@ -8,9 +8,16 @@ go:
 services:
   - docker
 
+# define stages
+stages:
+  - build
+  - integration-test
+
 jobs:
   include:
-    - stage: Integration Tests
+    - stage: build
+
+    - stage: integration-test 
       before_script:
         # Download and install kubectl
         - curl -LO https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl && chmod +x kubectl && sudo mv kubectl /usr/local/bin/
@@ -28,4 +35,5 @@ jobs:
         # Set KUBECONFIG environment variable.
         - export KUBECONFIG="$(kind get kubeconfig)"
         - echo $KUBECONFIG
+
       script: make test-integration
