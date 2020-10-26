@@ -22,7 +22,7 @@ jobs:
         - |
           make gobuild
           make build-images
-          make push 
+          make push
 
     - stage: integration-test 
       before_script:

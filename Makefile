@@ -86,6 +86,7 @@ tag:
 push: tag
 	docker login ${REGISTRY} -u ${DOCKER_USER} -p ${DOCKER_PASS}
 	docker images
+	@echo "${COMPONENT_VERSION}${COMPONENT_TAG_EXTENSION}"
 	docker push ${IMAGE_NAME_AND_VERSION}:${COMPONENT_VERSION}${COMPONENT_TAG_EXTENSION}
 	@echo "Pushed the following image: $(REGISTRY)/$(IMG):latest"
 
