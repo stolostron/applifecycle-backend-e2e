@@ -28,7 +28,8 @@ type TestCases []TestCase
 type TestCasesReg map[string]TestCases
 
 func LoadTestCases(dir string) (TestCasesReg, error) {
-	tDir := fmt.Sprintf("%s%s", dir, testCaseDirSuffix)
+	tDir := fmt.Sprintf("%s/%s", dir, testCaseDirSuffix)
+
 	files, err := ioutil.ReadDir(tDir)
 
 	if err != nil {
@@ -38,9 +39,10 @@ func LoadTestCases(dir string) (TestCasesReg, error) {
 	out := TestCasesReg{}
 	for _, file := range files {
 		p := fmt.Sprintf("%s/%s", tDir, file.Name())
+
 		c, err := ioutil.ReadFile(p)
 		if err != nil {
-			return out, gerr.Wrap(err, "failed to load test cases")
+			return out, gerr.Wrapf(err, "failed to load test cases at file %s", p)
 		}
 
 		tc := &TestCases{}
@@ -88,8 +90,8 @@ func parseExpectations(in []byte) (*Expectations, error) {
 }
 
 func (e ExpctationReg) Load(dir string) (ExpctationReg, error) {
-	tDir := fmt.Sprintf("%s%s", dir, expDirSuffix)
-	files, err := ioutil.ReadDir(tDir)
+	dir = fmt.Sprintf("%s/%s", dir, expDirSuffix)
+	files, err := ioutil.ReadDir(dir)
 
 	if err != nil {
 		return ExpctationReg{}, err
@@ -97,7 +99,7 @@ func (e ExpctationReg) Load(dir string) (ExpctationReg, error) {
 
 	out := ExpctationReg{}
 	for _, file := range files {
-		p := fmt.Sprintf("%s/%s", tDir, file.Name())
+		p := fmt.Sprintf("%s/%s", dir, file.Name())
 		c, err := ioutil.ReadFile(p)
 		if err != nil {
 			return out, gerr.Wrap(err, "failed to load expectations")

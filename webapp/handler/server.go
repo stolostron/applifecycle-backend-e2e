@@ -22,7 +22,8 @@ const (
 type TServer struct {
 	mux          *sync.Mutex
 	delay        func(time.Duration)
-	defaultDir   string
+	cfgDir       string
+	dataDir      string
 	configs      e2e.KubeConfigs
 	testCases    e2e.TestCasesReg
 	expectations e2e.ExpctationReg
@@ -31,19 +32,19 @@ type TServer struct {
 	set          map[string]struct{}
 }
 
-func NewTSever(dir string, logger logr.Logger) (*TServer, error) {
-	cfg, err := e2e.LoadKubeConfigs(dir)
+func NewTSever(cfgDir, dataDir string, logger logr.Logger) (*TServer, error) {
+	cfg, err := e2e.LoadKubeConfigs(cfgDir)
 	if err != nil {
 		return nil, err
 	}
 
-	tCases, err := e2e.LoadTestCases(dir)
+	tCases, err := e2e.LoadTestCases(dataDir)
 	if err != nil {
 		return nil, err
 	}
 
 	exps := e2e.ExpctationReg{}
-	exps, err = exps.Load(dir)
+	exps, err = exps.Load(dataDir)
 	if err != nil {
 		return nil, err
 	}
@@ -51,7 +52,8 @@ func NewTSever(dir string, logger logr.Logger) (*TServer, error) {
 	return &TServer{
 		mux:          &sync.Mutex{},
 		delay:        time.Sleep,
-		defaultDir:   dir,
+		cfgDir:       cfgDir,
+		dataDir:      dataDir,
 		configs:      cfg,
 		testCases:    tCases,
 		expectations: exps,

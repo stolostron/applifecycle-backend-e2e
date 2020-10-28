@@ -68,7 +68,7 @@ func (s *TServer) ExpectationCheckerHandler(w http.ResponseWriter, r *http.Reque
 	}
 
 	s.mux.Lock()
-	newExps, err := s.expectations.Load(s.defaultDir)
+	newExps, err := s.expectations.Load(s.dataDir)
 	if err != nil {
 		tr.Status = Fialed
 		tr.Error = fmt.Errorf("failed reload the expectations").Error()
@@ -109,7 +109,7 @@ func (s *TServer) ExpectationCheckerHandler(w http.ResponseWriter, r *http.Reque
 func (s *TServer) ReloadExpectationReg() {
 	s.mux.Lock()
 
-	newExps, err := s.expectations.Load(s.defaultDir)
+	newExps, err := s.expectations.Load(s.dataDir)
 	if err != nil {
 		return
 	}
@@ -121,7 +121,7 @@ func (s *TServer) ReloadExpectationReg() {
 func (s *TServer) DisplayExpectationHandler(w http.ResponseWriter, r *http.Request) {
 	s.ReloadExpectationReg()
 
-	tr := &TResponse{Name: "list expectations"}
+	tr := &TResponse{Name: "expectations list"}
 
 	testID := r.URL.Query().Get("id")
 	w.Header().Set("Content-Type", "application/json")

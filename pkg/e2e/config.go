@@ -32,8 +32,7 @@ type KubeConfigs map[string]*ConfigUnit
 func LoadKubeConfigs(dir string) (KubeConfigs, error) {
 	// use the current context in kubeconfig
 
-	tDir := fmt.Sprintf("%s%s", dir, configSuffix)
-	files, err := ioutil.ReadDir(tDir)
+	files, err := ioutil.ReadDir(dir)
 
 	if err != nil {
 		return KubeConfigs{}, err
@@ -46,7 +45,7 @@ func LoadKubeConfigs(dir string) (KubeConfigs, error) {
 
 	out := KubeConfigs{}
 	for _, file := range files {
-		p := fmt.Sprintf("%s/%s", tDir, file.Name())
+		p := fmt.Sprintf("%s/%s", dir, file.Name())
 		cfg, err := clientcmd.BuildConfigFromFlags("", p)
 		if err != nil {
 			return out, err
