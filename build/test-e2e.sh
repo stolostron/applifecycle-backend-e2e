@@ -19,7 +19,7 @@ if [ "$TRAVIS_BUILD" != 1 ]; then
 
     echo -e "BUILD_IMAGE tag $BUILD_IMAGE\n"
 
-    docker login -u ${GITHUB_USER} -p ${GITHUB_TOKEN} quay.io
+    docker login -u ${DOCKER_USER} -p ${DOCKER_PASS} quay.io
     if [[ "$(docker image inspect $BUILD_IMAGE 2> /dev/null)" == "" ]]; then
         echo "pull image from source"
         docker pull ${BUILD_IMAGE}
