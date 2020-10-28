@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: applifecycle-backend-e2e 
+  labels:
+    name: applifecycle-backend-e2e
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      name: applifecycle-backend-e2e
+  template:
+    metadata:
+      labels:
+        name: applifecycle-backend-e2e
+    spec:
+      containers:
+        - name: e2e-test-server 
+          imagePullPolicy: IfNotPresent
+          image: quay.io/open-cluster-management/applifecycle-backend-e2e:0.0.1
+          ports:
+          - containerPort: 8765
+          resources:
+              requests:
+                cpu: 100m
+                memory: 256Mi
+              limits:
+                cpu: 500m
+                memory: 512Mi

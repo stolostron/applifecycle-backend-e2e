@@ -73,8 +73,6 @@ local:
 
 build-images:
 	@echo "build image"
-	pwd
-	ls
 	@docker build -t ${IMAGE_NAME_AND_VERSION} .
 
 CONTAINER_NAME="e2e"
@@ -86,6 +84,8 @@ run: gobuild build-images
 	curl http://localhost:8765/testcase | head -n 10
 	curl http://localhost:8765/expectation | head -n 10
 
+e2e: gobuild build-images
+	build/test.sh
 
 tag:
 	docker tag ${IMAGE_NAME_AND_VERSION}:latest ${IMAGE_NAME_AND_VERSION}:${COMPONENT_VERSION}${COMPONENT_TAG_EXTENSION}
