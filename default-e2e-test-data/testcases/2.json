@@ -1,0 +1,8 @@
+[
+    {
+  "test_id": "2",
+  "desc": "helm-guestbook-on-hub",
+  "url": "https://raw.githubusercontent.com/ianzhang366/acm-applifecycle-samples/master/e2e_example/local_deployalbe_e2e.yaml",
+  "target_cluster": "hub"
+}
+]

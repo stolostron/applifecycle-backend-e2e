@@ -73,6 +73,8 @@ local:
 
 build-images:
 	@echo "build image"
+	pwd
+	ls
 	@docker build -t ${IMAGE_NAME_AND_VERSION} .
 
 CONTAINER_NAME="e2e"

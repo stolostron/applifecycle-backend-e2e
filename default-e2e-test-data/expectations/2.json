@@ -1,0 +1,49 @@
+[
+{
+		"test_id": "2",
+		"target_cluster": "hub",
+		"desc": "should have a channel on hub",
+		"apiversion": "apps.open-cluster-management.io/v1",
+		"kind": "channel",
+		"name": "helm-ch",
+		"namespace": "helm-local",
+		"matcher": "byname",
+		"args": {}
+	},
+	{
+		"test_id": "2",
+		"target_cluster": "hub",
+		"desc": "should have a configmap on hub",
+		"apiversion": "v1",
+		"kind": "configmap",
+		"name": "skip-cert-verify",
+		"namespace": "helm-local",
+		"matcher": "byname",
+		"args": {}
+	},
+	{
+		"test_id": "2",
+		"target_cluster": "hub",
+		"desc": "should the origin subscription on hub",
+		"apiversion": "apps.open-cluster-management.io/v1",
+		"kind": "subscription",
+		"name": "local-sub-test",
+		"namespace": "helm-local",
+		"matcher": "byname",
+		"args": {}
+	},
+	{
+		"test_id": "2",
+		"target_cluster": "hub",
+		"desc": "should have a helmrelease deployed on hub",
+		"apiversion": "apps.open-cluster-management.io/v1",
+		"kind": "HelmRelease",
+		"name": "",
+		"namespace": "helm-local",
+		"matcher": "byannotationcount",
+		"args": {
+            "apps.open-cluster-management.io/hosting-subscription":"helm-local/local-sub-test",
+			"count": "1"
+		}
+	}
+]
