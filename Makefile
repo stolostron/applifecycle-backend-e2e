@@ -75,7 +75,7 @@ build-images:
 	@echo "build image"
 	@docker build -t ${IMAGE_NAME_AND_VERSION} .
 
-CONTAINER_NAME="e2e"
+export CONTAINER_NAME=$(shell echo "e2e")
 run: gobuild build-images 
 	docker rm -f ${CONTAINER_NAME} || true
 	docker run -p 8765:8765 --name ${CONTAINER_NAME} -d --rm ${IMAGE_NAME_AND_VERSION}:latest
@@ -85,7 +85,7 @@ run: gobuild build-images
 	curl http://localhost:8765/expectation | head -n 10
 
 e2e: gobuild build-images
-	build/test.sh
+	build/test-e2e.sh
 
 tag:
 	docker tag ${IMAGE_NAME_AND_VERSION}:latest ${IMAGE_NAME_AND_VERSION}:${COMPONENT_VERSION}${COMPONENT_TAG_EXTENSION}
