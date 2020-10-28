@@ -26,7 +26,7 @@ if [ "$TRAVIS_BUILD" != 1 ]; then
     fi
 fi
 
-echo -e "\ndelete the running container: ${CONTAINER_NAME}"
+echo -e "\ndelete the running container: ${CONTAINER_NAME} if exist"
 docker rm -f ${CONTAINER_NAME} || true
 
 echo -e "\nrun a new container ${CONTAINER_NAME} with the update iamge: ${BUILD_IMAGE}\n"
