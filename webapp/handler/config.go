@@ -9,7 +9,7 @@ import (
 
 func (s *TServer) ReloadClusterReg() {
 	s.mux.Lock()
-	cfgs, err := e2e.LoadKubeConfigs(s.defaultDir)
+	cfgs, err := e2e.LoadKubeConfigs(s.cfgDir)
 	if err != nil {
 		return
 	}
@@ -27,6 +27,8 @@ func (s *TServer) DisplayClusterHandler(w http.ResponseWriter, r *http.Request) 
 
 	tr := &TResponse{
 		TestID: testID,
+		Name:   "kubeconfig list",
+		Status: Succeed,
 	}
 
 	if testID == "" {
@@ -42,7 +44,6 @@ func (s *TServer) DisplayClusterHandler(w http.ResponseWriter, r *http.Request) 
 		tr.Error = fmt.Errorf("ID (%s) doesn't exist", testID).Error()
 	}
 
-	tr.Status = Succeed
 	tr.Details = c
 
 	fmt.Fprint(w, tr.String())

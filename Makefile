@@ -75,8 +75,14 @@ build-images:
 	@echo "build image"
 	@docker build -t ${IMAGE_NAME_AND_VERSION} .
 
+CONTAINER_NAME="e2e"
 run: gobuild build-images 
-	docker run -p 8765:8765 --env CONFIG="/e2etest/" --name e2e -d --rm applifecycle-backend-e2e
+	docker rm -f ${CONTAINER_NAME} || true
+	docker run -p 8765:8765 --name ${CONTAINER_NAME} -d --rm ${IMAGE_NAME_AND_VERSION}:latest
+	sleep 3
+	curl http://localhost:8765/cluster | head -n 10
+	curl http://localhost:8765/testcase | head -n 10
+	curl http://localhost:8765/expectation | head -n 10
 
 
 tag:

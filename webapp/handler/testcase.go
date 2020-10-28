@@ -176,7 +176,7 @@ func (s *TServer) cleanUp(testID string, applied []appliedCase) {
 
 func (s *TServer) ReloadTestCaseReg() {
 	s.mux.Lock()
-	newTc, err := e2e.LoadTestCases(s.defaultDir)
+	newTc, err := e2e.LoadTestCases(s.dataDir)
 	if err != nil {
 		return
 	}
@@ -192,13 +192,14 @@ func (s *TServer) DisplayTestCasesHandler(w http.ResponseWriter, r *http.Request
 	testID := r.URL.Query().Get("id")
 	w.Header().Set("Content-Type", "application/json")
 
-	if testID == "" {
-		tr := &TResponse{
-			TestID:  testID,
-			Name:    "test case list",
-			Details: s.testCases,
-		}
+	tr := &TResponse{
+		TestID: testID,
+		Name:   "test case list",
+		Status: Succeed,
+	}
 
+	if testID == "" {
+		tr.Details = s.testCases
 		fmt.Fprint(w, tr.String())
 
 		return
@@ -206,21 +207,14 @@ func (s *TServer) DisplayTestCasesHandler(w http.ResponseWriter, r *http.Request
 
 	c, ok := s.testCases[testID]
 	if !ok {
-		tr := &TResponse{
-			TestID: testID,
-			Status: Fialed,
-			Error:  fmt.Errorf("ID (%s) doesn't exist", testID).Error(),
-		}
+		tr.Status = Fialed
+		tr.Error = fmt.Errorf("ID (%s) doesn't exist", testID).Error()
 
 		fmt.Fprint(w, tr.String())
 		return
 	}
 
-	tr := &TResponse{
-		TestID:  testID,
-		Status:  Succeed,
-		Details: c,
-	}
+	tr.Details = c
 
 	fmt.Fprint(w, tr.String())
 

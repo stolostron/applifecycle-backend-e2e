@@ -12,8 +12,12 @@ import (
 )
 
 const (
-	defaultPort = ":8765"
-	defaultDir  = "CONFIG"
+	defaultPort    = ":8765"
+	defaultCfgDir  = "default-kubeconfigs"
+	defaultDataDir = "default-e2e-test-data"
+
+	CONFIG_PATH = "CONFIGS"
+	DATA_PATH   = "E2E_DATA"
 )
 
 var LogLevel int
@@ -31,14 +35,21 @@ func main() {
 	flag.Parse()
 
 	logger := klogr.New().V(LogLevel)
-	dPath := os.Getenv(defaultDir)
-	if dPath == "" {
-		log.Fatal(fmt.Errorf("failed to get the default dir ENV %s", defaultDir))
+	cfgPath := os.Getenv(CONFIG_PATH)
+	if cfgPath == "" {
+		logger.Error(fmt.Errorf("failed to get the default dir ENV %s", CONFIG_PATH), fmt.Sprintf("will use default %s", defaultCfgDir))
+		cfgPath = defaultCfgDir
 	}
 
-	s, err := handler.NewTSever(dPath, logger)
+	dataPath := os.Getenv(DATA_PATH)
+	if dataPath == "" {
+		logger.Error(fmt.Errorf("failed to get the default dir ENV %s", DATA_PATH), fmt.Sprintf("will use default %s", defaultDataDir))
+		dataPath = defaultDataDir
+	}
+
+	s, err := handler.NewTSever(cfgPath, dataPath, logger)
 	if err != nil {
-		log.Fatal(fmt.Sprintf("failed to create test sever, err: %w", err))
+		log.Fatal(fmt.Sprintf("failed to create test sever, err: %v", err))
 	}
 
 	http.HandleFunc("/run", s.TestCasesRunnerHandler)

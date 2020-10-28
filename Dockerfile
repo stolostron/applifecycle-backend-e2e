@@ -4,7 +4,10 @@ FROM golang
 
 # Copy the local package files to the container's workspace.
 COPY build/_output/bin/applifecycle-backend-e2e /go/bin/applifecycle-backend-e2e
-COPY e2etest /e2etest
+
+# Copy default data to the binary level in the container
+COPY default-kubeconfigs default-kubeconfigs
+COPY default-e2e-test-data default-e2e-test-data
 
 RUN curl -LO https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl
 
@@ -12,7 +15,6 @@ RUN chmod +x ./kubectl
 RUN mv ./kubectl /usr/local/bin
 
 
-# Run the outyet command by default when the container starts.
 ENTRYPOINT /go/bin/applifecycle-backend-e2e
 
 # Document that the service listens on port 8765.
