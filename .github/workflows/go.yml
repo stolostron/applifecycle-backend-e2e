@@ -31,6 +31,3 @@ jobs:
 
     - name: Build
       run: make gobuild
-
-    - name: Test
-      run: make local-e2e
