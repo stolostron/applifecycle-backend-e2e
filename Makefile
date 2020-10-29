@@ -61,9 +61,7 @@ default::
 
 
 gobuild:
-	@echo "gobuild"
-	@echo ${GOOS}, ${GOARCH}
-	
+	@echo "gobuild the test server binary"
 	# create the directory for hosting the go binary
 	mkdir -p build/_output/bin
 	@GOOS=${GOOS} GOARCH=${GOARCH} go build -ldflags="-w -s" -o build/_output/bin/$(IMG)
@@ -80,9 +78,6 @@ run: gobuild build-images
 	curl http://localhost:8765/cluster | head -n 10
 	curl http://localhost:8765/testcase | head -n 10
 	curl http://localhost:8765/expectation | head -n 10
-
-local-e2e: gobuild
-	build/test-e2e.sh
 
 e2e: gobuild
 	build/test-e2e.sh
