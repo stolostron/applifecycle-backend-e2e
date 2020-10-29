@@ -12,6 +12,7 @@ import (
 )
 
 const (
+	defaultIP      = "localhost"
 	defaultPort    = ":8765"
 	defaultCfgDir  = "default-kubeconfigs"
 	defaultDataDir = "default-e2e-test-data"
@@ -49,7 +50,8 @@ func main() {
 
 	s, err := handler.NewTSever(cfgPath, dataPath, logger)
 	if err != nil {
-		log.Fatal(fmt.Sprintf("failed to create test sever, err: %v", err))
+		//		log.Fatal(fmt.Sprintf("failed to create test sever, err: %v", err))
+		fmt.Printf("izhang ======  main err = %+v\n", err)
 	}
 
 	http.HandleFunc("/run", s.TestCasesRunnerHandler)
@@ -58,5 +60,6 @@ func main() {
 	http.HandleFunc("/testcase", s.DisplayTestCasesHandler)
 	http.HandleFunc("/expectation", s.DisplayExpectationHandler)
 
-	log.Fatal(http.ListenAndServe(defaultPort, nil))
+	addr := fmt.Sprintf("%s%s", defaultIP, defaultPort)
+	log.Fatal(http.ListenAndServe(addr, nil))
 }
