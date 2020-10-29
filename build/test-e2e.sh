@@ -2,11 +2,7 @@
 set -e
 echo "e2e TEST"
 # need to find a way to use the Makefile to set these
-REGISTRY=quay.io/open-cluster-management
 IMG=$(cat COMPONENT_NAME 2> /dev/null)
-IMAGE_NAME=${REGISTRY}/${IMG}
-COMPONENT_VERSION=$(cat COMPONENT_VERSION 2> /dev/null)
-BUILD_IMAGE=${IMAGE_NAME}:latest
 
 if [ "$TRAVIS_BUILD" != 1 ]; then
     echo "Build is on Travis" 
@@ -15,22 +11,20 @@ if [ "$TRAVIS_BUILD" != 1 ]; then
     # Download and install kubectl
     curl -LO https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl && chmod +x kubectl && sudo mv kubectl /usr/local/bin/
 
-    BUILD_IMAGE=${IMAGE_NAME}:${COMPONENT_VERSION}${COMPONENT_TAG_EXTENSION}
+    echo -e "\nDownload and install KinD\n"
+    GO111MODULE=on go get sigs.k8s.io/kind
 
-    echo -e "BUILD_IMAGE tag $BUILD_IMAGE\n"
-
-    docker login -u ${DOCKER_USER} -p ${DOCKER_PASS} quay.io
-    if [[ "$(docker image inspect $BUILD_IMAGE 2> /dev/null)" == "" ]]; then
-        echo "pull image from source"
-        docker pull ${BUILD_IMAGE}
+    kind create cluster
+    if [ $? != 0 ]; then
+            exit $?;
     fi
+    sleep 15
+
 fi
 
-echo -e "\ndelete the running container: ${CONTAINER_NAME} if exist"
-docker rm -f ${CONTAINER_NAME} || true
+kind get kubeconfig > default-kubeconfigs/hub
 
-echo -e "\nrun a new container ${CONTAINER_NAME} with the update iamge: ${BUILD_IMAGE}\n"
-docker run -p 8765:8765 --name ${CONTAINER_NAME} -d --rm ${BUILD_IMAGE}
+./build/_output/bin/${IMG} &
 
 sleep 10
 curl http://localhost:8765/cluster | head -n 10

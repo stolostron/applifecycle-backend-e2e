@@ -39,7 +39,6 @@ func (b ByName) Match(clt client.Client, ep Expectation, logger logr.Logger) err
 	ins := ep.GetInstance()
 	key := ep.GetKey()
 
-	fmt.Printf("izhang ======  clt = %+v\n", clt)
 	if err := clt.Get(context.TODO(), key, ins); err != nil {
 		return gerr.Wrapf(err, "failed to get instance %s/%s of kind %s", ep.Namepsace, ep.Name, ep.Kind)
 	}

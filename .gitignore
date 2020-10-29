@@ -16,3 +16,4 @@
 bin
 .build-harness-bootstrap
 _output
+.DS_Store

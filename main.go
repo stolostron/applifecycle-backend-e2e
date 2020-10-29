@@ -5,14 +5,12 @@ import (
 	"fmt"
 	"log"
 	"net/http"
-	"os"
 
 	"github.com/open-cluster-management/applifecycle-backend-e2e/webapp/handler"
 	"k8s.io/klog/v2/klogr"
 )
 
 const (
-	defaultIP      = "localhost"
 	defaultPort    = ":8765"
 	defaultCfgDir  = "default-kubeconfigs"
 	defaultDataDir = "default-e2e-test-data"
@@ -22,6 +20,8 @@ const (
 )
 
 var LogLevel int
+var configPath string
+var dataPath string
 
 func init() {
 	flag.IntVar(
@@ -30,28 +30,30 @@ func init() {
 		1,
 		"The interval of housekeeping in seconds.",
 	)
+
+	flag.StringVar(
+		&configPath,
+		"cfg",
+		defaultCfgDir,
+		"the path to clusters config files",
+	)
+
+	flag.StringVar(
+		&dataPath,
+		"data",
+		defaultDataDir,
+		"the path to clusters config files",
+	)
 }
 
 func main() {
 	flag.Parse()
 
 	logger := klogr.New().V(LogLevel)
-	cfgPath := os.Getenv(CONFIG_PATH)
-	if cfgPath == "" {
-		logger.Error(fmt.Errorf("failed to get the default dir ENV %s", CONFIG_PATH), fmt.Sprintf("will use default %s", defaultCfgDir))
-		cfgPath = defaultCfgDir
-	}
 
-	dataPath := os.Getenv(DATA_PATH)
-	if dataPath == "" {
-		logger.Error(fmt.Errorf("failed to get the default dir ENV %s", DATA_PATH), fmt.Sprintf("will use default %s", defaultDataDir))
-		dataPath = defaultDataDir
-	}
-
-	s, err := handler.NewTSever(cfgPath, dataPath, logger)
+	s, err := handler.NewTSever(configPath, dataPath, logger)
 	if err != nil {
-		//		log.Fatal(fmt.Sprintf("failed to create test sever, err: %v", err))
-		fmt.Printf("izhang ======  main err = %+v\n", err)
+		log.Fatal(fmt.Sprintf("failed to create test sever, err: %v", err))
 	}
 
 	http.HandleFunc("/run", s.TestCasesRunnerHandler)
@@ -60,6 +62,5 @@ func main() {
 	http.HandleFunc("/testcase", s.DisplayTestCasesHandler)
 	http.HandleFunc("/expectation", s.DisplayExpectationHandler)
 
-	addr := fmt.Sprintf("%s%s", defaultIP, defaultPort)
-	log.Fatal(http.ListenAndServe(addr, nil))
+	log.Fatal(http.ListenAndServe(defaultPort, nil))
 }

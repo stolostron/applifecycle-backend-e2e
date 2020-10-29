@@ -68,7 +68,7 @@ gobuild:
 	mkdir -p build/_output/bin
 	@GOOS=linux GOARCH=amd64 go build -ldflags="-w -s" -o build/_output/bin/$(IMG)
 
-local:
+localbuild:
 	@GOOS=darwin go build -o build/_output/bin
 
 build-images: gobuild
@@ -84,10 +84,10 @@ run: gobuild build-images
 	curl http://localhost:8765/testcase | head -n 10
 	curl http://localhost:8765/expectation | head -n 10
 
-local-e2e: gobuild build-images
+local-e2e: localbuild
 	build/test-e2e.sh
 
-e2e:
+e2e: gobuild
 	build/test-e2e.sh
 
 tag:

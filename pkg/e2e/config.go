@@ -33,7 +33,6 @@ func LoadKubeConfigs(dir string) (KubeConfigs, error) {
 	// use the current context in kubeconfig
 	files, err := ioutil.ReadDir(dir)
 
-	fmt.Printf("izhang ====== read_dir  err = %+v\n", err)
 	if err != nil {
 		return KubeConfigs{}, err
 	}
@@ -46,9 +45,7 @@ func LoadKubeConfigs(dir string) (KubeConfigs, error) {
 	out := KubeConfigs{}
 	for _, file := range files {
 		p := fmt.Sprintf("%s/%s", dir, file.Name())
-		fmt.Printf("izhang ======  p = %+v\n", p)
 		cfg, err := clientcmd.BuildConfigFromFlags("", p)
-		fmt.Printf("izhang ======  cfg %+v\n err = %+v\n", cfg, err)
 		if err != nil {
 			return out, err
 		}
@@ -62,8 +59,6 @@ func LoadKubeConfigs(dir string) (KubeConfigs, error) {
 		if err != nil {
 			return out, err
 		}
-
-		fmt.Printf("izhang ======  err = %+v\n", err)
 
 		out[file.Name()] = &ConfigUnit{Clt: clt, CfgDir: p}
 	}
