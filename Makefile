@@ -62,14 +62,11 @@ default::
 
 gobuild:
 	@echo "gobuild"
-	@echo ${TRAVIS_BUILD_DIR}
+	@echo ${GOOS}, ${GOARCH}
 	
 	# create the directory for hosting the go binary
 	mkdir -p build/_output/bin
-	@GOOS=linux GOARCH=amd64 go build -ldflags="-w -s" -o build/_output/bin/$(IMG)
-
-localbuild:
-	@GOOS=darwin go build -o build/_output/bin
+	@GOOS=${GOOS} GOARCH=${GOARCH} go build -ldflags="-w -s" -o build/_output/bin/$(IMG)
 
 build-images: gobuild
 	@echo "build image"
@@ -84,7 +81,7 @@ run: gobuild build-images
 	curl http://localhost:8765/testcase | head -n 10
 	curl http://localhost:8765/expectation | head -n 10
 
-local-e2e: localbuild
+local-e2e: gobuild
 	build/test-e2e.sh
 
 e2e: gobuild
