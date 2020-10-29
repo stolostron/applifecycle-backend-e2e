@@ -19,7 +19,7 @@ const (
 	pullInterval = time.Second * 5
 )
 
-type TServer struct {
+type Processor struct {
 	mux          *sync.Mutex
 	delay        func(time.Duration)
 	cfgDir       string
@@ -32,7 +32,7 @@ type TServer struct {
 	set          map[string]struct{}
 }
 
-func NewTSever(cfgDir, dataDir string, logger logr.Logger) (*TServer, error) {
+func NewProcessor(cfgDir, dataDir string, logger logr.Logger) (*Processor, error) {
 	cfg, err := e2e.LoadKubeConfigs(cfgDir)
 	if err != nil {
 		return nil, err
@@ -49,7 +49,7 @@ func NewTSever(cfgDir, dataDir string, logger logr.Logger) (*TServer, error) {
 		return nil, err
 	}
 
-	return &TServer{
+	return &Processor{
 		mux:          &sync.Mutex{},
 		delay:        time.Sleep,
 		cfgDir:       cfgDir,

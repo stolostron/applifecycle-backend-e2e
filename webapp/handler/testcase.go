@@ -22,7 +22,7 @@ type appliedCase struct {
 	cfg string
 }
 
-func (s *TServer) applyTestCases(testID string, tc e2e.TestCases) ([]appliedCase, error) {
+func (s *Processor) applyTestCases(testID string, tc e2e.TestCases) ([]appliedCase, error) {
 	applied := []appliedCase{}
 	for _, c := range tc {
 		cUnit, ok := s.configs[c.TargetCluster]
@@ -64,7 +64,7 @@ func processResource(tURL, kCfgDir string, subCmd ocCommand) error {
 	return nil
 }
 
-func (s *TServer) TestCasesRunnerHandler(w http.ResponseWriter, r *http.Request) {
+func (s *Processor) TestCasesRunnerHandler(w http.ResponseWriter, r *http.Request) {
 	testID := r.URL.Query().Get("id")
 
 	s.logger.V(0).Info(fmt.Sprintf("Start running %s", testID))
@@ -134,7 +134,7 @@ func (s *TServer) TestCasesRunnerHandler(w http.ResponseWriter, r *http.Request)
 	return
 }
 
-func (s *TServer) continuousCheck(testID string) *TResponse {
+func (s *Processor) continuousCheck(testID string) *TResponse {
 	ticker := time.NewTicker(pullInterval)
 	timeOut := time.After(pullInterval * 3)
 
@@ -157,7 +157,7 @@ timoutLoop:
 	return &TResponse{TestID: testID, Status: Fialed, Error: out}
 }
 
-func (s *TServer) cleanUp(testID string, applied []appliedCase) {
+func (s *Processor) cleanUp(testID string, applied []appliedCase) {
 	if applied != nil {
 		for _, e := range applied {
 			if err := processResource(e.tc.URL, e.cfg, Delete); err != nil {
@@ -174,7 +174,7 @@ func (s *TServer) cleanUp(testID string, applied []appliedCase) {
 	return
 }
 
-func (s *TServer) ReloadTestCaseReg() {
+func (s *Processor) ReloadTestCaseReg() {
 	s.mux.Lock()
 	newTc, err := e2e.LoadTestCases(s.dataDir)
 	if err != nil {
@@ -186,7 +186,7 @@ func (s *TServer) ReloadTestCaseReg() {
 	s.mux.Unlock()
 }
 
-func (s *TServer) DisplayTestCasesHandler(w http.ResponseWriter, r *http.Request) {
+func (s *Processor) DisplayTestCasesHandler(w http.ResponseWriter, r *http.Request) {
 	s.ReloadTestCaseReg()
 
 	testID := r.URL.Query().Get("id")

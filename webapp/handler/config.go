@@ -7,7 +7,7 @@ import (
 	"github.com/open-cluster-management/applifecycle-backend-e2e/pkg/e2e"
 )
 
-func (s *TServer) ReloadClusterReg() {
+func (s *Processor) ReloadClusterReg() {
 	s.mux.Lock()
 	cfgs, err := e2e.LoadKubeConfigs(s.cfgDir)
 	if err != nil {
@@ -19,7 +19,7 @@ func (s *TServer) ReloadClusterReg() {
 	s.mux.Unlock()
 }
 
-func (s *TServer) DisplayClusterHandler(w http.ResponseWriter, r *http.Request) {
+func (s *Processor) DisplayClusterHandler(w http.ResponseWriter, r *http.Request) {
 	s.ReloadClusterReg()
 
 	testID := r.URL.Query().Get("id")

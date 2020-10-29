@@ -7,7 +7,7 @@ import (
 	"github.com/open-cluster-management/applifecycle-backend-e2e/pkg/e2e"
 )
 
-func (s *TServer) dispatchExpectation(testID string, exps e2e.Expectations) (*TResponse, error) {
+func (s *Processor) dispatchExpectation(testID string, exps e2e.Expectations) (*TResponse, error) {
 	s.logger.Info(fmt.Sprintf("running test id %s", testID))
 
 	tr := &TResponse{
@@ -59,7 +59,7 @@ func (s *TServer) dispatchExpectation(testID string, exps e2e.Expectations) (*TR
 	return tr, err
 }
 
-func (s *TServer) ExpectationCheckerHandler(w http.ResponseWriter, r *http.Request) {
+func (s *Processor) ExpectationCheckerHandler(w http.ResponseWriter, r *http.Request) {
 	// make sure we can dynamically change the expectations records when the
 	// endpoint is called
 	tr := &TResponse{
@@ -106,7 +106,7 @@ func (s *TServer) ExpectationCheckerHandler(w http.ResponseWriter, r *http.Reque
 	return
 }
 
-func (s *TServer) ReloadExpectationReg() {
+func (s *Processor) ReloadExpectationReg() {
 	s.mux.Lock()
 
 	newExps, err := s.expectations.Load(s.dataDir)
@@ -118,7 +118,7 @@ func (s *TServer) ReloadExpectationReg() {
 	s.mux.Unlock()
 }
 
-func (s *TServer) DisplayExpectationHandler(w http.ResponseWriter, r *http.Request) {
+func (s *Processor) DisplayExpectationHandler(w http.ResponseWriter, r *http.Request) {
 	s.ReloadExpectationReg()
 
 	tr := &TResponse{Name: "expectations list"}

@@ -1,10 +1,15 @@
 package main
 
 import (
+	"context"
 	"flag"
 	"fmt"
 	"log"
 	"net/http"
+	"os"
+	"os/signal"
+	"syscall"
+	"time"
 
 	"github.com/open-cluster-management/applifecycle-backend-e2e/webapp/handler"
 	"k8s.io/klog/v2/klogr"
@@ -51,16 +56,44 @@ func main() {
 
 	logger := klogr.New().V(LogLevel)
 
-	s, err := handler.NewTSever(configPath, dataPath, logger)
+	p, err := handler.NewProcessor(configPath, dataPath, logger)
 	if err != nil {
 		log.Fatal(fmt.Sprintf("failed to create test sever, err: %v", err))
 	}
 
-	http.HandleFunc("/run", s.TestCasesRunnerHandler)
-	http.HandleFunc("/result", s.ExpectationCheckerHandler)
-	http.HandleFunc("/cluster", s.DisplayClusterHandler)
-	http.HandleFunc("/testcase", s.DisplayTestCasesHandler)
-	http.HandleFunc("/expectation", s.DisplayExpectationHandler)
+	done := make(chan os.Signal, 1)
+	signal.Notify(done, os.Interrupt, syscall.SIGINT, syscall.SIGTERM)
 
-	log.Fatal(http.ListenAndServe(defaultPort, nil))
+	http.HandleFunc("/run", p.TestCasesRunnerHandler)
+	http.HandleFunc("/result", p.ExpectationCheckerHandler)
+	http.HandleFunc("/cluster", p.DisplayClusterHandler)
+	http.HandleFunc("/testcase", p.DisplayTestCasesHandler)
+	http.HandleFunc("/expectation", p.DisplayExpectationHandler)
+
+	srv := &http.Server{
+		Addr: defaultPort,
+	}
+
+	go func() {
+		if err := srv.ListenAndServe(); err != nil && err != http.ErrServerClosed {
+			log.Fatalf("listen: %s\n", err)
+		}
+	}()
+
+	log.Print("Server Started")
+
+	<-done
+	log.Print("Server Stopped")
+
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer func() {
+		// extra handling here
+		cancel()
+	}()
+
+	if err := srv.Shutdown(ctx); err != nil {
+		log.Fatalf("Server Shutdown Failed:%+v", err)
+	}
+
+	log.Print("Server Exited Properly")
 }

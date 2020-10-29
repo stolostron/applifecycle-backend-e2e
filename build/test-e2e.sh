@@ -31,3 +31,6 @@ curl http://localhost:8765/cluster | head -n 10
 curl http://localhost:8765/testcase | head -n 10
 curl http://localhost:8765/expectation | head -n 10
 
+
+echo "terminate the test server"
+ps aux | grep ${IMG} | grep -v 'grep' | awk '{print $2}' | xargs kill -9
