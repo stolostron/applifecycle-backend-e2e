@@ -16,7 +16,7 @@ import (
 )
 
 const (
-	defaultPort    = ":8765"
+	defaultAddr    = "localhost:8765"
 	defaultCfgDir  = "default-kubeconfigs"
 	defaultDataDir = "default-e2e-test-data"
 
@@ -71,7 +71,7 @@ func main() {
 	http.HandleFunc("/expectation", p.DisplayExpectationHandler)
 
 	srv := &http.Server{
-		Addr: defaultPort,
+		Addr: defaultAddr,
 	}
 
 	go func() {
