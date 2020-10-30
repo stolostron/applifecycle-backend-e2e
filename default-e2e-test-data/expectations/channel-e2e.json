@@ -110,7 +110,7 @@
 		"apiversion": "apps.open-cluster-management.io/v1",
 		"kind": "deployable",
 		"name": "payload-cfg-obj-channel",
-		"namespace": "ch-obj",
+		"namespace": "ch-ns",
 		"matcher": "byannotationcount",
 		"args": {
             "apps.open-cluster-management.io/hosting-deployable": "default/payload-cfg-namespace-channel",
