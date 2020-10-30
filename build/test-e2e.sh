@@ -30,6 +30,8 @@ sleep 10
 curl http://localhost:8765/cluster | head -n 10
 curl http://localhost:8765/testcase | head -n 10
 curl http://localhost:8765/expectation | head -n 10
+curl http://localhost:8765/testcase?id=chn-001 | head -n 10
+curl http://localhost:8765/expectation?id=chn-001 | head -n 10
 
 
 echo "terminate the test server"
