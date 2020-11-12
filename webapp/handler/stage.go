@@ -33,12 +33,14 @@ func (s *Processor) StageRunnerHandler(w http.ResponseWriter, r *http.Request) {
 	if ID == "" {
 		tr.Details = s.stages
 		tr.Error = fmt.Errorf("stage group ID is not defined, checkout details for avaliable stages").Error()
-		tr.Status = Fialed
+		tr.Status = Failed
 		fmt.Fprint(w, tr.String())
 		return
 	}
 
-	rsp := s.Run(ID, 10*time.Second, s.DefaultRunner, s.DefaultChecker, s.DefaultCleaner)
+	tr = s.Run(ID, 10*time.Second, s.DefaultRunner, s.DefaultChecker, s.DefaultCleaner)
+
+	fmt.Fprint(w, tr.String())
 }
 
 func (s *Processor) DisplayStagesHandler(w http.ResponseWriter, r *http.Request) {
@@ -62,7 +64,7 @@ func (s *Processor) DisplayStagesHandler(w http.ResponseWriter, r *http.Request)
 
 	c, ok := s.stages[ID]
 	if !ok {
-		tr.Status = Fialed
+		tr.Status = Failed
 		tr.Error = fmt.Errorf("ID (%s) doesn't exist", ID).Error()
 
 		fmt.Fprint(w, tr.String())
@@ -113,7 +115,7 @@ func (st *Processor) Run(groupID string, timeout time.Duration, run runner, chec
 
 		if err != nil {
 			rsp.Error = err.Error()
-			rsp.Status = Fialed
+			rsp.Status = Failed
 			return rsp
 		}
 	}
@@ -169,7 +171,7 @@ timoutLoop:
 	}
 
 	out := "failed to successfully check all the expectations due to timeout"
-	return &TResponse{TestID: testID, Status: Fialed, Error: out}, nil
+	return &TResponse{TestID: testID, Status: Failed, Error: out}, nil
 }
 
 func (s *Processor) DefaultCleaner(applied AppliedCase) {

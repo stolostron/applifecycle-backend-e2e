@@ -14,7 +14,7 @@ const (
 	defaultPort  = ":8765"
 	Unknown      = "unknown"
 	Succeed      = "succeed"
-	Fialed       = "failed"
+	Failed       = "failed"
 	InfoLevel    = 0
 	DebugLevel   = 1
 	pullInterval = time.Second * 5

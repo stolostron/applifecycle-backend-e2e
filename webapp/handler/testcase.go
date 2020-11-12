@@ -98,7 +98,7 @@ func (s *Processor) TestCasesRunnerHandler(w http.ResponseWriter, r *http.Reques
 	//make sure unique id is running
 	_, ok := s.set[testID]
 	if ok {
-		tr.Status = Fialed
+		tr.Status = Failed
 		tr.Details = fmt.Sprintf("the request test case (%s) is running", testID)
 		fmt.Fprint(w, tr.String())
 
@@ -109,7 +109,7 @@ func (s *Processor) TestCasesRunnerHandler(w http.ResponseWriter, r *http.Reques
 
 	c, ok := s.testCases[testID]
 	if !ok {
-		tr.Status = Fialed
+		tr.Status = Failed
 		err = fmt.Errorf("ID (%s) doesn't exist", testID)
 		tr.Error = err.Error()
 
@@ -122,7 +122,7 @@ func (s *Processor) TestCasesRunnerHandler(w http.ResponseWriter, r *http.Reques
 	defer s.cleanUp(testID, applied)
 
 	if err != nil {
-		tr.Status = Fialed
+		tr.Status = Failed
 		tr.Error = err.Error()
 		return
 	}
@@ -154,7 +154,7 @@ timoutLoop:
 	}
 
 	out := "failed to successfully check all the expectations due to timeout"
-	return &TResponse{TestID: testID, Status: Fialed, Error: out}
+	return &TResponse{TestID: testID, Status: Failed, Error: out}
 }
 
 func (s *Processor) cleanUp(testID string, applied []AppliedCase) {
@@ -207,7 +207,7 @@ func (s *Processor) DisplayTestCasesHandler(w http.ResponseWriter, r *http.Reque
 
 	c, ok := s.testCases[testID]
 	if !ok {
-		tr.Status = Fialed
+		tr.Status = Failed
 		tr.Error = fmt.Errorf("ID (%s) doesn't exist", testID).Error()
 
 		fmt.Fprint(w, tr.String())
