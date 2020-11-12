@@ -11,8 +11,9 @@ import (
 	"syscall"
 	"time"
 
+	"github.com/go-logr/zapr"
 	"github.com/open-cluster-management/applifecycle-backend-e2e/webapp/handler"
-	"k8s.io/klog/v2/klogr"
+	"go.uber.org/zap"
 )
 
 const (
@@ -54,11 +55,17 @@ func init() {
 func main() {
 	flag.Parse()
 
-	logger := klogr.New().V(LogLevel)
+	zapLog, err := zap.NewDevelopment(zap.AddCaller())
+	if err != nil {
+		panic(fmt.Sprintf("who watches the watchmen (%v)?", err))
+	}
+
+	logger := zapr.NewLogger(zapLog)
 
 	p, err := handler.NewProcessor(configPath, dataPath, logger)
 	if err != nil {
-		log.Fatal(fmt.Sprintf("failed to create test sever, err: %v", err))
+		logger.Error(err, "failed to create test sever")
+		os.Exit(2)
 	}
 
 	done := make(chan os.Signal, 1)

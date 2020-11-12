@@ -1,0 +1,46 @@
+[
+{
+		"test_id": "release-001",
+		"target_cluster": "hub",
+		"desc": "should have a helmrelease on hub",
+		"apiversion": "apps.open-cluster-management.io/v1",
+		"kind": "HelmRelease",
+		"name": "guestbook-010",
+		"namespace": "helmrelease-test",
+		"matcher": "byname",
+		"args": {}
+	},
+{
+		"test_id": "release-001",
+		"target_cluster": "hub",
+		"desc": "should have a frontend deployment on hub",
+		"apiversion": "apps/v1",
+		"kind": "deployment",
+		"name": "guestbook-010-gbapp-frontend",
+		"namespace": "helmrelease-test",
+		"matcher": "byname",
+		"args": {}
+	},
+{
+		"test_id": "release-001",
+		"target_cluster": "hub",
+		"desc": "should have a master deployment on hub",
+		"apiversion": "apps/v1",
+		"kind": "deployment",
+		"name": "guestbook-010-gbapp-redis-master",
+		"namespace": "helmrelease-test",
+		"matcher": "byname",
+		"args": {}
+	},
+{
+		"test_id": "release-001",
+		"target_cluster": "hub",
+		"desc": "should have a slave deployment on hub",
+		"apiversion": "apps/v1",
+		"kind": "deployment",
+		"name": "guestbook-010-gbapp-redis-slave",
+		"namespace": "helmrelease-test",
+		"matcher": "byname",
+		"args": {}
+	}
+]

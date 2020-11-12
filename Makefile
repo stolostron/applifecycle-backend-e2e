@@ -46,16 +46,6 @@ endif
 GITHUB_USER := $(shell echo $(GITHUB_USER) | sed 's/@/%40/g')
 GITHUB_TOKEN ?=
 
-USE_VENDORIZED_BUILD_HARNESS ?=
-
-ifndef USE_VENDORIZED_BUILD_HARNESS
-	ifeq ($(TRAVIS_BUILD),1)
-	-include $(shell curl -H 'Authorization: token ${GITHUB_TOKEN}' -H 'Accept: application/vnd.github.v4.raw' -L https://api.github.com/repos/open-cluster-management/build-harness-extensions/contents/templates/Makefile.build-harness-bootstrap -o .build-harness-bootstrap; echo .build-harness-bootstrap)
-	endif
-else
--include vbh/.build-harness-vendorized
-endif
-
 default::
 	@echo "Build Harness Bootstrapped"
 
@@ -72,9 +62,10 @@ build-images: gobuild
 
 export CONTAINER_NAME=$(shell echo "e2e")
 run: gobuild build-images 
+	kind get kubeconfig > default-kubeconfigs/hub
 	docker rm -f ${CONTAINER_NAME} || true
 	docker run -p 8765:8765 --name ${CONTAINER_NAME} -d --rm ${IMAGE_NAME_AND_VERSION}:latest
-	sleep 3
+	sleep 10
 	curl http://localhost:8765/cluster | head -n 10
 	curl http://localhost:8765/testcase | head -n 10
 	curl http://localhost:8765/expectation | head -n 10
