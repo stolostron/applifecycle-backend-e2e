@@ -74,7 +74,7 @@ func main() {
 	// run is used by operators
 	http.HandleFunc("/run", p.TestCasesRunnerHandler)
 	http.HandleFunc("/run/stage", p.StageRunnerHandler)
-	http.HandleFunc("/result", p.ExpectationCheckerHandler)
+	http.HandleFunc("/results", p.ExpectationCheckerHandler)
 	http.HandleFunc("/clusters", p.DisplayClusterHandler)
 	http.HandleFunc("/testcases", p.DisplayTestCasesHandler)
 	http.HandleFunc("/expectations", p.DisplayExpectationHandler)

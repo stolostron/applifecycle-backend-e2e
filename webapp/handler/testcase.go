@@ -81,16 +81,17 @@ func (s *Processor) TestCasesRunnerHandler(w http.ResponseWriter, r *http.Reques
 	defer func() {
 		if err != nil {
 			s.logger.Error(err, "failed on running test")
+			tr.Error = err.Error()
 		}
 		s.logger.V(0).Info(fmt.Sprintf("DONE servering %s!", testID))
+
+		fmt.Fprint(w, tr.String())
 	}()
 
 	if testID == "" {
 		tr.Status = Unknown
 		err = fmt.Errorf("unknow id (%s)", testID)
 		tr.Error = err.Error()
-
-		fmt.Fprint(w, tr.String())
 
 		return
 	}
@@ -107,19 +108,17 @@ func (s *Processor) TestCasesRunnerHandler(w http.ResponseWriter, r *http.Reques
 
 	s.set[testID] = struct{}{}
 
-	c, ok := s.testCases[testID]
+	_, ok = s.testCases[testID]
 	if !ok {
 		tr.Status = Failed
 		err = fmt.Errorf("ID (%s) doesn't exist", testID)
 		tr.Error = err.Error()
 
-		fmt.Fprint(w, tr.String())
-
 		return
 	}
 
-	applied, err := s.applyTestCases(testID, e2e.TestCases{c})
-	defer s.cleanUp(testID, applied)
+	applied, err := s.DefaultRunner(testID, s.testCases)
+	defer s.DefaultCleaner(applied)
 
 	if err != nil {
 		tr.Status = Failed
@@ -127,9 +126,7 @@ func (s *Processor) TestCasesRunnerHandler(w http.ResponseWriter, r *http.Reques
 		return
 	}
 
-	tr = s.continuousCheck(testID)
-
-	fmt.Fprint(w, tr.String())
+	tr, _ = s.DefaultChecker(testID, pullInterval*3, s.expectations)
 
 	return
 }

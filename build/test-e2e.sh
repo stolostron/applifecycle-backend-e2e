@@ -27,11 +27,11 @@ kind get kubeconfig > default-kubeconfigs/hub
 ./build/_output/bin/${IMG} &
 
 sleep 10
-curl http://localhost:8765/cluster | head -n 10
-curl http://localhost:8765/testcase | head -n 10
-curl http://localhost:8765/expectation | head -n 10
-curl http://localhost:8765/testcase?id=chn-001 | head -n 10
-curl http://localhost:8765/expectation?id=chn-001 | head -n 10
+curl http://localhost:8765/clusters | head -n 10
+curl http://localhost:8765/testcases | head -n 10
+curl http://localhost:8765/expectations | head -n 10
+curl http://localhost:8765/testcases?id=chn-001 | head -n 10
+curl http://localhost:8765/expectations?id=chn-001 | head -n 10
 
 
 echo "terminate the test server"

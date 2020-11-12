@@ -22,7 +22,6 @@ const (
 
 type Processor struct {
 	mux          *sync.Mutex
-	delay        func(time.Duration)
 	cfgDir       string
 	dataDir      string
 	configs      e2e.KubeConfigs
@@ -58,7 +57,6 @@ func NewProcessor(cfgDir, dataDir string, logger logr.Logger) (*Processor, error
 
 	return &Processor{
 		mux:          &sync.Mutex{},
-		delay:        time.Sleep,
 		cfgDir:       cfgDir,
 		dataDir:      dataDir,
 		configs:      cfg,
