@@ -13,6 +13,7 @@ import (
 const (
 	expDirSuffix      = "expectations"
 	testCaseDirSuffix = "testcases"
+	stagesDirSuffix   = "stages"
 )
 
 //TestCase contains an id and a ULR pointing to it's raw content
@@ -25,7 +26,7 @@ type TestCase struct {
 
 type TestCases []TestCase
 
-type TestCasesReg map[string]TestCases
+type TestCasesReg map[string]TestCase
 
 func LoadTestCases(dir string) (TestCasesReg, error) {
 	tDir := fmt.Sprintf("%s/%s", dir, testCaseDirSuffix)
@@ -52,7 +53,7 @@ func LoadTestCases(dir string) (TestCasesReg, error) {
 		}
 
 		for _, t := range *tc {
-			out[t.CaseID] = append(out[t.CaseID], t)
+			out[t.CaseID] = t
 		}
 	}
 

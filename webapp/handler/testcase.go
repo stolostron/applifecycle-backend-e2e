@@ -17,13 +17,13 @@ const (
 	Delete ocCommand = "delete"
 )
 
-type appliedCase struct {
-	tc  e2e.TestCase
-	cfg string
+type AppliedCase struct {
+	Tc  e2e.TestCase
+	Cfg string
 }
 
-func (s *Processor) applyTestCases(testID string, tc e2e.TestCases) ([]appliedCase, error) {
-	applied := []appliedCase{}
+func (s *Processor) applyTestCases(testID string, tc e2e.TestCases) ([]AppliedCase, error) {
+	applied := []AppliedCase{}
 	for _, c := range tc {
 		cUnit, ok := s.configs[c.TargetCluster]
 		if !ok {
@@ -37,7 +37,7 @@ func (s *Processor) applyTestCases(testID string, tc e2e.TestCases) ([]appliedCa
 			return applied, err
 		}
 
-		applied = append(applied, appliedCase{tc: c, cfg: kCfg})
+		applied = append(applied, AppliedCase{Tc: c, Cfg: kCfg})
 
 		s.logger.V(DebugLevel).Info(fmt.Sprintf("applyed %s of test case %s on cluster %s", c.Desc, testID, c.TargetCluster))
 	}
@@ -118,7 +118,7 @@ func (s *Processor) TestCasesRunnerHandler(w http.ResponseWriter, r *http.Reques
 		return
 	}
 
-	applied, err := s.applyTestCases(testID, c)
+	applied, err := s.applyTestCases(testID, e2e.TestCases{c})
 	defer s.cleanUp(testID, applied)
 
 	if err != nil {
@@ -157,15 +157,15 @@ timoutLoop:
 	return &TResponse{TestID: testID, Status: Fialed, Error: out}
 }
 
-func (s *Processor) cleanUp(testID string, applied []appliedCase) {
+func (s *Processor) cleanUp(testID string, applied []AppliedCase) {
 	if applied != nil {
 		for _, e := range applied {
-			if err := processResource(e.tc.URL, e.cfg, Delete); err != nil {
+			if err := processResource(e.Tc.URL, e.Cfg, Delete); err != nil {
 				s.logger.Error(err, fmt.Sprintf("failed to delete applied resource %s on cluster %s",
-					e.tc.Desc, e.tc.TargetCluster))
+					e.Tc.Desc, e.Tc.TargetCluster))
 			}
 
-			s.logger.Info(fmt.Sprintf("successfully deleted resource %s on cluster %s", e.tc.Desc, e.tc.TargetCluster))
+			s.logger.Info(fmt.Sprintf("successfully deleted resource %s on cluster %s", e.Tc.Desc, e.Tc.TargetCluster))
 		}
 	}
 

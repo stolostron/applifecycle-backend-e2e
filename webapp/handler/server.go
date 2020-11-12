@@ -28,6 +28,7 @@ type Processor struct {
 	configs      e2e.KubeConfigs
 	testCases    e2e.TestCasesReg
 	expectations e2e.ExpctationReg
+	stages       e2e.StageReg
 	getMatcher   func(string) e2e.Matcher
 	logger       logr.Logger
 	set          map[string]struct{}
@@ -50,6 +51,11 @@ func NewProcessor(cfgDir, dataDir string, logger logr.Logger) (*Processor, error
 		return nil, gerr.Wrap(err, "failed to load expectations")
 	}
 
+	stages, err := e2e.LoadStages(dataDir)
+	if err != nil {
+		return nil, gerr.Wrap(err, "failed to load test case")
+	}
+
 	return &Processor{
 		mux:          &sync.Mutex{},
 		delay:        time.Sleep,
@@ -58,6 +64,7 @@ func NewProcessor(cfgDir, dataDir string, logger logr.Logger) (*Processor, error
 		configs:      cfg,
 		testCases:    tCases,
 		expectations: exps,
+		stages:       stages,
 		getMatcher:   e2e.MatcherRouter,
 		logger:       logger,
 		set:          map[string]struct{}{},

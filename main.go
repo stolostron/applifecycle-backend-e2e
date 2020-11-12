@@ -71,11 +71,14 @@ func main() {
 	done := make(chan os.Signal, 1)
 	signal.Notify(done, os.Interrupt, syscall.SIGINT, syscall.SIGTERM)
 
+	// run is used by operators
 	http.HandleFunc("/run", p.TestCasesRunnerHandler)
+	http.HandleFunc("/run/stage", p.StageRunnerHandler)
 	http.HandleFunc("/result", p.ExpectationCheckerHandler)
-	http.HandleFunc("/cluster", p.DisplayClusterHandler)
-	http.HandleFunc("/testcase", p.DisplayTestCasesHandler)
-	http.HandleFunc("/expectation", p.DisplayExpectationHandler)
+	http.HandleFunc("/clusters", p.DisplayClusterHandler)
+	http.HandleFunc("/testcases", p.DisplayTestCasesHandler)
+	http.HandleFunc("/expectations", p.DisplayExpectationHandler)
+	http.HandleFunc("/stages", p.DisplayStagesHandler)
 
 	srv := &http.Server{
 		Addr: defaultAddr,

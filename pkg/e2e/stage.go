@@ -1,55 +1,51 @@
 package e2e
 
+import (
+	"encoding/json"
+	"fmt"
+	"io/ioutil"
+
+	gerr "github.com/pkg/errors"
+)
+
 type Stage struct {
-	groupID string `json:"groupid"`
-	order   int    `json:"run_order"`
-	caseID  string `json:"case_id"`
-	clean   string `json:"clean"`
+	GroupID string `json:"groupid"`
+	Order   int    `json:"run_order"`
+	CaseID  string `json:"case_id"`
+	Clean   string `json:"clean"`
 }
 
 type Stages []Stage
 
-type runner func(id string, tCases TestCasesReg) (rCase TestCase, err error)
-type cleaner func(tCase TestCase)
-type checker func(id string, exps ExpctationReg) error
+type StageReg map[string]Stages
 
-type StageReg struct {
-	group   map[string]Stages
-	caseReg TestCasesReg
-	expReg  ExpctationReg
-}
+func LoadStages(dir string) (StageReg, error) {
+	tDir := fmt.Sprintf("%s/%s", dir, stagesDirSuffix)
+	out := StageReg{}
 
-// we can provide a stage endpoint
-// each stage will link to a test unit run the stage in numeric order, if any
-// stage failed the will fail the test
+	files, err := ioutil.ReadDir(tDir)
+	if err != nil {
+		return out, err
+	}
 
-func (st *StageReg) Run(groupID string, run runner, check checker, clean cleaner) error {
-	a := TestCases{}
+	for _, file := range files {
+		p := fmt.Sprintf("%s/%s", tDir, file.Name())
 
-	defer func() {
-		for _, c := range a {
-			clean(c)
-		}
-	}()
-
-	for _, s := range st.group[groupID] {
-		applied, rerr := run(s.caseID, st.caseReg)
-		if rerr != nil {
-			return rerr
-		}
-
-		a = append(a, applied)
-
-		err := check(s.caseID, st.expReg)
-
-		if s.clean == "true" {
-			clean(applied)
-		}
-
+		c, err := ioutil.ReadFile(p)
 		if err != nil {
-			return err
+			return out, gerr.Wrapf(err, "failed to load test cases at file %s", p)
+		}
+
+		st := &Stages{}
+		err = json.Unmarshal(c, st)
+		if err != nil {
+			return out, gerr.Wrap(err, "failed to load test cases")
+		}
+
+		for _, t := range *st {
+			out[t.GroupID] = append(out[t.GroupID], t)
 		}
 	}
 
-	return nil
+	return out, nil
 }
