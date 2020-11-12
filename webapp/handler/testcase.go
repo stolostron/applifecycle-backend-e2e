@@ -39,7 +39,7 @@ func (s *Processor) applyTestCases(testID string, tc e2e.TestCases) ([]appliedCa
 
 		applied = append(applied, appliedCase{tc: c, cfg: kCfg})
 
-		s.logger.V(DebugLevel).Info("applyed %s of test case %s on cluster %s", c.Desc, testID, c.TargetCluster)
+		s.logger.V(DebugLevel).Info(fmt.Sprintf("applyed %s of test case %s on cluster %s", c.Desc, testID, c.TargetCluster))
 	}
 
 	return applied, nil
