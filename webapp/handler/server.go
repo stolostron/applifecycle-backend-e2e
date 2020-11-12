@@ -7,6 +7,7 @@ import (
 
 	"github.com/go-logr/logr"
 	"github.com/open-cluster-management/applifecycle-backend-e2e/pkg/e2e"
+	gerr "github.com/pkg/errors"
 )
 
 const (
@@ -35,18 +36,18 @@ type Processor struct {
 func NewProcessor(cfgDir, dataDir string, logger logr.Logger) (*Processor, error) {
 	cfg, err := e2e.LoadKubeConfigs(cfgDir)
 	if err != nil {
-		return nil, err
+		return nil, gerr.Wrap(err, "failed to load kubeconfig")
 	}
 
 	tCases, err := e2e.LoadTestCases(dataDir)
 	if err != nil {
-		return nil, err
+		return nil, gerr.Wrap(err, "failed to load test case")
 	}
 
 	exps := e2e.ExpctationReg{}
 	exps, err = exps.Load(dataDir)
 	if err != nil {
-		return nil, err
+		return nil, gerr.Wrap(err, "failed to load expectations")
 	}
 
 	return &Processor{
