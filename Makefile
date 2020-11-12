@@ -70,6 +70,9 @@ run: gobuild build-images
 	curl http://localhost:8765/testcase | head -n 10
 	curl http://localhost:8765/expectation | head -n 10
 
+kind-setup:
+	kind get kubeconfig > default-kubeconfigs/hub
+
 e2e: gobuild
 	build/test-e2e.sh
 
