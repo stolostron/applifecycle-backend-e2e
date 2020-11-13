@@ -80,8 +80,8 @@ func main() {
 	signal.Notify(done, os.Interrupt, syscall.SIGINT, syscall.SIGTERM)
 
 	// run is used by operators
-	http.HandleFunc("/help", p.HelperHandler)
 	http.HandleFunc("/run", p.TestCasesRunnerHandler)
+	http.HandleFunc("/help", p.HelperHandler)
 	http.HandleFunc("/run/stage", p.StageRunnerHandler)
 	http.HandleFunc("/results", p.ExpectationCheckerHandler)
 	http.HandleFunc("/clusters", p.DisplayClusterHandler)

@@ -163,26 +163,25 @@ func (s *Processor) Run(testID string, tc e2e.TestCasesReg) (AppliedCase, error)
 
 func (s *Processor) Check(testID string, timeout time.Duration, expReg e2e.ExpctationReg) (*TResponse, error) {
 	ticker := time.NewTicker(pullInterval)
-	scale := timeout / pullInterval
-	timeOut := time.After(pullInterval * scale)
+	timeOut := time.After(timeout)
 
-timoutLoop:
+	out := "failed to  check all the expectations due to timeout"
+
 	for {
 		select {
 		case <-ticker.C:
 			rsp, err := s.dispatchExpectation(testID, s.expectations[testID])
 			if err == nil {
-				return rsp, err
+				return rsp, nil
 			}
 
 			s.logger.Error(err, "faild")
 		case <-timeOut:
-			break timoutLoop
+			return &TResponse{TestID: testID, Status: Failed, Error: out}, fmt.Errorf(out)
 		}
 	}
 
-	out := "failed to successfully check all the expectations due to timeout"
-	return &TResponse{TestID: testID, Status: Failed, Error: out}, nil
+	return &TResponse{}, fmt.Errorf(out)
 }
 
 func (s *Processor) Clean(applied AppliedCase) error {

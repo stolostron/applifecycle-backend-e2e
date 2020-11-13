@@ -64,6 +64,8 @@ func (s *Processor) TestCasesRunnerHandler(w http.ResponseWriter, r *http.Reques
 
 		s.logger.V(0).Info(fmt.Sprintf("DONE servering %s!", testID))
 
+		delete(s.set, testID)
+
 		fmt.Fprint(w, tr.String())
 	}()
 
@@ -100,7 +102,10 @@ func (s *Processor) TestCasesRunnerHandler(w http.ResponseWriter, r *http.Reques
 		return
 	}
 
-	defer s.Clean(applied)
+	defer func() {
+		//TODO here need to be handle different, might lead to goroutine leak
+		go s.Clean(applied)
+	}()
 
 	tr, err = s.Check(testID, s.timeout, s.expectations)
 	if err != nil {
