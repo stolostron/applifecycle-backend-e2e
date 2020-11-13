@@ -28,13 +28,21 @@ const (
 var LogLevel int
 var configPath string
 var dataPath string
+var timeout int
 
 func init() {
 	flag.IntVar(
 		&LogLevel,
 		"v",
 		1,
-		"The interval of housekeeping in seconds.",
+		"log level",
+	)
+
+	flag.IntVar(
+		&timeout,
+		"t",
+		15,
+		"timeout for running each expectation unit",
 	)
 
 	flag.StringVar(
@@ -62,7 +70,7 @@ func main() {
 
 	logger := zapr.NewLogger(zapLog)
 
-	p, err := handler.NewProcessor(configPath, dataPath, logger)
+	p, err := handler.NewProcessor(configPath, dataPath, timeout, logger)
 	if err != nil {
 		logger.Error(err, "failed to create test sever")
 		os.Exit(2)
@@ -72,6 +80,7 @@ func main() {
 	signal.Notify(done, os.Interrupt, syscall.SIGINT, syscall.SIGTERM)
 
 	// run is used by operators
+	http.HandleFunc("/help", p.HelperHandler)
 	http.HandleFunc("/run", p.TestCasesRunnerHandler)
 	http.HandleFunc("/run/stage", p.StageRunnerHandler)
 	http.HandleFunc("/results", p.ExpectationCheckerHandler)

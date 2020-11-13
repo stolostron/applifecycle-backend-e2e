@@ -22,6 +22,7 @@ const (
 
 type Processor struct {
 	mux          *sync.Mutex
+	timeout      time.Duration
 	cfgDir       string
 	dataDir      string
 	configs      e2e.KubeConfigs
@@ -33,7 +34,7 @@ type Processor struct {
 	set          map[string]struct{}
 }
 
-func NewProcessor(cfgDir, dataDir string, logger logr.Logger) (*Processor, error) {
+func NewProcessor(cfgDir, dataDir string, timeout int, logger logr.Logger) (*Processor, error) {
 	cfg, err := e2e.LoadKubeConfigs(cfgDir)
 	if err != nil {
 		return nil, gerr.Wrap(err, "failed to load kubeconfig")
@@ -57,6 +58,7 @@ func NewProcessor(cfgDir, dataDir string, logger logr.Logger) (*Processor, error
 
 	return &Processor{
 		mux:          &sync.Mutex{},
+		timeout:      time.Duration(timeout) * time.Second,
 		cfgDir:       cfgDir,
 		dataDir:      dataDir,
 		configs:      cfg,

@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"github.com/open-cluster-management/applifecycle-backend-e2e/pkg/e2e"
+	gerr "github.com/pkg/errors"
 )
 
 func (s *Processor) ReloadStageReg() {
@@ -19,6 +20,14 @@ func (s *Processor) ReloadStageReg() {
 
 	s.mux.Unlock()
 }
+
+type StageRunner interface {
+	Run(id string, caseReg e2e.TestCasesReg) (AppliedCase, error)
+	Check(id string, timeout time.Duration, expReg e2e.ExpctationReg) (*TResponse, error)
+	Clean(AppliedCase) error
+}
+
+var _ StageRunner = (*Processor)(nil)
 
 func (s *Processor) StageRunnerHandler(w http.ResponseWriter, r *http.Request) {
 	ID := r.URL.Query().Get("id")
@@ -34,11 +43,17 @@ func (s *Processor) StageRunnerHandler(w http.ResponseWriter, r *http.Request) {
 		tr.Details = s.stages
 		tr.Error = fmt.Errorf("stage group ID is not defined, checkout details for avaliable stages").Error()
 		tr.Status = Failed
+
 		fmt.Fprint(w, tr.String())
 		return
 	}
 
-	tr = s.Run(ID, 10*time.Second, s.DefaultRunner, s.DefaultChecker, s.DefaultCleaner)
+	out := s.RunStage(ID, s.timeout, s)
+
+	tr.Error = out.Error
+	tr.Name = out.Name
+	tr.Details = out.Details
+	tr.Status = out.Status
 
 	fmt.Fprint(w, tr.String())
 }
@@ -78,28 +93,24 @@ func (s *Processor) DisplayStagesHandler(w http.ResponseWriter, r *http.Request)
 	return
 }
 
-type runner func(id string, caseReg e2e.TestCasesReg) (AppliedCase, error)
-type checker func(id string, timeout time.Duration, expReg e2e.ExpctationReg) (*TResponse, error)
-type cleaner func(AppliedCase)
-
 // we can provide a stage endpoint
 // each stage will link to a test unit run the stage in numeric order, if any
 // stage failed the will fail the test
 
-func (st *Processor) Run(groupID string, timeout time.Duration, run runner, check checker, clean cleaner) *TResponse {
+func (st *Processor) RunStage(groupID string, timeout time.Duration, sRunner StageRunner) *TResponse {
 	a := []AppliedCase{}
 
 	out := &TResponse{}
 	defer func() {
 		for _, c := range a {
-			clean(c)
+			sRunner.Clean(c)
 		}
 	}()
 
 	out.Name = fmt.Sprintf("run stage group %s", groupID)
 
 	for _, s := range st.stages[groupID] {
-		applied, rerr := run(s.CaseID, st.testCases)
+		applied, rerr := sRunner.Run(s.CaseID, st.testCases)
 		if rerr != nil {
 			out.Error = rerr.Error()
 			return out
@@ -107,10 +118,10 @@ func (st *Processor) Run(groupID string, timeout time.Duration, run runner, chec
 
 		a = append(a, applied)
 
-		rsp, err := check(s.CaseID, timeout, st.expectations)
+		rsp, err := sRunner.Check(s.CaseID, timeout, st.expectations)
 
 		if s.Clean == "true" {
-			clean(applied)
+			err = sRunner.Clean(applied)
 		}
 
 		if err != nil {
@@ -125,7 +136,7 @@ func (st *Processor) Run(groupID string, timeout time.Duration, run runner, chec
 	return out
 }
 
-func (s *Processor) DefaultRunner(testID string, tc e2e.TestCasesReg) (AppliedCase, error) {
+func (s *Processor) Run(testID string, tc e2e.TestCasesReg) (AppliedCase, error) {
 	out := AppliedCase{}
 
 	c := tc[testID]
@@ -138,7 +149,7 @@ func (s *Processor) DefaultRunner(testID string, tc e2e.TestCasesReg) (AppliedCa
 
 	kCfg := cUnit.CfgDir
 	if kerr := processResource(c.URL, kCfg, Apply); kerr != nil {
-		err := fmt.Errorf("failed to apply test case %s, resource %s on cluster %s, err: %v", testID, c.Desc, c.TargetCluster, kerr)
+		err := fmt.Errorf("failed to apply resource %s on cluster %s, \n err: %+v", c.Desc, c.TargetCluster, kerr.Error())
 		return out, err
 	}
 
@@ -150,7 +161,7 @@ func (s *Processor) DefaultRunner(testID string, tc e2e.TestCasesReg) (AppliedCa
 	return out, nil
 }
 
-func (s *Processor) DefaultChecker(testID string, timeout time.Duration, expReg e2e.ExpctationReg) (*TResponse, error) {
+func (s *Processor) Check(testID string, timeout time.Duration, expReg e2e.ExpctationReg) (*TResponse, error) {
 	ticker := time.NewTicker(pullInterval)
 	scale := timeout / pullInterval
 	timeOut := time.After(pullInterval * scale)
@@ -174,13 +185,13 @@ timoutLoop:
 	return &TResponse{TestID: testID, Status: Failed, Error: out}, nil
 }
 
-func (s *Processor) DefaultCleaner(applied AppliedCase) {
+func (s *Processor) Clean(applied AppliedCase) error {
 	if err := processResource(applied.Tc.URL, applied.Cfg, Delete); err != nil {
-		s.logger.Error(err, fmt.Sprintf("failed to delete applied resource %s on cluster %s",
+		return gerr.Wrap(err, fmt.Sprintf("failed to delete applied resource %s on cluster %s",
 			applied.Tc.Desc, applied.Tc.TargetCluster))
 	}
 
 	s.logger.Info(fmt.Sprintf("successfully deleted resource %s on cluster %s", applied.Tc.Desc, applied.Tc.TargetCluster))
 
-	return
+	return nil
 }

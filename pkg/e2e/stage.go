@@ -9,10 +9,10 @@ import (
 )
 
 type Stage struct {
-	GroupID string `json:"groupid"`
-	Order   int    `json:"run_order"`
-	CaseID  string `json:"case_id"`
-	Clean   string `json:"clean"`
+	ID     string `json:"id"`
+	Order  int    `json:"run_order"`
+	CaseID string `json:"case_id"`
+	Clean  string `json:"clean"`
 }
 
 type Stages []Stage
@@ -43,7 +43,7 @@ func LoadStages(dir string) (StageReg, error) {
 		}
 
 		for _, t := range *st {
-			out[t.GroupID] = append(out[t.GroupID], t)
+			out[t.ID] = append(out[t.ID], t)
 		}
 	}
 
