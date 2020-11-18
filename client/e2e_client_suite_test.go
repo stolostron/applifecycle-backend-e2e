@@ -20,7 +20,7 @@ import (
 
 const (
 	StartTimeout = 60 // seconds
-	JUnitResult  = "result"
+	JUnitResult  = "results"
 	defaultAddr  = "localhost:8765"
 	//this will be depend on the caller's location
 	defaultCfgDir  = "../default-kubeconfigs"
