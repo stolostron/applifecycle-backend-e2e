@@ -4,6 +4,9 @@ echo "e2e TEST"
 # need to find a way to use the Makefile to set these
 IMG=$(cat COMPONENT_NAME 2> /dev/null)
 
+echo ${TRAVIS_BUILD}
+echo ${TRAVIS_PULL_REQUEST}-${TRAVIS_COMMIT}
+
 if [ "$TRAVIS_BUILD" != 1 ]; then
     echo "Build is on Travis" 
 

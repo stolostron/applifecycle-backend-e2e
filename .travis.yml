@@ -5,6 +5,7 @@ os:
   - linux
 
 language: go
+
 go:
   - "1.15"
 
@@ -29,6 +30,6 @@ jobs:
 
     - stage: integration-test 
       script: 
-        - if [ "$TRAVIS_PULL_REQUEST" != "false" ]; then export COMPONENT_TAG_EXTENSION="-PR${TRAVIS_PULL_REQUEST}-${TRAVIS_COMMIT}"; fi;
+        - if [ "$TRAVIS_PULL_REQUEST" != "false" ]; then export COMPONENT_TAG_EXTENSION="-PR${TRAVIS_PULL_REQUEST}-${TRAVIS_COMMIT}"; else export COMPONENT_TAG_EXTENSION="-PR${TRAVIS_COMMIT}"; fi;
         - |
           make e2e
