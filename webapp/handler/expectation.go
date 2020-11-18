@@ -31,7 +31,7 @@ func (s *Processor) dispatchExpectation(testID string, exps e2e.Expectations) (*
 		if !ok {
 			err = fmt.Errorf("unregister cluster name: (%s)", cName)
 			tr.Error = err.Error()
-			tr.Status = Fialed
+			tr.Status = Failed
 
 			return tr, err
 		}
@@ -40,13 +40,13 @@ func (s *Processor) dispatchExpectation(testID string, exps e2e.Expectations) (*
 		matcher := s.getMatcher(mName)
 		if matcher == nil {
 			err := fmt.Errorf("unregister matcher: (%s)", mName)
-			tr.Status = Fialed
+			tr.Status = Failed
 			tr.Error = err.Error()
 			return tr, err
 		}
 
 		if nerr := matcher.Match(cUnit.Clt, e, s.logger); nerr != nil {
-			tr.Status = Fialed
+			tr.Status = Failed
 			tr.Error = nerr.Error()
 
 			return tr, nerr
@@ -70,7 +70,7 @@ func (s *Processor) ExpectationCheckerHandler(w http.ResponseWriter, r *http.Req
 	s.mux.Lock()
 	newExps, err := s.expectations.Load(s.dataDir)
 	if err != nil {
-		tr.Status = Fialed
+		tr.Status = Failed
 		tr.Error = fmt.Errorf("failed reload the expectations").Error()
 
 		fmt.Fprint(w, tr.String())
@@ -87,7 +87,7 @@ func (s *Processor) ExpectationCheckerHandler(w http.ResponseWriter, r *http.Req
 	exps, ok := s.expectations[testID]
 
 	if !ok {
-		tr.Status = Fialed
+		tr.Status = Failed
 		tr.Error = fmt.Errorf("ID (%s) doesn't exist", testID).Error()
 		fmt.Fprint(w, tr.String())
 		return
@@ -97,7 +97,7 @@ func (s *Processor) ExpectationCheckerHandler(w http.ResponseWriter, r *http.Req
 	if err == nil {
 		tr.Status = Succeed
 	} else {
-		tr.Status = Fialed
+		tr.Status = Failed
 		tr.Error = err.Error()
 	}
 

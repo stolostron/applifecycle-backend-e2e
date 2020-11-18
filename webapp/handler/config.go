@@ -40,7 +40,7 @@ func (s *Processor) DisplayClusterHandler(w http.ResponseWriter, r *http.Request
 	c, ok := s.configs[testID]
 
 	if !ok {
-		tr.Status = Fialed
+		tr.Status = Failed
 		tr.Error = fmt.Errorf("ID (%s) doesn't exist", testID).Error()
 	}
 

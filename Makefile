@@ -51,24 +51,27 @@ default::
 
 
 gobuild:
-	@echo "gobuild the test server binary"
+	@echo "gobuild the test server binary ${GOOS}, ${GOARCH}"
 	# create the directory for hosting the go binary
 	mkdir -p build/_output/bin
-	@GOOS=${GOOS} GOARCH=${GOARCH} go build -ldflags="-w -s" -o build/_output/bin/$(IMG)
+	GOOS=${GOOS} GOARCH=${GOARCH} go build -ldflags="-w -s" -o build/_output/bin/$(IMG)
 
 build-images: gobuild
 	@echo "build image"
 	@docker build -t ${IMAGE_NAME_AND_VERSION}:latest .
 
 export CONTAINER_NAME=$(shell echo "e2e")
-run: gobuild build-images 
+run: build-images 
 	kind get kubeconfig > default-kubeconfigs/hub
 	docker rm -f ${CONTAINER_NAME} || true
 	docker run -p 8765:8765 --name ${CONTAINER_NAME} -d --rm ${IMAGE_NAME_AND_VERSION}:latest
 	sleep 10
-	curl http://localhost:8765/cluster | head -n 10
-	curl http://localhost:8765/testcase | head -n 10
-	curl http://localhost:8765/expectation | head -n 10
+	curl http://localhost:8765/clusters | head -n 10
+	curl http://localhost:8765/testcases | head -n 10
+	curl http://localhost:8765/expectations | head -n 10
+
+kind-setup:
+	kind get kubeconfig > default-kubeconfigs/hub
 
 e2e: gobuild
 	build/test-e2e.sh

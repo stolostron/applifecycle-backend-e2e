@@ -3,7 +3,6 @@ package main
 import (
 	"context"
 	"flag"
-	"fmt"
 	"log"
 	"net/http"
 	"os"
@@ -11,13 +10,12 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/go-logr/zapr"
-	"github.com/open-cluster-management/applifecycle-backend-e2e/webapp/handler"
-	"go.uber.org/zap"
+	"github.com/open-cluster-management/applifecycle-backend-e2e/webapp/server"
 )
 
 const (
-	defaultAddr    = "localhost:8765"
+	defaultAddr = "localhost:8765"
+	//this will be depend on the caller's location
 	defaultCfgDir  = "default-kubeconfigs"
 	defaultDataDir = "default-e2e-test-data"
 
@@ -28,13 +26,21 @@ const (
 var LogLevel int
 var configPath string
 var dataPath string
+var timeout int
 
 func init() {
 	flag.IntVar(
 		&LogLevel,
 		"v",
 		1,
-		"The interval of housekeeping in seconds.",
+		"log level",
+	)
+
+	flag.IntVar(
+		&timeout,
+		"t",
+		15,
+		"timeout for running each expectation unit",
 	)
 
 	flag.StringVar(
@@ -50,36 +56,15 @@ func init() {
 		defaultDataDir,
 		"the path to clusters config files",
 	)
+
+	flag.Parse()
 }
 
 func main() {
-	flag.Parse()
-
-	zapLog, err := zap.NewDevelopment(zap.AddCaller())
-	if err != nil {
-		panic(fmt.Sprintf("who watches the watchmen (%v)?", err))
-	}
-
-	logger := zapr.NewLogger(zapLog)
-
-	p, err := handler.NewProcessor(configPath, dataPath, logger)
-	if err != nil {
-		logger.Error(err, "failed to create test sever")
-		os.Exit(2)
-	}
+	srv := server.NewServer(defaultAddr, configPath, dataPath, LogLevel, timeout)
 
 	done := make(chan os.Signal, 1)
 	signal.Notify(done, os.Interrupt, syscall.SIGINT, syscall.SIGTERM)
-
-	http.HandleFunc("/run", p.TestCasesRunnerHandler)
-	http.HandleFunc("/result", p.ExpectationCheckerHandler)
-	http.HandleFunc("/cluster", p.DisplayClusterHandler)
-	http.HandleFunc("/testcase", p.DisplayTestCasesHandler)
-	http.HandleFunc("/expectation", p.DisplayExpectationHandler)
-
-	srv := &http.Server{
-		Addr: defaultAddr,
-	}
 
 	go func() {
 		if err := srv.ListenAndServe(); err != nil && err != http.ErrServerClosed {
