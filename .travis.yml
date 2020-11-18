@@ -30,6 +30,6 @@ jobs:
 
     - stage: integration-test 
       script: 
-        - if [ "$TRAVIS_PULL_REQUEST" != "false" ||  "$TRAVIS_EVENT_TYPE" != "push" ]; then export COMPONENT_TAG_EXTENSION="-PR${TRAVIS_PULL_REQUEST}-${TRAVIS_COMMIT}"; fi;
+        - if [ "$TRAVIS_PULL_REQUEST" != "false" ||  "$TRAVIS_EVENT_TYPE" == "push" ]; then export COMPONENT_TAG_EXTENSION="-PR${TRAVIS_PULL_REQUEST}-${TRAVIS_COMMIT}"; fi;
         - |
           make e2e
