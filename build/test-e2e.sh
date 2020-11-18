@@ -5,6 +5,7 @@ echo "e2e TEST"
 IMG=$(cat COMPONENT_NAME 2> /dev/null)
 
 echo ${TRAVIS_BUILD}
+echo ${COMPONENT_TAG_EXTENSION}
 echo ${TRAVIS_PULL_REQUEST}-${TRAVIS_COMMIT}
 
 if [ "$TRAVIS_BUILD" != 1 ]; then
