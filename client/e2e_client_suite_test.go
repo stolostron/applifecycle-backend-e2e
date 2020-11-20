@@ -1,9 +1,6 @@
 package client_test
 
 import (
-	"encoding/json"
-	"fmt"
-	"io/ioutil"
 	"log"
 	"net/http"
 	"testing"
@@ -13,7 +10,7 @@ import (
 	"github.com/onsi/ginkgo/reporters"
 	. "github.com/onsi/gomega"
 	"github.com/onsi/gomega/gexec"
-	"github.com/open-cluster-management/applifecycle-backend-e2e/webapp/handler"
+	clt "github.com/open-cluster-management/applifecycle-backend-e2e/client"
 	"github.com/open-cluster-management/applifecycle-backend-e2e/webapp/server"
 	"sigs.k8s.io/controller-runtime/pkg/envtest/printer"
 )
@@ -37,61 +34,7 @@ func TestAppLifecycleAPI_E2E(t *testing.T) {
 		[]Reporter{printer.NewlineReporter{}, reporters.NewJUnitReporter(JUnitResult)})
 }
 
-func isSeverUp(addr, cluster string) error {
-	URL := fmt.Sprintf("%s%s", addr, cluster)
-	resp, err := http.Get(URL)
-
-	if err != nil {
-		return err
-	}
-
-	defer resp.Body.Close()
-
-	if resp.StatusCode != http.StatusOK {
-		return fmt.Errorf("e2e server is not up")
-	}
-
-	return nil
-}
-
-type Runner struct {
-	addr     string
-	endpoint string
-}
-
-func (r *Runner) run(runID string) error {
-	URL := fmt.Sprintf("http://%s%s?id=%s", r.addr, r.endpoint, runID)
-	resp, err := http.Get(URL)
-
-	if err != nil {
-		return err
-	}
-
-	defer resp.Body.Close()
-
-	if resp.StatusCode == http.StatusOK {
-		bodyBytes, err := ioutil.ReadAll(resp.Body)
-		if err != nil {
-			return err
-		}
-
-		res := &handler.TResponse{}
-
-		if err := json.Unmarshal(bodyBytes, res); err != nil {
-			return err
-		}
-
-		if res.Status != handler.Succeed {
-			return fmt.Errorf("failed test on %s, with status %s err: %s", res.TestID, res.Status, res.Status)
-		}
-
-		return nil
-	}
-
-	return fmt.Errorf("incorrect response code %v", resp.StatusCode)
-}
-
-var DefaultRunner = &Runner{}
+var DefaultRunner = &clt.Runner{}
 
 var _ = BeforeSuite(func(done Done) {
 	By("bootstrapping test environment")
@@ -105,11 +48,11 @@ var _ = BeforeSuite(func(done Done) {
 	}()
 
 	Eventually(func() error {
-		return isSeverUp(defaultAddr, "/clusters")
+		return clt.IsSeverUp(defaultAddr, "/clusters")
 	}, StartTimeout, 3*time.Second)
 
-	DefaultRunner.addr = defaultAddr
-	DefaultRunner.endpoint = "/run"
+	DefaultRunner.Addr = defaultAddr
+	DefaultRunner.Endpoint = "/run"
 
 	close(done)
 }, StartTimeout)
