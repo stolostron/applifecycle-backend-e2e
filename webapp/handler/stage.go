@@ -5,13 +5,13 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/open-cluster-management/applifecycle-backend-e2e/pkg/e2e"
+	"github.com/open-cluster-management/applifecycle-backend-e2e/pkg"
 	gerr "github.com/pkg/errors"
 )
 
 func (s *Processor) ReloadStageReg() {
 	s.mux.Lock()
-	newSt, err := e2e.LoadStages(s.dataDir)
+	newSt, err := pkg.LoadStages(s.dataDir)
 	if err != nil {
 		return
 	}
@@ -22,8 +22,8 @@ func (s *Processor) ReloadStageReg() {
 }
 
 type StageRunner interface {
-	Run(id string, caseReg e2e.TestCasesReg) (AppliedCase, error)
-	Check(id string, timeout time.Duration, expReg e2e.ExpctationReg) (*TResponse, error)
+	Run(id string, caseReg pkg.TestCasesReg) (AppliedCase, error)
+	Check(id string, timeout time.Duration, expReg pkg.ExpctationReg) (*TResponse, error)
 	Clean(AppliedCase) error
 }
 
@@ -136,7 +136,7 @@ func (st *Processor) RunStage(groupID string, timeout time.Duration, sRunner Sta
 	return out
 }
 
-func (s *Processor) Run(testID string, tc e2e.TestCasesReg) (AppliedCase, error) {
+func (s *Processor) Run(testID string, tc pkg.TestCasesReg) (AppliedCase, error) {
 	out := AppliedCase{}
 
 	c := tc[testID]
@@ -161,7 +161,7 @@ func (s *Processor) Run(testID string, tc e2e.TestCasesReg) (AppliedCase, error)
 	return out, nil
 }
 
-func (s *Processor) Check(testID string, timeout time.Duration, expReg e2e.ExpctationReg) (*TResponse, error) {
+func (s *Processor) Check(testID string, timeout time.Duration, expReg pkg.ExpctationReg) (*TResponse, error) {
 	ticker := time.NewTicker(pullInterval)
 	timeOut := time.After(timeout)
 

@@ -6,7 +6,7 @@ import (
 	"time"
 
 	"github.com/go-logr/logr"
-	"github.com/open-cluster-management/applifecycle-backend-e2e/pkg/e2e"
+	"github.com/open-cluster-management/applifecycle-backend-e2e/pkg"
 	gerr "github.com/pkg/errors"
 )
 
@@ -25,33 +25,33 @@ type Processor struct {
 	timeout      time.Duration
 	cfgDir       string
 	dataDir      string
-	configs      e2e.KubeConfigs
-	testCases    e2e.TestCasesReg
-	expectations e2e.ExpctationReg
-	stages       e2e.StageReg
-	getMatcher   func(string) e2e.Matcher
+	configs      pkg.KubeConfigs
+	testCases    pkg.TestCasesReg
+	expectations pkg.ExpctationReg
+	stages       pkg.StageReg
+	getMatcher   func(string) pkg.Matcher
 	logger       logr.Logger
 	set          map[string]struct{}
 }
 
 func NewProcessor(cfgDir, dataDir string, timeout int, logger logr.Logger) (*Processor, error) {
-	cfg, err := e2e.LoadKubeConfigs(cfgDir)
+	cfg, err := pkg.LoadKubeConfigs(cfgDir)
 	if err != nil {
 		return nil, gerr.Wrap(err, "failed to load kubeconfig")
 	}
 
-	tCases, err := e2e.LoadTestCases(dataDir)
+	tCases, err := pkg.LoadTestCases(dataDir)
 	if err != nil {
 		return nil, gerr.Wrap(err, "failed to load test case")
 	}
 
-	exps := e2e.ExpctationReg{}
+	exps := pkg.ExpctationReg{}
 	exps, err = exps.Load(dataDir)
 	if err != nil {
 		return nil, gerr.Wrap(err, "failed to load expectations")
 	}
 
-	stages, err := e2e.LoadStages(dataDir)
+	stages, err := pkg.LoadStages(dataDir)
 	if err != nil {
 		return nil, gerr.Wrap(err, "failed to load test case")
 	}
@@ -65,7 +65,7 @@ func NewProcessor(cfgDir, dataDir string, timeout int, logger logr.Logger) (*Pro
 		testCases:    tCases,
 		expectations: exps,
 		stages:       stages,
-		getMatcher:   e2e.MatcherRouter,
+		getMatcher:   pkg.MatcherRouter,
 		logger:       logger,
 		set:          map[string]struct{}{},
 	}, nil

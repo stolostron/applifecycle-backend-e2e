@@ -1,5 +1,5 @@
 // Package test provides ...
-package e2e
+package pkg
 
 import (
 	"testing"

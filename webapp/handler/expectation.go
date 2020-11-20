@@ -4,10 +4,10 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/open-cluster-management/applifecycle-backend-e2e/pkg/e2e"
+	"github.com/open-cluster-management/applifecycle-backend-e2e/pkg"
 )
 
-func (s *Processor) dispatchExpectation(testID string, exps e2e.Expectations) (*TResponse, error) {
+func (s *Processor) dispatchExpectation(testID string, exps pkg.Expectations) (*TResponse, error) {
 	s.logger.Info(fmt.Sprintf("running test id %s", testID))
 
 	tr := &TResponse{
@@ -17,7 +17,7 @@ func (s *Processor) dispatchExpectation(testID string, exps e2e.Expectations) (*
 
 	var err error
 
-	out := e2e.Expectations{}
+	out := pkg.Expectations{}
 
 	defer func() {
 		tr.Details = out

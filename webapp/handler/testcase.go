@@ -6,7 +6,7 @@ import (
 	"net/http"
 	"os/exec"
 
-	"github.com/open-cluster-management/applifecycle-backend-e2e/pkg/e2e"
+	"github.com/open-cluster-management/applifecycle-backend-e2e/pkg"
 	gerr "github.com/pkg/errors"
 )
 
@@ -18,7 +18,7 @@ const (
 )
 
 type AppliedCase struct {
-	Tc  e2e.TestCase
+	Tc  pkg.TestCase
 	Cfg string
 }
 
@@ -117,7 +117,7 @@ func (s *Processor) TestCasesRunnerHandler(w http.ResponseWriter, r *http.Reques
 
 func (s *Processor) ReloadTestCaseReg() {
 	s.mux.Lock()
-	newTc, err := e2e.LoadTestCases(s.dataDir)
+	newTc, err := pkg.LoadTestCases(s.dataDir)
 	if err != nil {
 		return
 	}

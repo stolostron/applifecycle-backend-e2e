@@ -4,12 +4,12 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/open-cluster-management/applifecycle-backend-e2e/pkg/e2e"
+	"github.com/open-cluster-management/applifecycle-backend-e2e/pkg"
 )
 
 func (s *Processor) ReloadClusterReg() {
 	s.mux.Lock()
-	cfgs, err := e2e.LoadKubeConfigs(s.cfgDir)
+	cfgs, err := pkg.LoadKubeConfigs(s.cfgDir)
 	if err != nil {
 		return
 	}
