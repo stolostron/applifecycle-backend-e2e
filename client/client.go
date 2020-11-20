@@ -10,7 +10,7 @@ import (
 )
 
 func IsSeverUp(addr, cluster string) error {
-	URL := fmt.Sprintf("%s%s", addr, cluster)
+	URL := fmt.Sprintf("http://%s%s", addr, cluster)
 	resp, err := http.Get(URL)
 
 	if err != nil {
