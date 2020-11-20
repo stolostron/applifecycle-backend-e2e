@@ -31,6 +31,12 @@ type Runner struct {
 	Endpoint string
 }
 
+func NewRunner(url, endpoint string) *Runner {
+	return &Runner{
+		Addr:     url,
+		Endpoint: endpoint,
+	}
+}
 func (r *Runner) Run(runID string) error {
 	URL := fmt.Sprintf("http://%s%s?id=%s", r.Addr, r.Endpoint, runID)
 	resp, err := http.Get(URL)

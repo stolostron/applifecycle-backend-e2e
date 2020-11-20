@@ -34,7 +34,7 @@ func TestAppLifecycleAPI_E2E(t *testing.T) {
 		[]Reporter{printer.NewlineReporter{}, reporters.NewJUnitReporter(JUnitResult)})
 }
 
-var DefaultRunner = &clt.Runner{}
+var DefaultRunner = clt.NewRunner(defaultAddr, "/run")
 
 var _ = BeforeSuite(func(done Done) {
 	By("bootstrapping test environment")
@@ -50,9 +50,6 @@ var _ = BeforeSuite(func(done Done) {
 	Eventually(func() error {
 		return clt.IsSeverUp(defaultAddr, "/clusters")
 	}, StartTimeout, 3*time.Second)
-
-	DefaultRunner.Addr = defaultAddr
-	DefaultRunner.Endpoint = "/run"
 
 	close(done)
 }, StartTimeout)
