@@ -7,12 +7,12 @@ import (
 
 var _ = Describe("helmrelease-test", func() {
 	It("release-001", func() {
-		Expect(DefaultRunner.run("release-001")).Should(Succeed())
+		Expect(DefaultRunner.Run("release-001")).Should(Succeed())
 	})
 })
 
-var _ = FDescribe("channel-test", func() {
+var _ = Describe("channel-test", func() {
 	It("chn-003", func() {
-		Expect(DefaultRunner.run("release-001")).Should(Succeed())
+		Expect(DefaultRunner.Run("chn-003")).Should(Succeed())
 	})
 })
