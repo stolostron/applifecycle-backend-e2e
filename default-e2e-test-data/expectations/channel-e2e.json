@@ -39,7 +39,7 @@
 		"desc": "should have a channel of the object bucket on hub",
 		"apiversion": "apps.open-cluster-management.io/v1",
 		"kind": "channel",
-		"name": "deva",
+		"name": "backend-test",
 		"namespace": "ch-obj",
 		"matcher": "byname",
 		"args": {}
