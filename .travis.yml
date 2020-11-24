@@ -21,7 +21,4 @@ jobs:
     - stage: integration-test 
       script: 
         - |
-          make
           make e2e
-          make security/scans
-          make sonar/go
