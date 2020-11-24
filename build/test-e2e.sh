@@ -78,7 +78,7 @@ setup_operators(){
     setup_helmrelease_operator
     setup_placementrule_operator
 
-    sleep 30
+    sleep 60
     kubectl get deploy -A
 }
 
