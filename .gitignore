@@ -14,6 +14,17 @@ results
 # Dependency directories (remove the comment below to include it)
 # vendor/
 bin
-.build-harness-bootstrap
 build/_output
 .DS_Store
+
+.build-harness-bootstrap
+
+build-harness
+build-harness-extensions/
+
+OPENSOURCE.check
+
+# override build harness vendoring
+!vbh/.build-harness-vendorized
+!vbh/build-harness
+!vbh/build-harness-extensions
