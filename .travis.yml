@@ -14,22 +14,11 @@ services:
 
 # define stages
 stages:
-  - build
   - integration-test
 
 jobs:
   include:
-      #    - stage: build
-      #      name: "Build the image and run unit tests"
-      #      script:
-      #        - if [ "$TRAVIS_PULL_REQUEST" != "false" ]; then export COMPONENT_TAG_EXTENSION="-PR${TRAVIS_PULL_REQUEST}-${TRAVIS_COMMIT}"; fi;
-      #        - |
-      #          make gobuild
-      #          make build-images
-      #          make push
-
     - stage: integration-test 
       script: 
-        - if ["$TRAVIS_PULL_REQUEST" != "false" || "$TRAVIS_EVENT_TYPE" = "push" ]; then export COMPONENT_TAG_EXTENSION="-PR${TRAVIS_PULL_REQUEST}-${TRAVIS_COMMIT}"; fi;
         - |
           make e2e

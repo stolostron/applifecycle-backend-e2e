@@ -27,7 +27,7 @@ func NewServer(addr, cfg, data string, lvl, timeout int) *http.Server {
 	mux := http.NewServeMux()
 
 	// run is used by operators
-	mux.HandleFunc("/run", p.TestCasesRunnerHandler)
+	mux.HandleFunc("/run", p.CasesRunnerHandler)
 	mux.HandleFunc("/help", p.HelperHandler)
 	mux.HandleFunc("/run/stage", p.StageRunnerHandler)
 	mux.HandleFunc("/results", p.ExpectationCheckerHandler)
