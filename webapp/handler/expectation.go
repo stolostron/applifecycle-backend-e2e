@@ -82,7 +82,11 @@ func (s *Processor) ExpectationCheckerHandler(w http.ResponseWriter, r *http.Req
 	s.mux.Unlock()
 
 	testID := r.URL.Query().Get("id")
-	w.Header().Set("Content-Type", "application/json")
+
+	s.logger.Info(fmt.Sprintf("Start checking test ID %s", testID))
+	defer s.logger.Info(fmt.Sprintf("Done checking test ID %s", testID))
+
+	defer w.Header().Set("Content-Type", "application/json")
 
 	exps, ok := s.expectations[testID]
 
@@ -124,6 +128,9 @@ func (s *Processor) DisplayExpectationHandler(w http.ResponseWriter, r *http.Req
 	tr := &TResponse{Name: "expectations list"}
 
 	testID := r.URL.Query().Get("id")
+	s.logger.Info(fmt.Sprintf("Start display expectations testID (%s)", testID))
+	defer s.logger.Info(fmt.Sprintf("Done display expectations testID (%s)", testID))
+
 	w.Header().Set("Content-Type", "application/json")
 
 	if testID == "" {

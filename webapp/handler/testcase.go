@@ -41,10 +41,11 @@ func processResource(tURL, kCfgDir string, subCmd ocCommand) error {
 	return nil
 }
 
-func (s *Processor) TestCasesRunnerHandler(w http.ResponseWriter, r *http.Request) {
+func (s *Processor) CasesRunnerHandler(w http.ResponseWriter, r *http.Request) {
 	testID := r.URL.Query().Get("id")
 
-	s.logger.V(0).Info(fmt.Sprintf("Start running %s", testID))
+	s.logger.Info(fmt.Sprintf("Start running %s", testID))
+	defer s.logger.Info(fmt.Sprintf("Done running %s", testID))
 
 	w.Header().Set("Content-Type", "application/json")
 
@@ -61,8 +62,6 @@ func (s *Processor) TestCasesRunnerHandler(w http.ResponseWriter, r *http.Reques
 			err = gerr.Wrap(err, fmt.Sprintf("failed to run test case %s", testID))
 			tr.Error = err.Error()
 		}
-
-		s.logger.V(0).Info(fmt.Sprintf("DONE servering %s!", testID))
 
 		delete(s.set, testID)
 
@@ -131,6 +130,9 @@ func (s *Processor) DisplayTestCasesHandler(w http.ResponseWriter, r *http.Reque
 	s.ReloadTestCaseReg()
 
 	testID := r.URL.Query().Get("id")
+	s.logger.Info(fmt.Sprintf("Start display testcase testID (%s)", testID))
+	defer s.logger.Info(fmt.Sprintf("Done display testcase testID (%s)", testID))
+
 	w.Header().Set("Content-Type", "application/json")
 
 	tr := &TResponse{

@@ -30,8 +30,12 @@ type StageRunner interface {
 var _ StageRunner = (*Processor)(nil)
 
 func (s *Processor) StageRunnerHandler(w http.ResponseWriter, r *http.Request) {
+
 	ID := r.URL.Query().Get("id")
 	w.Header().Set("Content-Type", "application/json")
+
+	s.logger.Info(fmt.Sprintf("Start stage runner on %s", ID))
+	defer s.logger.Info(fmt.Sprintf("Done stage runner on %s", ID))
 
 	tr := &TResponse{
 		TestID: ID,
@@ -62,6 +66,9 @@ func (s *Processor) DisplayStagesHandler(w http.ResponseWriter, r *http.Request)
 	s.ReloadStageReg()
 
 	ID := r.URL.Query().Get("id")
+	s.logger.Info(fmt.Sprintf("Start display stages testID (%s)", ID))
+	defer s.logger.Info(fmt.Sprintf("Done display stages testID (%s)", ID))
+
 	w.Header().Set("Content-Type", "application/json")
 
 	tr := &TResponse{
