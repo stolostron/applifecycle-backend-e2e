@@ -34,6 +34,7 @@ fi
 
 kind get kubeconfig > default-kubeconfigs/hub
 
+
 setup_channel_operator(){
     echo "Clone the channel repo"
     if [ ! -d "multicloud-operators-channel" ]; then

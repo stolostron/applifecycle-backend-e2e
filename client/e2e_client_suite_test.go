@@ -24,6 +24,7 @@ const (
 	defaultDataDir = "../default-e2e-test-data"
 	logLvl         = 1
 	testTimeout    = 30
+	pullInterval   = 3 * time.Second
 )
 
 func TestAppLifecycleAPI_E2E(t *testing.T) {
@@ -49,12 +50,12 @@ var _ = BeforeSuite(func(done Done) {
 
 	Eventually(func() error {
 		return clt.IsSeverUp(defaultAddr, "/clusters")
-	}, StartTimeout, 3*time.Second)
+	}, StartTimeout, pullInterval)
 
 	close(done)
 }, StartTimeout)
 
 var _ = AfterSuite(func() {
 	By("tearing down the test environment")
-	gexec.KillAndWait(5 * time.Second)
+	gexec.KillAndWait(3 * time.Second)
 })
