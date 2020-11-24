@@ -23,6 +23,9 @@ func (s *Processor) DisplayClusterHandler(w http.ResponseWriter, r *http.Request
 	s.ReloadClusterReg()
 
 	testID := r.URL.Query().Get("id")
+	s.logger.Info(fmt.Sprintf("Start display cluster testID (%s)", testID))
+	defer s.logger.Info(fmt.Sprintf("Done display cluster testID (%s)", testID))
+
 	w.Header().Set("Content-Type", "application/json")
 
 	tr := &TResponse{
