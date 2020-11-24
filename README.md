@@ -16,6 +16,7 @@ Initial Set up:
 - [ ] Placementrule
 
 # Design
+
 ```graphviz
 graph {
   compound=true
