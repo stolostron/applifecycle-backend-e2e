@@ -16,3 +16,9 @@ var _ = Describe("channel-test", func() {
 		Expect(DefaultRunner.Run("chn-003")).Should(Succeed())
 	})
 })
+
+var _ = Describe("subscription-test", func() {
+	It("sub-001", func() {
+		Expect(DefaultRunner.Run("sub-001")).Should(Succeed())
+	})
+})

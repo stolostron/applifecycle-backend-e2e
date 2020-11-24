@@ -28,3 +28,7 @@ OPENSOURCE.check
 !vbh/.build-harness-vendorized
 !vbh/build-harness
 !vbh/build-harness-extensions
+
+multicloud-operators-channel
+multicloud-operators-subscription
+multicloud-operators-subscription-release

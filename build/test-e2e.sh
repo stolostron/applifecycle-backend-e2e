@@ -9,6 +9,7 @@ echo ${TRAVIS_BUILD}
 echo ${TRAVIS_EVENT_TYPE}
 echo ${COMPONENT_TAG_EXTENSION}
 echo ${TRAVIS_PULL_REQUEST}-${TRAVIS_COMMIT}
+export GO111MODULE=on
 
 if [ "$TRAVIS_BUILD" != 1 ]; then
     echo "Build is on Travis" 
@@ -18,27 +19,47 @@ if [ "$TRAVIS_BUILD" != 1 ]; then
     curl -LO https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl && chmod +x kubectl && sudo mv kubectl /usr/local/bin/
 
     echo -e "\nDownload and install KinD\n"
-    GO111MODULE=on go get sigs.k8s.io/kind
+    go get sigs.k8s.io/kind
 
     kind create cluster
     if [ $? != 0 ]; then
             exit $?;
     fi
-    sleep 15
 
+    sleep 15
 fi
 
 kind get kubeconfig > default-kubeconfigs/hub
 
-./build/_output/bin/${IMG} &
+setup_channel_operator(){
+    echo "Clone the channel repo"
+    rm -rf multicloud-operators-channel || true
+    git clone https://github.com/open-cluster-management/multicloud-operators-channel.git
 
-sleep 10
-curl http://localhost:8765/clusters | head -n 10
-curl http://localhost:8765/testcases | head -n 10
-curl http://localhost:8765/expectations | head -n 10
-curl http://localhost:8765/testcases?id=chn-001 | head -n 10
-curl http://localhost:8765/expectations?id=chn-001 | head -n 10
+    kubectl apply -f multicloud-operators-channel/deploy/standalone
+    kubectl apply -f multicloud-operators-channel/deploy/crds
+}
 
+setup_subscription_operator(){
+    echo "Clone the subscription repo"
+    rm -rf multicloud-operators-subscription || true
+    git clone https://github.com/open-cluster-management/multicloud-operators-subscription.git
 
-echo "terminate the test server"
-ps aux | grep ${IMG} | grep -v 'grep' | awk '{print $2}' | xargs kill -9
+    kubectl apply -f multicloud-operators-subscription/deploy/standalone
+}
+
+setup_helmrelease_operator(){
+    echo "Clone the subscription repo"
+    rm -rf multicloud-operators-subscription-release || true
+    git clone https://github.com/open-cluster-management/multicloud-operators-subscription-release.git
+
+    kubectl apply -f multicloud-operators-subscription-release/deploy
+    kubectl apply -f multicloud-operators-subscription-release/deploy/crds
+}
+
+# setup_channel_operator
+# setup_subscription_operator
+setup_helmrelease_operator
+
+echo "Process the test cases"
+# go test -v ./client
