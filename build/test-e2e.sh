@@ -14,7 +14,7 @@ echo
 
 export GO111MODULE=on
 
-if [ ${TRAVIS_BUILD} != 1 ]; then
+if [ "$TRAVIS_BUILD" != 1 ]; then
     echo "Build is on Travis" 
 
     echo -e "Get kubectl binary \n"
