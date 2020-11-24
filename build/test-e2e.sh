@@ -79,6 +79,8 @@ setup_operators(){
     setup_subscription_operator
     setup_helmrelease_operator
     setup_placementrule_operator
+
+    kubectl get deploy -A
 }
 
 setup_operators
