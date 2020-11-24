@@ -1,4 +1,7 @@
 # applifecyce-backend-e2e
+
+[Graph version](https://hackmd.io/mbBSgnYITLmN4W-C0L4DRw)
+
 This repo is set up for testing the following operators:
 - [Application](https://github.com/open-cluster-management/multicloud-operators-application)
 - [Channel](https://github.com/open-cluster-management/multicloud-operators-channel)
@@ -16,6 +19,7 @@ Initial Set up:
 - [ ] Placementrule
 
 # Design
+[Design Doc](https://docs.google.com/document/d/1YEnw_EYrcMzUAR4P2QrNvaQwCq_ogujKl2yoDL8giWo/edit)
 
 ```graphviz
 graph {
@@ -162,3 +166,4 @@ http://localhost:8765/expectations?id=chn-001
 ```
 
 Also, there's an E2E go suite for travis.
+
