@@ -48,6 +48,14 @@ setup_subscription_operator(){
     kubectl apply -f multicloud-operators-subscription/deploy/standalone
 }
 
+setup_placementrule_operator(){
+    echo "Clone the placementrule repo"
+    rm -rf multicloud-operators-placementrule || true
+    git clone https://github.com/open-cluster-management/multicloud-operators-placementrule.git
+
+    kubectl apply -f https://raw.githubusercontent.com/open-cluster-management/multicloud-operators-placementrule/master/deploy/crds/apps.open-cluster-management.io_placementrules_crd.yaml
+}
+
 setup_helmrelease_operator(){
     echo "Clone the subscription repo"
     rm -rf multicloud-operators-subscription-release || true
@@ -57,9 +65,10 @@ setup_helmrelease_operator(){
     kubectl apply -f multicloud-operators-subscription-release/deploy/crds
 }
 
-# setup_channel_operator
-# setup_subscription_operator
+setup_channel_operator
+setup_subscription_operator
 setup_helmrelease_operator
+setup_placementrule_operator
 
 echo "Process the test cases"
 # go test -v ./client
