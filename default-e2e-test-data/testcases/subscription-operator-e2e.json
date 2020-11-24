@@ -1,0 +1,9 @@
+
+[
+{
+  "test_id": "sub-001",
+  "desc": "subscription test",
+  "url": "https://raw.githubusercontent.com/ianzhang366/acm-applifecycle-samples/master/e2e-test-simple/namespace_channel_e2e.yaml",
+  "target_cluster": "hub"
+}
+]
