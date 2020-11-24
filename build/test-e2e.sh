@@ -4,14 +4,17 @@ echo "e2e TEST"
 # need to find a way to use the Makefile to set these
 IMG=$(cat COMPONENT_NAME 2> /dev/null)
 
-echo ${TRAVIS_BUILD}
+echo "print ENVs: "
+echo "travis_build: ${TRAVIS_BUILD}"
+echo "travis_event_type: ${TRAVIS_EVENT_TYPE}"
+echo "component_tag_extension: ${COMPONENT_TAG_EXTENSION}"
+echo "pull_request-travis_commit: ${TRAVIS_PULL_REQUEST}-${TRAVIS_COMMIT}"
+echo "end of printing ENVs"
+echo
 
-echo ${TRAVIS_EVENT_TYPE}
-echo ${COMPONENT_TAG_EXTENSION}
-echo ${TRAVIS_PULL_REQUEST}-${TRAVIS_COMMIT}
 export GO111MODULE=on
 
-if [ "$TRAVIS_BUILD" != 1 ]; then
+if [ ${TRAVIS_BUILD} != 1 ]; then
     echo "Build is on Travis" 
 
     echo -e "Get kubectl binary \n"
@@ -33,8 +36,9 @@ kind get kubeconfig > default-kubeconfigs/hub
 
 setup_channel_operator(){
     echo "Clone the channel repo"
-    rm -rf multicloud-operators-channel || true
-    git clone https://github.com/open-cluster-management/multicloud-operators-channel.git
+    if [ ! -d "multicloud-operators-channel" ]; then
+        git clone https://github.com/open-cluster-management/multicloud-operators-channel.git
+    fi
 
     kubectl apply -f multicloud-operators-channel/deploy/standalone
     kubectl apply -f multicloud-operators-channel/deploy/crds
@@ -42,33 +46,41 @@ setup_channel_operator(){
 
 setup_subscription_operator(){
     echo "Clone the subscription repo"
-    rm -rf multicloud-operators-subscription || true
-    git clone https://github.com/open-cluster-management/multicloud-operators-subscription.git
+    if [ ! -d "multicloud-operators-subscription" ]; then
+        git clone https://github.com/open-cluster-management/multicloud-operators-subscription.git
+    fi
 
     kubectl apply -f multicloud-operators-subscription/deploy/standalone
 }
 
 setup_placementrule_operator(){
     echo "Clone the placementrule repo"
-    rm -rf multicloud-operators-placementrule || true
-    git clone https://github.com/open-cluster-management/multicloud-operators-placementrule.git
+    if [ ! -d "multicloud-operators-placementrule" ]; then
+        git clone https://github.com/open-cluster-management/multicloud-operators-placementrule.git
+    fi
 
     kubectl apply -f https://raw.githubusercontent.com/open-cluster-management/multicloud-operators-placementrule/master/deploy/crds/apps.open-cluster-management.io_placementrules_crd.yaml
 }
 
 setup_helmrelease_operator(){
-    echo "Clone the subscription repo"
-    rm -rf multicloud-operators-subscription-release || true
-    git clone https://github.com/open-cluster-management/multicloud-operators-subscription-release.git
+    echo "Clone the helmrelease repo"
+    if [ ! -d "multicloud-operators-subscription-release" ]; then
+        git clone https://github.com/open-cluster-management/multicloud-operators-subscription-release.git
+    fi
 
     kubectl apply -f multicloud-operators-subscription-release/deploy
     kubectl apply -f multicloud-operators-subscription-release/deploy/crds
 }
 
-setup_channel_operator
-setup_subscription_operator
-setup_helmrelease_operator
-setup_placementrule_operator
+
+setup_operators(){
+    setup_channel_operator
+    setup_subscription_operator
+    setup_helmrelease_operator
+    setup_placementrule_operator
+}
+
+setup_operators
 
 echo "Process the test cases"
-# go test -v ./client
+go test -v ./client
