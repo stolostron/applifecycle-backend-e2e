@@ -46,6 +46,8 @@ var _ = BeforeSuite(func(done Done) {
 		if err := srv.ListenAndServe(); err != nil && err != http.ErrServerClosed {
 			log.Fatalf("listen: %s\n", err)
 		}
+
+		By("test server started")
 	}()
 
 	Eventually(func() error {
