@@ -20,9 +20,7 @@ jobs:
   include:
     - stage: integration-test 
       script: 
-        - if ["$TRAVIS_PULL_REQUEST" != "false" || "$TRAVIS_EVENT_TYPE" = "push" ]; then export COMPONENT_TAG_EXTENSION="-PR${TRAVIS_PULL_REQUEST}-${TRAVIS_COMMIT}"; fi;
-        - |
-          make
-          make e2e
-          make security/scans
-          make sonar/go
+        make
+        make e2e
+        make security/scans
+        make sonar/go
