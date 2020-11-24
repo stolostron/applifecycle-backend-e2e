@@ -28,8 +28,6 @@ if [ "$TRAVIS_BUILD" != 1 ]; then
     if [ $? != 0 ]; then
             exit $?;
     fi
-
-    sleep 15
 fi
 
 kind get kubeconfig > default-kubeconfigs/hub
@@ -80,6 +78,7 @@ setup_operators(){
     setup_helmrelease_operator
     setup_placementrule_operator
 
+    sleep 30
     kubectl get deploy -A
 }
 

@@ -1,6 +1,7 @@
 package client_test
 
 import (
+	"fmt"
 	"log"
 	"net/http"
 	"testing"
@@ -47,7 +48,7 @@ var _ = BeforeSuite(func(done Done) {
 			log.Fatalf("listen: %s\n", err)
 		}
 
-		By("test server started")
+		fmt.Println("test server started")
 	}()
 
 	Eventually(func() error {
