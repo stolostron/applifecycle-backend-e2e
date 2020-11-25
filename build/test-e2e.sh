@@ -32,6 +32,14 @@ fi
 
 kind get kubeconfig > default-kubeconfigs/hub
 
+setup_application_operator(){
+    echo "Clone the channel repo"
+    if [ ! -d "multicloud-operators-application" ]; then
+        git clone https://github.com/open-cluster-management/multicloud-operators-application.git
+    fi
+
+    kubectl apply -f multicloud-operators-application/deploy/crds
+}
 
 setup_channel_operator(){
     echo "Clone the channel repo"
@@ -73,12 +81,16 @@ setup_helmrelease_operator(){
 
 
 setup_operators(){
+    setup_application_operator
     setup_channel_operator
     setup_subscription_operator
     setup_helmrelease_operator
     setup_placementrule_operator
 
-    sleep 90
+    if [ "$TRAVIS_BUILD" != 1 ]; then
+        sleep 90
+    fi
+
     kubectl get deploy -A
 }
 

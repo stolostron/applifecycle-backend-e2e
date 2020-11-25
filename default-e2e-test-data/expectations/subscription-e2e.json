@@ -35,7 +35,7 @@
 {
 		"test_id": "sub-001",
 		"target_cluster": "hub",
-		"desc": "should have a channel on hub",
+		"desc": "should have subscription",
 		"apiversion": "apps.open-cluster-management.io/v1",
 		"kind": "subscription",
 		"name": "ns-sub",
@@ -46,7 +46,7 @@
 {
 		"test_id": "sub-001",
 		"target_cluster": "hub",
-		"desc": "should have a channel on hub",
+		"desc": "should have a secret",
 		"apiversion": "v1",
 		"kind": "secret",
 		"name": "dev-test",
@@ -57,12 +57,59 @@
 {
 		"test_id": "sub-001",
 		"target_cluster": "hub",
-		"desc": "should have a channel on hub",
+		"desc": "should have a configmap",
 		"apiversion": "v1",
 		"kind": "configmap",
 		"name": "cfg-from-ch-qa",
 		"namespace": "ns-sub-ns",
 		"matcher": "byname",
 		"args": {}
+	},
+{
+		"test_id": "sub-002",
+		"target_cluster": "hub",
+		"desc": "should have subscription deployed",
+		"apiversion": "apps.open-cluster-management.io/v1",
+		"kind": "subscription",
+		"name": "local-sub-test",
+		"namespace": "helm-local",
+		"matcher": "byname",
+		"args": {}
+	},
+{
+		"test_id": "sub-002",
+		"target_cluster": "hub",
+		"desc": "should have deployable",
+		"apiversion": "apps.open-cluster-management.io/v1",
+		"kind": "deployable",
+		"name": "sample-guestbook",
+		"namespace": "helm-local",
+		"matcher": "byname",
+		"args": {}
+	},
+{
+		"test_id": "sub-002",
+		"target_cluster": "hub",
+		"desc": "should have channel",
+		"apiversion": "apps.open-cluster-management.io/v1",
+		"kind": "channel",
+		"name": "helm-ch",
+		"namespace": "helm-local",
+		"matcher": "byname",
+		"args": {}
+	},
+{
+		"test_id": "sub-002",
+		"target_cluster": "hub",
+		"desc": "should have channel",
+		"apiversion": "apps.open-cluster-management.io/v1",
+		"kind": "helmrelease",
+		"name": "helm-ch",
+		"namespace": "helm-local",
+		"matcher": "byannotationcount",
+		"args": {
+            "apps.open-cluster-management.io/hosting-subscription": "helm-local/local-sub-test",
+            "count": "1"
+		}
 	}
 ]

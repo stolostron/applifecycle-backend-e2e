@@ -21,4 +21,7 @@ var _ = Describe("subscription-test", func() {
 	It("sub-001", func() {
 		Eventually(func() error { return DefaultRunner.Run("sub-001") }, 5*pullInterval, pullInterval).Should(Succeed())
 	})
+	It("sub-002", func() {
+		Eventually(func() error { return DefaultRunner.Run("sub-002") }, 5*pullInterval, pullInterval).Should(Succeed())
+	})
 })

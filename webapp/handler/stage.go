@@ -160,7 +160,7 @@ func (s *Processor) Run(testID string, tc pkg.TestCasesReg) (AppliedCase, error)
 		return out, err
 	}
 
-	s.logger.V(DebugLevel).Info(fmt.Sprintf("applyed %s of test case %s on cluster %s", c.Desc, testID, c.TargetCluster))
+	s.logger.Info(fmt.Sprintf("applyed %s of test case %s on cluster %s", c.URL, testID, c.TargetCluster))
 
 	out.Cfg = kCfg
 	out.Tc = c
