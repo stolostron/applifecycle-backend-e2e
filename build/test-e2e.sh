@@ -24,11 +24,19 @@ if [ "$TRAVIS_BUILD" != 1 ]; then
     echo -e "\nDownload and install KinD\n"
     go get sigs.k8s.io/kind
 
-    kind create cluster
-    if [ $? != 0 ]; then
-            exit $?;
-    fi
 fi
+
+kind delete cluster
+if [ $? != 0 ]; then
+        exit $?;
+fi
+
+kind create cluster
+if [ $? != 0 ]; then
+        exit $?;
+fi
+
+sleep 15
 
 kind get kubeconfig > default-kubeconfigs/hub
 
