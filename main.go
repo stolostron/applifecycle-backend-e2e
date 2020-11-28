@@ -17,7 +17,7 @@ const (
 	defaultAddr = "localhost:8765"
 	//this will be depend on the caller's location
 	defaultCfgDir  = "default-kubeconfigs"
-	defaultDataDir = "default-e2e-test-data"
+	defaultDataDir = ""
 
 	CONFIG_PATH = "CONFIGS"
 	DATA_PATH   = "E2E_DATA"

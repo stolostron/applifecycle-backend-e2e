@@ -114,21 +114,7 @@ func (s *Processor) CasesRunnerHandler(w http.ResponseWriter, r *http.Request) {
 	return
 }
 
-func (s *Processor) ReloadTestCaseReg() {
-	s.mux.Lock()
-	newTc, err := pkg.LoadTestCases(s.dataDir)
-	if err != nil {
-		return
-	}
-
-	s.testCases = newTc
-
-	s.mux.Unlock()
-}
-
 func (s *Processor) DisplayTestCasesHandler(w http.ResponseWriter, r *http.Request) {
-	s.ReloadTestCaseReg()
-
 	testID := r.URL.Query().Get("id")
 	s.logger.Info(fmt.Sprintf("Start display testcase testID (%s)", testID))
 	defer s.logger.Info(fmt.Sprintf("Done display testcase testID (%s)", testID))

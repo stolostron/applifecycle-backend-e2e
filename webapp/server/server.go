@@ -35,6 +35,7 @@ func NewServer(addr, cfg, data string, lvl, timeout int) *http.Server {
 	mux.HandleFunc("/testcases", p.DisplayTestCasesHandler)
 	mux.HandleFunc("/expectations", p.DisplayExpectationHandler)
 	mux.HandleFunc("/stages", p.DisplayStagesHandler)
+	mux.HandleFunc("/", p.HelperHandler)
 
 	return &http.Server{
 		Addr:    addr,

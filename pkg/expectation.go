@@ -28,6 +28,22 @@ type TestCases []TestCase
 
 type TestCasesReg map[string]TestCase
 
+func BytesToTestCases(b []byte) (*TestCases, error) {
+	tc := &TestCases{}
+	if err := json.Unmarshal(b, tc); err != nil {
+		return tc, gerr.Wrap(err, "failed to load test cases")
+	}
+
+	return tc, nil
+}
+
+func ToTcReg(in TestCasesReg, tc *TestCases) TestCasesReg {
+	for _, t := range *tc {
+		in[t.CaseID] = t
+	}
+	return in
+}
+
 func LoadTestCases(dir string) (TestCasesReg, error) {
 	tDir := fmt.Sprintf("%s/%s", dir, testCaseDirSuffix)
 
@@ -46,15 +62,12 @@ func LoadTestCases(dir string) (TestCasesReg, error) {
 			return out, gerr.Wrapf(err, "failed to load test cases at file %s", p)
 		}
 
-		tc := &TestCases{}
-		err = json.Unmarshal(c, tc)
+		tc, err := BytesToTestCases(c)
 		if err != nil {
-			return out, gerr.Wrap(err, "failed to load test cases")
+			return out, gerr.Wrapf(err, "failed to load test cases at file %s", p)
 		}
 
-		for _, t := range *tc {
-			out[t.CaseID] = t
-		}
+		out = ToTcReg(out, tc)
 	}
 
 	return out, nil
@@ -81,13 +94,21 @@ type Expectations []Expectation
 
 type ExpctationReg map[string]Expectations
 
-func parseExpectations(in []byte) (*Expectations, error) {
+func BytesToExpectations(in []byte) (*Expectations, error) {
 	exps := &Expectations{}
 	if err := json.Unmarshal(in, exps); err != nil {
 		return exps, err
 	}
 
 	return exps, nil
+}
+
+func ToExpReg(in ExpctationReg, exps *Expectations) ExpctationReg {
+	for _, e := range *exps {
+		in[e.TestID] = append(in[e.TestID], e)
+	}
+
+	return in
 }
 
 func (e ExpctationReg) Load(dir string) (ExpctationReg, error) {
@@ -106,14 +127,12 @@ func (e ExpctationReg) Load(dir string) (ExpctationReg, error) {
 			return out, gerr.Wrap(err, "failed to load expectations")
 		}
 
-		exps, err := parseExpectations(c)
+		exps, err := BytesToExpectations(c)
 		if err != nil {
 			return out, err
 		}
 
-		for _, e := range *exps {
-			out[e.TestID] = append(out[e.TestID], e)
-		}
+		out = ToExpReg(out, exps)
 	}
 
 	return out, nil
