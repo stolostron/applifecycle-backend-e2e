@@ -41,7 +41,8 @@ sleep 15
 kind get kubeconfig > default-kubeconfigs/hub
 
 setup_application_operator(){
-    echo "Clone the channel repo"
+    echo "Clone the application repo"
+    echo
     if [ ! -d "multicloud-operators-application" ]; then
         git clone https://github.com/open-cluster-management/multicloud-operators-application.git
     fi
@@ -51,12 +52,14 @@ setup_application_operator(){
 
 setup_channel_operator(){
     echo "Clone the channel repo"
+    echo
     if [ ! -d "multicloud-operators-channel" ]; then
         git clone https://github.com/open-cluster-management/multicloud-operators-channel.git
     fi
 
     kubectl apply -f multicloud-operators-channel/deploy/crds
     kubectl apply -f multicloud-operators-channel/deploy/standalone
+
     kubectl rollout status deployment/multicluster-operators-channel
     if [ $? != 0 ]; then
         echo "failed to deploy the channel operator"
@@ -66,15 +69,17 @@ setup_channel_operator(){
 
 setup_subscription_operator(){
     echo "Clone the subscription repo"
+    echo
     if [ ! -d "multicloud-operators-subscription" ]; then
         git clone https://github.com/open-cluster-management/multicloud-operators-subscription.git
     fi
 
-    kubectl create ns multicluster-operators
     kubectl apply -f multicloud-operators-subscription/deploy/common
+    sleep 5
+
     kubectl apply -f multicloud-operators-subscription/deploy/standalone
 
-    kubectl rollout status deployment/multicluster-operators-subscription -n multicluster-operators 
+    kubectl rollout status deployment/multicluster-operators-subscription -n multicluster-operators
     if [ $? != 0 ]; then
         echo "failed to deploy the subscription operator"
         exit $?;
@@ -83,6 +88,7 @@ setup_subscription_operator(){
 
 setup_placementrule_operator(){
     echo "Clone the placementrule repo"
+    echo
     if [ ! -d "multicloud-operators-placementrule" ]; then
         git clone https://github.com/open-cluster-management/multicloud-operators-placementrule.git
     fi
@@ -92,6 +98,7 @@ setup_placementrule_operator(){
 
 setup_helmrelease_operator(){
     echo "Clone the helmrelease repo"
+    echo
     if [ ! -d "multicloud-operators-subscription-release" ]; then
         git clone https://github.com/open-cluster-management/multicloud-operators-subscription-release.git
     fi

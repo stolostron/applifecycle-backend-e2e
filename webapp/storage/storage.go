@@ -37,7 +37,7 @@ func (e *embedData) Has(file string) bool {
 	return false
 }
 
-// Embed TestCase expose
+// Embed TestCase
 var DefaultTestCaseStore = newEmbedData()
 
 func LoadTestCases() (pkg.TestCasesReg, error) {
@@ -58,7 +58,7 @@ func LoadTestCases() (pkg.TestCasesReg, error) {
 	return out, nil
 }
 
-// Embed Expectation expose
+// Embed Expectation
 var DefaultExpectationStore = newEmbedData()
 
 func LoadExpectations() (pkg.ExpctationReg, error) {
@@ -74,6 +74,27 @@ func LoadExpectations() (pkg.ExpctationReg, error) {
 		}
 
 		out = pkg.ToExpReg(out, tc)
+	}
+
+	return out, nil
+}
+
+// Embed Stage
+var DefaultStageStore = newEmbedData()
+
+func LoadStages() (pkg.StageReg, error) {
+	out := pkg.StageReg{}
+	if len(DefaultStageStore.store) == 0 {
+		return out, nil
+	}
+
+	for _, b := range DefaultStageStore.store {
+		st, err := pkg.BytesToStages(b)
+		if err != nil {
+			return out, err
+		}
+
+		out = pkg.ToStageReg(out, st)
 	}
 
 	return out, nil

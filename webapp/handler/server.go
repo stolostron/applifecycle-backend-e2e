@@ -58,6 +58,11 @@ func NewProcessor(cfgDir, dataDir string, timeout int, logger logr.Logger) (*Pro
 		if err != nil {
 			return nil, gerr.Wrap(err, "failed to load expectations")
 		}
+
+		stages, err = storage.LoadStages()
+		if err != nil {
+			return nil, gerr.Wrap(err, "failed to load test case")
+		}
 	} else {
 		tCases, err = pkg.LoadTestCases(dataDir)
 		if err != nil {
