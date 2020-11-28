@@ -9,18 +9,6 @@ import (
 	gerr "github.com/pkg/errors"
 )
 
-func (s *Processor) ReloadStageReg() {
-	s.mux.Lock()
-	newSt, err := pkg.LoadStages(s.dataDir)
-	if err != nil {
-		return
-	}
-
-	s.stages = newSt
-
-	s.mux.Unlock()
-}
-
 type StageRunner interface {
 	Run(id string, caseReg pkg.TestCasesReg) (AppliedCase, error)
 	Check(id string, timeout time.Duration, expReg pkg.ExpctationReg) (*TResponse, error)
@@ -30,7 +18,6 @@ type StageRunner interface {
 var _ StageRunner = (*Processor)(nil)
 
 func (s *Processor) StageRunnerHandler(w http.ResponseWriter, r *http.Request) {
-
 	ID := r.URL.Query().Get("id")
 	w.Header().Set("Content-Type", "application/json")
 
@@ -63,8 +50,6 @@ func (s *Processor) StageRunnerHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func (s *Processor) DisplayStagesHandler(w http.ResponseWriter, r *http.Request) {
-	s.ReloadStageReg()
-
 	ID := r.URL.Query().Get("id")
 	s.logger.Info(fmt.Sprintf("Start display stages testID (%s)", ID))
 	defer s.logger.Info(fmt.Sprintf("Done display stages testID (%s)", ID))
@@ -160,7 +145,7 @@ func (s *Processor) Run(testID string, tc pkg.TestCasesReg) (AppliedCase, error)
 		return out, err
 	}
 
-	s.logger.Info(fmt.Sprintf("applyed %s of test case %s on cluster %s", c.URL, testID, c.TargetCluster))
+	s.logger.Info(fmt.Sprintf("applyed %s of test case %s on cluster %s", c.Desc, testID, c.TargetCluster))
 
 	out.Cfg = kCfg
 	out.Tc = c

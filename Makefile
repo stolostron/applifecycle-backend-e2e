@@ -91,3 +91,7 @@ push: tag
 ############################################################
 clean::
 	rm -f build/$(IMG)
+
+gen:
+	@echo "generate the default test data for binary"
+	go generate ./...

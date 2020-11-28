@@ -21,8 +21,9 @@ const (
 	JUnitResult  = "results"
 	defaultAddr  = "localhost:8765"
 	//this will be depend on the caller's location
-	defaultCfgDir  = "../default-kubeconfigs"
-	defaultDataDir = "../default-e2e-test-data"
+	defaultCfgDir = "../default-kubeconfigs"
+	//defaultDataDir = "../default-e2e-test-data"
+	defaultDataDir = ""
 	logLvl         = 1
 	testTimeout    = 30
 	pullInterval   = 3 * time.Second

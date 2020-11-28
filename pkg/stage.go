@@ -19,6 +19,23 @@ type Stages []Stage
 
 type StageReg map[string]Stages
 
+func BytesToStages(b []byte) (*Stages, error) {
+	st := &Stages{}
+	if err := json.Unmarshal(b, st); err != nil {
+		return st, gerr.Wrap(err, "failed to load test cases")
+	}
+
+	return st, nil
+}
+
+func ToStageReg(in StageReg, st *Stages) StageReg {
+	for _, t := range *st {
+		in[t.ID] = append(in[t.ID], t)
+	}
+
+	return in
+}
+
 func LoadStages(dir string) (StageReg, error) {
 	tDir := fmt.Sprintf("%s/%s", dir, stagesDirSuffix)
 	out := StageReg{}
@@ -36,15 +53,12 @@ func LoadStages(dir string) (StageReg, error) {
 			return out, gerr.Wrapf(err, "failed to load test cases at file %s", p)
 		}
 
-		st := &Stages{}
-		err = json.Unmarshal(c, st)
+		st, err := BytesToStages(c)
 		if err != nil {
 			return out, gerr.Wrap(err, "failed to load test cases")
 		}
 
-		for _, t := range *st {
-			out[t.ID] = append(out[t.ID], t)
-		}
+		out = ToStageReg(out, st)
 	}
 
 	return out, nil

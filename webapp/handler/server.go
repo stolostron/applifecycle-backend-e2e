@@ -7,6 +7,7 @@ import (
 
 	"github.com/go-logr/logr"
 	"github.com/open-cluster-management/applifecycle-backend-e2e/pkg"
+	"github.com/open-cluster-management/applifecycle-backend-e2e/webapp/storage"
 	gerr "github.com/pkg/errors"
 )
 
@@ -35,25 +36,49 @@ type Processor struct {
 }
 
 func NewProcessor(cfgDir, dataDir string, timeout int, logger logr.Logger) (*Processor, error) {
+	var err error
+
 	cfg, err := pkg.LoadKubeConfigs(cfgDir)
 	if err != nil {
 		return nil, gerr.Wrap(err, "failed to load kubeconfig")
 	}
 
-	tCases, err := pkg.LoadTestCases(dataDir)
-	if err != nil {
-		return nil, gerr.Wrap(err, "failed to load test case")
-	}
-
+	tCases := pkg.TestCasesReg{}
 	exps := pkg.ExpctationReg{}
-	exps, err = exps.Load(dataDir)
-	if err != nil {
-		return nil, gerr.Wrap(err, "failed to load expectations")
-	}
+	stages := pkg.StageReg{}
 
-	stages, err := pkg.LoadStages(dataDir)
-	if err != nil {
-		return nil, gerr.Wrap(err, "failed to load test case")
+	//dataDir should have folders for testcases, expectations, and stages
+	if dataDir == "" {
+		tCases, err = storage.LoadTestCases()
+		if err != nil {
+			return nil, gerr.Wrap(err, "failed to load test case")
+		}
+
+		exps, err = storage.LoadExpectations()
+		if err != nil {
+			return nil, gerr.Wrap(err, "failed to load expectations")
+		}
+
+		stages, err = storage.LoadStages()
+		if err != nil {
+			return nil, gerr.Wrap(err, "failed to load test case")
+		}
+	} else {
+		tCases, err = pkg.LoadTestCases(dataDir)
+		if err != nil {
+			return nil, gerr.Wrap(err, "failed to load test case")
+		}
+
+		exps = pkg.ExpctationReg{}
+		exps, err = exps.Load(dataDir)
+		if err != nil {
+			return nil, gerr.Wrap(err, "failed to load expectations")
+		}
+
+		stages, err = pkg.LoadStages(dataDir)
+		if err != nil {
+			return nil, gerr.Wrap(err, "failed to load test case")
+		}
 	}
 
 	return &Processor{

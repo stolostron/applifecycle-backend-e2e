@@ -110,21 +110,7 @@ func (s *Processor) ExpectationCheckerHandler(w http.ResponseWriter, r *http.Req
 	return
 }
 
-func (s *Processor) ReloadExpectationReg() {
-	s.mux.Lock()
-
-	newExps, err := s.expectations.Load(s.dataDir)
-	if err != nil {
-		return
-	}
-
-	s.expectations = newExps
-	s.mux.Unlock()
-}
-
 func (s *Processor) DisplayExpectationHandler(w http.ResponseWriter, r *http.Request) {
-	s.ReloadExpectationReg()
-
 	tr := &TResponse{Name: "expectations list"}
 
 	testID := r.URL.Query().Get("id")
