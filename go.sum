@@ -779,13 +779,13 @@ github.com/op/go-logging v0.0.0-20160315200505-970db520ece7/go.mod h1:HzydrMdWEr
 github.com/open-cluster-management/ansiblejob-go-lib v0.1.12/go.mod h1:dDL15yXQUna2cVZwjgnQ/HZ95deXgI4Uj8/djY4A5o4=
 github.com/open-cluster-management/api v0.0.0-20201007180356-41d07eee4294 h1:Ek/KLp95G0ThcfUQ5vFj7VAySJvOXbXBD4vJzHrkgJg=
 github.com/open-cluster-management/api v0.0.0-20201007180356-41d07eee4294/go.mod h1:F1hDJHtWuV7BAUtfL4XRS9GZjUpksleLgEcisNXvQEw=
-github.com/open-cluster-management/multicloud-operators-channel v1.0.1-0.20201120143200-e505a259de45 h1:GuMOB2hJjZA1jxcoQ1PsTMtBSrDfN74E9/ex66hLT0M=
-github.com/open-cluster-management/multicloud-operators-channel v1.0.1-0.20201120143200-e505a259de45/go.mod h1:aL69GeyC51UBT9jmpogrvoJUQC5gVm+QvRY+e56NjH4=
+github.com/open-cluster-management/multicloud-operators-channel v0.2.2-pre h1:CPA1DYNderwf4s6/1lO7WtHrWfCkO1Z6ExcgnKaI87A=
+github.com/open-cluster-management/multicloud-operators-channel v0.2.2-pre/go.mod h1:aL69GeyC51UBT9jmpogrvoJUQC5gVm+QvRY+e56NjH4=
 github.com/open-cluster-management/multicloud-operators-deployable v0.0.0-20201119200129-dcb15e7afa3f/go.mod h1:IgsJxFw2EyGpwxTNMz9MzAC3Ci6cry2DErgBl3cv+SI=
 github.com/open-cluster-management/multicloud-operators-deployable v0.2.2-pre h1:ZrQ1ssZ6pXFrPY9ZEMb0ANs3UqTb6tMwCidcwDMEddc=
 github.com/open-cluster-management/multicloud-operators-deployable v0.2.2-pre/go.mod h1:IgsJxFw2EyGpwxTNMz9MzAC3Ci6cry2DErgBl3cv+SI=
-github.com/open-cluster-management/multicloud-operators-placementrule v1.0.1-2020-06-08-14-28-27.0.20201118195339-05a8c4c89c12 h1:iPQiiQSTOYvUXxOYZ4YjcuafOse2LnuY318yhDeJ+NU=
-github.com/open-cluster-management/multicloud-operators-placementrule v1.0.1-2020-06-08-14-28-27.0.20201118195339-05a8c4c89c12/go.mod h1:qoFtdFcv8E5Ewuvw5MCSTfMp5/iVR0kPfdWg7/VTESM=
+github.com/open-cluster-management/multicloud-operators-placementrule v0.2.2-pre h1:qMmpJN3hhc88YFjyeuQg56gE9+mOZudat2eYlKBVZ1c=
+github.com/open-cluster-management/multicloud-operators-placementrule v0.2.2-pre/go.mod h1:qoFtdFcv8E5Ewuvw5MCSTfMp5/iVR0kPfdWg7/VTESM=
 github.com/open-cluster-management/multicloud-operators-subscription v0.2.2-pre h1:eHaxLhVxb0Kiv9HsIixYn0O+LOTiZsH6jozYbS/KQ9Q=
 github.com/open-cluster-management/multicloud-operators-subscription v0.2.2-pre/go.mod h1:Se+fBDKfY1SysKjxRrcjVxATaaWpwDBNKAXovZOn+yQ=
 github.com/open-cluster-management/multicloud-operators-subscription-release v1.0.1-2020-06-08-14-28-27.0.20201120152906-e64e01280049 h1:Sre0c4KlZ6mtqM3Pu4iv4lzsg7DRpisE1j2wV6gVmz8=

@@ -21,4 +21,8 @@ require (
 	sigs.k8s.io/controller-runtime v0.6.3
 )
 
-replace k8s.io/client-go => k8s.io/client-go v0.19.3
+replace (
+	github.com/open-cluster-management/multicloud-operators-channel => github.com/open-cluster-management/multicloud-operators-channel v0.2.2-pre
+	github.com/open-cluster-management/multicloud-operators-placementrule => github.com/open-cluster-management/multicloud-operators-placementrule v0.2.2-pre
+	k8s.io/client-go => k8s.io/client-go v0.19.3
+)
