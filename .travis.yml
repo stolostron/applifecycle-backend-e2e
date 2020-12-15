@@ -25,7 +25,6 @@ jobs:
           make e2e
     - stage: publish
       name: "Publish the image to quay with an official version/sha tag and publish entry to integration pipeline stage"
-      if: branch =~ /^release-[0-9]+\..*$/
       script:
         - |
           make push
