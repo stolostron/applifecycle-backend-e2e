@@ -22,8 +22,9 @@ const (
 )
 
 type Processor struct {
-	mux          *sync.Mutex
-	timeout      time.Duration
+	mux     *sync.Mutex
+	timeout time.Duration
+	// the config directory flag
 	cfgDir       string
 	dataDir      string
 	configs      pkg.KubeConfigs

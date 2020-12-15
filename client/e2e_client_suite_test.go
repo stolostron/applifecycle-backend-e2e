@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"os"
 	"testing"
 	"time"
 
@@ -20,16 +21,20 @@ const (
 	StartTimeout = 60 // seconds
 	JUnitResult  = "results"
 	defaultAddr  = "localhost:8765"
-	//this will be depend on the caller's location
-	defaultCfgDir = "../default-kubeconfigs"
-	//defaultDataDir = "../default-e2e-test-data"
+	//empty dataDir means test will use the compiled binary data for test
 	defaultDataDir = ""
 	logLvl         = 1
 	testTimeout    = 30
 	pullInterval   = 3 * time.Second
+	evnKubeConfig  = "KUBE_DIR"
 )
 
-func TestAppLifecycleAPI_E2E(t *testing.T) {
+var (
+	//this will be depend on the caller's location
+	cfgDir = "../default-kubeconfigs"
+)
+
+func TestAppLifecycle_API_E2E(t *testing.T) {
 	RegisterFailHandler(Fail)
 
 	RunSpecsWithDefaultAndCustomReporters(t,
@@ -42,7 +47,12 @@ var DefaultRunner = clt.NewRunner(defaultAddr, "/run")
 var _ = BeforeSuite(func(done Done) {
 	By("bootstrapping test environment")
 
-	srv := server.NewServer(defaultAddr, defaultCfgDir, defaultDataDir, logLvl, testTimeout)
+	envDir, _ := os.LookupEnv(evnKubeConfig)
+	if envDir != "" {
+		cfgDir = envDir
+	}
+
+	srv := server.NewServer(defaultAddr, cfgDir, defaultDataDir, logLvl, testTimeout)
 
 	go func() {
 		if err := srv.ListenAndServe(); err != nil && err != http.ErrServerClosed {

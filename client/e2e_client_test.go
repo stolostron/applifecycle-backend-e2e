@@ -5,6 +5,12 @@ import (
 	. "github.com/onsi/gomega"
 )
 
+var _ = FDescribe("e2e-server", func() {
+	It("hello-world", func() {
+		By("the applifecycle-backend-e2e is running fine")
+	})
+})
+
 var _ = Describe("helmrelease-test", func() {
 	It("release-001", func() {
 		Eventually(func() error { return DefaultRunner.Run("release-001") }, 5*pullInterval, pullInterval).Should(Succeed())

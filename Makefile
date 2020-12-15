@@ -72,6 +72,7 @@ run: build-images
 
 kind-setup:
 	kind get kubeconfig > default-kubeconfigs/hub
+	kubectl config use-context kind-kind
 
 e2e: gobuild
 	build/test-e2e.sh

@@ -24,10 +24,13 @@ build-harness-extensions/
 
 OPENSOURCE.check
 
+default-kubeconfigs
+
 # override build harness vendoring
 !vbh/.build-harness-vendorized
 !vbh/build-harness
 !vbh/build-harness-extensions
+
 
 multicloud-operators-channel
 multicloud-operators-subscription
