@@ -19,7 +19,7 @@ import (
 
 const (
 	StartTimeout = 60 // seconds
-	JUnitResult  = "../results"
+	JUnitResult  = "results"
 	defaultAddr  = "localhost:8765"
 	//empty dataDir means test will use the compiled binary data for test
 	defaultDataDir = ""
