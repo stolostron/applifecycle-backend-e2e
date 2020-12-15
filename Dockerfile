@@ -2,7 +2,7 @@
 # and a workspace (GOPATH) configured at /go.
 FROM golang
 
-RUN git clone -b v0.1.6 --single-branch https://github.com/open-cluster-management/applifecycle-backend-e2e.git /opt/e2e
+RUN git clone -b v0.1.7 --single-branch https://github.com/open-cluster-management/applifecycle-backend-e2e.git /opt/e2e
 
 RUN curl -LO https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl
 
