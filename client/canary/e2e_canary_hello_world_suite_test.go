@@ -60,7 +60,7 @@ var _ = BeforeSuite(func(done Done) {
 			log.Fatalf("listen: %s\n", err)
 		}
 
-		fmt.Println("test server started")
+		fmt.Fprintln(os.Stdout, "test server started")
 	}()
 
 	Eventually(func() error {
@@ -71,6 +71,6 @@ var _ = BeforeSuite(func(done Done) {
 }, StartTimeout)
 
 var _ = AfterSuite(func() {
-	By("tearing down the test environment")
+	fmt.Fprintln(os.Stdout, "tear down the test server")
 	gexec.KillAndWait(3 * time.Second)
 })

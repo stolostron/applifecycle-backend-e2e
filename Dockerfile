@@ -15,5 +15,6 @@ WORKDIR /opt/e2e/client/canary
 # the test data is in the binary format
 ENTRYPOINT go test -v
 
+ENTRYPOINT ["tail", "-f", "/dev/null"]
 # Document that the service listens on port 8765.
 EXPOSE 8765
