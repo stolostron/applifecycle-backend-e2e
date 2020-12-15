@@ -17,9 +17,17 @@ export GO111MODULE=on
 if [ "$TRAVIS_BUILD" != 1 ]; then
     echo "Build is on Travis" 
 
-    echo -e "Get kubectl binary \n"
     # Download and install kubectl
-    curl -LO https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl && chmod +x kubectl && sudo mv kubectl /usr/local/bin/
+    echo -e "\nGet kubectl binary\n"
+    PLATFORM=`uname -s | awk '{print tolower($0)}'`
+    if [ "`which kubectl`" ]; then
+        echo "kubectl PATH is `which kubectl`"
+    else
+        mkdir -p $(pwd)/bin
+        curl -LO https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/$PLATFORM/amd64/kubectl && mv kubectl $(pwd)/bin/ && chmod +x $(pwd)/bin/kubectl
+        export PATH=$PATH:$(pwd)/bin
+        echo "kubectl PATH is `which kubectl`"
+    fi
 
     echo -e "\nDownload and install KinD\n"
     go get sigs.k8s.io/kind
