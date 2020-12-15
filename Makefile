@@ -79,6 +79,7 @@ e2e: gobuild
 
 tag:
 	docker tag ${IMAGE_NAME_AND_VERSION}:latest ${IMAGE_NAME_AND_VERSION}:${COMPONENT_VERSION}${COMPONENT_TAG_EXTENSION}
+	docker tag ${IMAGE_NAME_AND_VERSION}:latest ${IMAGE_NAME_AND_VERSION}:canary
 	docker images
 
 push: tag
@@ -86,6 +87,8 @@ push: tag
 	docker images
 	docker push ${IMAGE_NAME_AND_VERSION}:${COMPONENT_VERSION}${COMPONENT_TAG_EXTENSION}
 	@echo "Pushed the following image: ${IMAGE_NAME_AND_VERSION}:${COMPONENT_VERSION}${COMPONENT_TAG_EXTENSION}"
+	docker push ${IMAGE_NAME_AND_VERSION}:canary
+	@echo "Pushed the following image: ${IMAGE_NAME_AND_VERSION}:canary"
 
 ############################################################
 # clean section
