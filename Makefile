@@ -77,15 +77,18 @@ kind-setup:
 e2e: gobuild
 	build/test-e2e.sh
 
-tag:
+tag: build-images
 	docker tag ${IMAGE_NAME_AND_VERSION}:latest ${IMAGE_NAME_AND_VERSION}:${COMPONENT_VERSION}${COMPONENT_TAG_EXTENSION}
+	docker tag ${IMAGE_NAME_AND_VERSION}:latest ${IMAGE_NAME_AND_VERSION}:canary
+	@echo "tagged images are:"
 	docker images
 
 push: tag
 	docker login ${REGISTRY} -u ${DOCKER_USER} -p ${DOCKER_PASS}
-	docker images
 	docker push ${IMAGE_NAME_AND_VERSION}:${COMPONENT_VERSION}${COMPONENT_TAG_EXTENSION}
 	@echo "Pushed the following image: ${IMAGE_NAME_AND_VERSION}:${COMPONENT_VERSION}${COMPONENT_TAG_EXTENSION}"
+	docker push ${IMAGE_NAME_AND_VERSION}:canary
+	@echo "Pushed the following image: ${IMAGE_NAME_AND_VERSION}:canary"
 
 ############################################################
 # clean section

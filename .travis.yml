@@ -15,6 +15,7 @@ services:
 # define stages
 stages:
   - integration-test
+  - publish
 
 jobs:
   include:
@@ -22,3 +23,8 @@ jobs:
       script: 
         - |
           make e2e
+    - stage: publish
+      name: "Publish the image to quay with an official version/sha tag and publish entry to integration pipeline stage"
+      script:
+        - |
+          make push

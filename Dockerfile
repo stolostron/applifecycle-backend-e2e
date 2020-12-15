@@ -10,11 +10,10 @@ RUN chmod +x ./kubectl
 RUN mv ./kubectl /usr/local/bin
 
 
-WORKDIR /opt/e2e/client
+WORKDIR /opt/e2e/client/canary
 
 # the test data is in the binary format
-ENTRYPOINT go test
-
+ENTRYPOINT go test -v
 
 # Document that the service listens on port 8765.
 EXPOSE 8765
