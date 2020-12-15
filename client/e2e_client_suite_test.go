@@ -49,6 +49,7 @@ var _ = BeforeSuite(func(done Done) {
 
 	envDir, _ := os.LookupEnv(evnKubeConfig)
 	if envDir != "" {
+		fmt.Fprintf(os.Stdout, "using ENV var KUBE_DIR (%s) to get kubeconfigs\n", envDir)
 		cfgDir = envDir
 	}
 

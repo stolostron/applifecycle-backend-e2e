@@ -142,5 +142,10 @@ setup_operators(){
 
 setup_operators
 
+export KUBE_DIR="../default-kubeconfigs"
+
+# make sure when using focus mode on ginkgo won't fail on skip
+export GINKGO_EDITOR_INTEGRATION=true
+
 echo "Process the test cases"
 go test -v ./client
