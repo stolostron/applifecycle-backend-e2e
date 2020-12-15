@@ -19,7 +19,7 @@ import (
 
 const (
 	StartTimeout = 60 // seconds
-	JUnitResult  = "results"
+	JUnitResult  = "../results"
 	defaultAddr  = "localhost:8765"
 	//empty dataDir means test will use the compiled binary data for test
 	defaultDataDir = ""
@@ -31,7 +31,7 @@ const (
 
 var (
 	//this will be depend on the caller's location
-	cfgDir = "../default-kubeconfigs"
+	cfgDir = "../../default-kubeconfigs"
 )
 
 func TestAppLifecycle_API_E2E(t *testing.T) {
@@ -60,7 +60,7 @@ var _ = BeforeSuite(func(done Done) {
 			log.Fatalf("listen: %s\n", err)
 		}
 
-		fmt.Println("test server started")
+		fmt.Fprintln(os.Stdout, "test server started")
 	}()
 
 	Eventually(func() error {
@@ -71,6 +71,6 @@ var _ = BeforeSuite(func(done Done) {
 }, StartTimeout)
 
 var _ = AfterSuite(func() {
-	By("tearing down the test environment")
+	fmt.Fprintln(os.Stdout, "tear down the test server")
 	gexec.KillAndWait(3 * time.Second)
 })
