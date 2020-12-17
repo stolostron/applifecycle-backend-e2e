@@ -43,20 +43,14 @@ endif
 
 
 # GITHUB_USER containing '@' char must be escaped with '%40'
-
-USE_VENDORIZED_BUILD_HARNESS ?=
-
-ifndef USE_VENDORIZED_BUILD_HARNESS
-	ifeq ($(TRAVIS_BUILD),1)
-		-include $(shell [ -f ".build-harness-bootstrap" ] || curl --fail -sSL -o .build-harness-bootstrap -H "Authorization: token $(GITHUB_TOKEN)" -H "Accept: application/vnd.github.v3.raw" "https://raw.github.com/open-cluster-management/build-harness-extensions/master/templates/Makefile.build-harness-bootstrap"; echo .build-harness-bootstrap)
-	endif
-else
--include vbh/.build-harness-vendorized
+ifeq ($(TRAVIS_BUILD),1)
+	-include $(shell [ -f ".build-harness-bootstrap" ] || curl --fail -sSL -o .build-harness-bootstrap -H "Authorization: token $(GITHUB_TOKEN)" -H "Accept: application/vnd.github.v3.raw" "https://raw.github.com/open-cluster-management/build-harness-extensions/master/templates/Makefile.build-harness-bootstrap"; echo .build-harness-bootstrap)
 endif
 
 
 default::
 	@echo "Build Harness Bootstrapped"
+	@echo "${TRAVIS_BUILD}"
 
 
 gobuild:
