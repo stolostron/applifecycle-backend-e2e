@@ -41,6 +41,16 @@ func processResource(tURL, kCfgDir string, subCmd ocCommand) error {
 	return nil
 }
 
+func processResources(urls []string, kCfgDir string, subCmd ocCommand) error {
+	for _, url := range urls {
+		if err := processResource(url, kCfgDir, subCmd); err != nil {
+			return gerr.Wrapf(err, "failed to apply url: %s", url)
+		}
+	}
+
+	return nil
+}
+
 func (s *Processor) CasesRunnerHandler(w http.ResponseWriter, r *http.Request) {
 	testID := r.URL.Query().Get("id")
 
