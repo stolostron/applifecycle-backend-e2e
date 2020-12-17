@@ -78,7 +78,6 @@ jobs:
         - |
           make 
           make release-ff
-    - stage: publish
 
     - stage: publish
       name: "Publish the image to quay with an official version/sha tag and publish entry to integration pipeline stage"
