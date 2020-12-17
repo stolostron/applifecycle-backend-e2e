@@ -36,6 +36,7 @@ stages:
   - build
   - unit-test
   - test-e2e
+  - release-ff
   - publish
 
 jobs:
@@ -69,6 +70,15 @@ jobs:
         - if [ "$TRAVIS_PULL_REQUEST" != "false" ]; then export COMPONENT_TAG_EXTENSION="-PR${TRAVIS_PULL_REQUEST}-${TRAVIS_COMMIT}"; fi;
         - |
           make e2e
+
+    - stage: release-ff
+      name: "Push commits from master to branch defined in RELEASE_FF_BRANCH"
+      if: type = push AND branch =~ /^main$/
+      script:
+        - |
+          make 
+          make release-ff
+    - stage: publish
 
     - stage: publish
       name: "Publish the image to quay with an official version/sha tag and publish entry to integration pipeline stage"
