@@ -86,7 +86,7 @@ kind-setup:
 	kubectl config use-context kind-kind
 
 e2e: gobuild
-	build/test-e2e.sh
+	build/run-e2e-tests.sh
 
 tag: build-images
 	docker tag ${IMAGE_NAME_AND_VERSION}:latest ${IMAGE_NAME_AND_VERSION}:${COMPONENT_VERSION}${COMPONENT_TAG_EXTENSION}
