@@ -18,10 +18,10 @@ const (
 
 //TestCase contains an id and a ULR pointing to it's raw content
 type TestCase struct {
-	CaseID        string `json:"test_id"`
-	Desc          string `json:"desc"`
-	URL           string `json:"url"`
-	TargetCluster string `json:"target_cluster"`
+	CaseID        string   `json:"test_id"`
+	Desc          string   `json:"desc"`
+	URLs          []string `json:"urls"`
+	TargetCluster string   `json:"target_cluster"`
 }
 
 type TestCases []TestCase

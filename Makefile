@@ -41,13 +41,19 @@ else
     $(error "This system's OS $(LOCAL_OS) isn't recognized/supported")
 endif
 
+# This repo is build in Travis-ci by default;
+# Override this variable in local env.
+TRAVIS_BUILD ?= 1
 
 # GITHUB_USER containing '@' char must be escaped with '%40'
-GITHUB_USER := $(shell echo $(GITHUB_USER) | sed 's/@/%40/g')
-GITHUB_TOKEN ?=
+ifeq ($(TRAVIS_BUILD),1)
+	-include $(shell [ -f ".build-harness-bootstrap" ] || curl --fail -sSL -o .build-harness-bootstrap -H "Authorization: token $(GITHUB_TOKEN)" -H "Accept: application/vnd.github.v3.raw" "https://raw.github.com/open-cluster-management/build-harness-extensions/master/templates/Makefile.build-harness-bootstrap"; echo .build-harness-bootstrap)
+endif
+
 
 default::
 	@echo "Build Harness Bootstrapped"
+	@echo "${TRAVIS_BUILD}"
 
 
 gobuild:
@@ -57,8 +63,8 @@ gobuild:
 	GOOS=${GOOS} GOARCH=${GOARCH} go build -ldflags="-w -s" -o build/_output/bin/$(IMG)
 
 build-images: gobuild
-	@echo "build image"
-	@docker build -t ${IMAGE_NAME_AND_VERSION}:latest .
+	@echo "build image ${IMAGE_NAME_AND_VERSION}"
+	@docker build -t ${IMAGE_NAME_AND_VERSION} .
 
 export CONTAINER_NAME=$(shell echo "e2e")
 run: build-images 
@@ -75,7 +81,7 @@ kind-setup:
 	kubectl config use-context kind-kind
 
 e2e: gobuild
-	build/test-e2e.sh
+	build/run-e2e-tests.sh
 
 tag: build-images
 	docker tag ${IMAGE_NAME_AND_VERSION}:latest ${IMAGE_NAME_AND_VERSION}:${COMPONENT_VERSION}${COMPONENT_TAG_EXTENSION}
