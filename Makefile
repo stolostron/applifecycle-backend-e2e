@@ -63,8 +63,8 @@ gobuild:
 	GOOS=${GOOS} GOARCH=${GOARCH} go build -ldflags="-w -s" -o build/_output/bin/$(IMG)
 
 build-images: gobuild
-	@echo "build image"
-	@docker build -t ${IMAGE_NAME_AND_VERSION}:latest .
+	@echo "build image ${IMAGE_NAME_AND_VERSION}"
+	@docker build -t ${IMAGE_NAME_AND_VERSION} .
 
 export CONTAINER_NAME=$(shell echo "e2e")
 run: build-images 
