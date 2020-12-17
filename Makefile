@@ -41,9 +41,12 @@ else
     $(error "This system's OS $(LOCAL_OS) isn't recognized/supported")
 endif
 
+# This repo is build in Travis-ci by default;
+# Override this variable in local env.
+TRAVIS_BUILD ?= 1
 
 # GITHUB_USER containing '@' char must be escaped with '%40'
-ifndef $(TRAVIS_BUILD)
+ifeq ($(TRAVIS_BUILD),1)
 	-include $(shell [ -f ".build-harness-bootstrap" ] || curl --fail -sSL -o .build-harness-bootstrap -H "Authorization: token $(GITHUB_TOKEN)" -H "Accept: application/vnd.github.v3.raw" "https://raw.github.com/open-cluster-management/build-harness-extensions/master/templates/Makefile.build-harness-bootstrap"; echo .build-harness-bootstrap)
 endif
 
