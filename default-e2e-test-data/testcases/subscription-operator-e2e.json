@@ -3,13 +3,13 @@
 {
   "test_id": "sub-001",
   "desc": "subscription standalone deploy a namespace type with a configmap",
-  "url": "https://raw.githubusercontent.com/ianzhang366/acm-applifecycle-samples/master/e2e-test-simple/namespace_channel_e2e.yaml",
+  "urls": ["https://raw.githubusercontent.com/ianzhang366/acm-applifecycle-samples/master/e2e-test-simple/namespace_channel_e2e.yaml"],
   "target_cluster": "hub"
 },
 {
   "test_id": "sub-002",
   "desc": "subscription standalone deploy a helm type with a guestbook",
-  "url": "https://raw.githubusercontent.com/ianzhang366/acm-applifecycle-samples/master/helm-ops/local-guestbook-helm-sub.yaml",
+  "urls": ["https://raw.githubusercontent.com/ianzhang366/acm-applifecycle-samples/master/helm-ops/local-guestbook-helm-sub.yaml"],
   "target_cluster": "hub"
 }
 ]

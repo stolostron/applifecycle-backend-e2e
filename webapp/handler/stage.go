@@ -140,7 +140,7 @@ func (s *Processor) Run(testID string, tc pkg.TestCasesReg) (AppliedCase, error)
 	}
 
 	kCfg := cUnit.CfgDir
-	if kerr := processResource(c.URL, kCfg, Apply); kerr != nil {
+	if kerr := processResources(c.URLs, kCfg, Apply); kerr != nil {
 		err := fmt.Errorf("failed to apply resource %s on cluster %s, \n err: %+v", c.Desc, c.TargetCluster, kerr.Error())
 		return out, err
 	}
@@ -177,7 +177,7 @@ func (s *Processor) Check(testID string, timeout time.Duration, expReg pkg.Expct
 }
 
 func (s *Processor) Clean(applied AppliedCase) error {
-	if err := processResource(applied.Tc.URL, applied.Cfg, Delete); err != nil {
+	if err := processResources(applied.Tc.URLs, applied.Cfg, Delete); err != nil {
 		return gerr.Wrap(err, fmt.Sprintf("failed to delete applied resource %s on cluster %s",
 			applied.Tc.Desc, applied.Tc.TargetCluster))
 	}
