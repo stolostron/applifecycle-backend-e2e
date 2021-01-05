@@ -1,6 +1,20 @@
 # Start from a Debian image with the latest version of Go installed
 # and a workspace (GOPATH) configured at /go.
-FROM golang
+FROM registry.access.redhat.com/ubi8/ubi-minimal:latest
+
+RUN  microdnf update -y \
+        && rpm -e --nodeps tzdata \
+        && microdnf install tzdata \
+        && microdnf install git \
+        && microdnf install openssh-clients \
+        && microdnf install golang \
+        && microdnf install curl \
+        && microdnf clean all
+
+ENV USER_UID=1001 \
+    USER_NAME=app-backend \
+    ZONEINFO=/usr/share/timezone
+
 
 RUN git clone -b v0.1.7 --single-branch https://github.com/open-cluster-management/applifecycle-backend-e2e.git /opt/e2e
 
