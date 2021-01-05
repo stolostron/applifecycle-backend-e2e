@@ -11,7 +11,7 @@ import (
 )
 
 func NewServer(addr, cfg, data string, lvl, timeout int) *http.Server {
-	zapLog, err := zap.NewDevelopment(zap.AddCaller())
+	zapLog, err := zap.NewDevelopment()
 	if err != nil {
 		panic(fmt.Sprintf("who watches the watchmen (%v)?", err))
 	}
