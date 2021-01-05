@@ -66,7 +66,7 @@ func SopkeAssert(sClt client.Client, units Units) error {
 }
 
 func failedExpectations(v map[string]bool, u Units) (res []string) {
-	for k, _ := range u {
+	for k := range u {
 		if _, ok := v[k]; !ok {
 			res = append(res, k)
 		}

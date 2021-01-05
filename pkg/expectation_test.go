@@ -66,7 +66,7 @@ func TestParseExpectation(t *testing.T) {
 	for _, tt := range tests {
 		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
-			actual, _ := parseExpectations(tt.given)
+			actual, _ := BytesToExpectations(tt.given)
 			for _, item := range *actual {
 				fmt.Printf("izhang ======  item = %+v\n", item)
 			}

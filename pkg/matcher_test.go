@@ -73,7 +73,7 @@ var _ = Describe("test ByAnnotation matcher", func() {
 		}
 		obj := &corev1.ConfigMap{
 			ObjectMeta: metav1.ObjectMeta{
-				Name:        key.Name,
+				Name:        key.Name + "a",
 				Namespace:   key.Namespace,
 				Annotations: insAnnotation,
 			},
