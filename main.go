@@ -16,7 +16,7 @@ import (
 const (
 	defaultAddr = "localhost:8765"
 	//this will be depend on the caller's location
-	defaultCfgDir  = "default-kubeconfigs"
+	defaultCfgDir  = "kubeconfigs"
 	defaultDataDir = ""
 
 	CONFIG_PATH = "CONFIGS"
@@ -54,7 +54,7 @@ func init() {
 		&dataPath,
 		"data",
 		defaultDataDir,
-		"the path to clusters config files",
+		"the path to testdata files",
 	)
 
 	flag.Parse()

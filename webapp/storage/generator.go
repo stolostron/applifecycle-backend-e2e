@@ -19,9 +19,9 @@ const (
 	testCaseBlobFileName    string = "testcases_blob.go"
 	expectationBlobFileName string = "expectation_blob.go"
 	stageBlobFileName       string = "stage_blob.go"
-	embedTestCaseFolder     string = "../../default-e2e-test-data/testcases"
-	embedExpectationFolder  string = "../../default-e2e-test-data/expectations"
-	embedStageFolder        string = "../../default-e2e-test-data/stages"
+	embedTestCaseFolder     string = "../../testdata/testcases"
+	embedExpectationFolder  string = "../../testdata/expectations"
+	embedStageFolder        string = "../../testdata/stages"
 )
 
 var conv = map[string]interface{}{"conv": fmtByteSlice}
