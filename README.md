@@ -2,7 +2,24 @@
 tags: redhat, test
 ---
 
-[TOC]
+Table of Contents
+=================
+
+   * [Design](#design)
+   * [Usage](#usage)
+   * [Expand the server](#expand-the-server)
+      * [Define and integrate your own test case and expectation](#define-and-integrate-your-own-test-case-and-expectation)
+         * [Form Inputs](#form-inputs)
+      * [Test the output and put your case into test server](#test-the-output-and-put-your-case-into-test-server)
+      * [Share your tests](#share-your-tests)
+   * [Leverage the new test case in an operator](#leverage-the-new-test-case-in-an-operator)
+   * [Leverage the new test case in canary](#leverage-the-new-test-case-in-canary)
+      * [Canary integeration overview:](#canary-integeration-overview)
+      * [Add your test case to canary](#add-your-test-case-to-canary)
+   * [Beyond a single operator](#beyond-a-single-operator)
+   * [Progress](#progress)
+
+Created by [gh-md-toc](https://github.com/ekalinin/github-markdown-toc)
 
 
 # Design
