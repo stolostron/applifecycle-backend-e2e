@@ -141,8 +141,8 @@ log level (default 1)
                 "matcher": "byname",
                 "args": {}
         },
-......
 
+etc.
 ```
 
 ## Test the output and put your case into test server
