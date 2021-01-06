@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+  <testsuite name="Applifecycle-API-Test" tests="1" failures="0" errors="0" time="0.037">
+      <testcase name="e2e-server hello-world" classname="Applifecycle-API-Test" time="1.3459e-05"></testcase>
+  </testsuite>

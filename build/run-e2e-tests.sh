@@ -15,7 +15,7 @@ echo
 export GO111MODULE=on
 
 if [ "$TRAVIS_BUILD" != 1 ]; then
-    echo "Build is on Travis" 
+    echo "Build is on Travis"
 
     # Download and install kubectl
     echo -e "\nGet kubectl binary\n"
@@ -45,6 +45,11 @@ if [ $? != 0 ]; then
 fi
 
 sleep 15
+
+if [ ! -d "default-kubeconfigs" ]; then
+	mkdir default-kubeconfigs
+fi
+
 
 kind get kubeconfig > default-kubeconfigs/hub
 

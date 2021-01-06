@@ -5,6 +5,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"path/filepath"
 	"testing"
 	"time"
 
@@ -19,7 +20,8 @@ import (
 
 const (
 	StartTimeout = 60 // seconds
-	JUnitResult  = "results"
+	JUnitDir     = "./results"
+	JUnitName    = "app-backend-e2e.xml"
 	defaultAddr  = "localhost:8765"
 	//empty dataDir means test will use the compiled binary data for test
 	defaultDataDir = ""
@@ -37,9 +39,11 @@ var (
 func TestAppLifecycle_API_E2E(t *testing.T) {
 	RegisterFailHandler(Fail)
 
+	resultDest := filepath.Join(JUnitDir, JUnitName)
+
 	RunSpecsWithDefaultAndCustomReporters(t,
 		"Applifecycle-API-Test",
-		[]Reporter{printer.NewlineReporter{}, reporters.NewJUnitReporter(JUnitResult)})
+		[]Reporter{printer.NewlineReporter{}, reporters.NewJUnitReporter(resultDest)})
 }
 
 var DefaultRunner = clt.NewRunner(defaultAddr, "/run")
