@@ -9,8 +9,6 @@ import (
 	"time"
 
 	. "github.com/onsi/ginkgo"
-	"github.com/onsi/ginkgo/reporters"
-	. "github.com/onsi/gomega"
 	"github.com/onsi/gomega/gexec"
 	clt "github.com/open-cluster-management/applifecycle-backend-e2e/client"
 	"github.com/open-cluster-management/applifecycle-backend-e2e/webapp/server"
@@ -19,7 +17,6 @@ import (
 
 const (
 	StartTimeout = 60 // seconds
-	JUnitResult  = "results"
 	defaultAddr  = "localhost:8765"
 	//empty dataDir means test will use the compiled binary data for test
 	defaultDataDir = ""
@@ -39,7 +36,7 @@ func TestAppLifecycle_API_E2E(t *testing.T) {
 
 	RunSpecsWithDefaultAndCustomReporters(t,
 		"Applifecycle-API-Test",
-		[]Reporter{printer.NewlineReporter{}, reporters.NewJUnitReporter(JUnitResult)})
+		[]Reporter{printer.NewlineReporter{}})
 }
 
 var DefaultRunner = clt.NewRunner(defaultAddr, "/run")

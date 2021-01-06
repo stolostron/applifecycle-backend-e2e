@@ -44,6 +44,9 @@ func LoadKubeConfigs(dir string) (KubeConfigs, error) {
 
 	out := KubeConfigs{}
 	for _, file := range files {
+		if file.Name() == ".gitignore" {
+			continue
+		}
 		p := fmt.Sprintf("%s/%s", dir, file.Name())
 		cfg, err := clientcmd.BuildConfigFromFlags("", p)
 		if err != nil {
