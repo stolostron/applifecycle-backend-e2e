@@ -141,7 +141,8 @@ log level (default 1)
                 "matcher": "byname",
                 "args": {}
         },
-...
+......
+
 ```
 
 ## Test the output and put your case into test server
@@ -283,7 +284,7 @@ This repo is set up for testing the following operators:
 
 
 Initial Set up:
-- [x] Canary
+- [x] Canary (staging env)
 - [x] Channel
 - [x] Subscription
 - [x] Subscription-release
