@@ -24,7 +24,8 @@ build-harness-extensions/
 
 OPENSOURCE.check
 
-default-kubeconfigs
+default-kubeconfigs/*
+kubeconfigs/*
 
 # override build harness vendoring
 !vbh/.build-harness-vendorized
