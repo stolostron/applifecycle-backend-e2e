@@ -67,10 +67,10 @@ build-images: gobuild
 	@docker build -t ${IMAGE_NAME_AND_VERSION} .
 
 export CONTAINER_NAME=$(shell echo "e2e")
-run: build-images 
+run: build-images
 	kind get kubeconfig > default-kubeconfigs/hub
 	docker rm -f ${CONTAINER_NAME} || true
-	docker run -p 8765:8765 --name ${CONTAINER_NAME} -d --rm ${IMAGE_NAME_AND_VERSION}:latest
+	docker run -p 8765:8765 --name ${CONTAINER_NAME} -d --rm ${IMAGE_NAME_AND_VERSION}:latest sleep 300
 	sleep 10
 	curl http://localhost:8765/clusters | head -n 10
 	curl http://localhost:8765/testcases | head -n 10
