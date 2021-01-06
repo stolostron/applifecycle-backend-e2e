@@ -103,7 +103,7 @@ log level (default 1)
 
 ### Form Inputs
 - define app yamls
-```json
+```
 ❯ cat default-e2e-test-data/testcases/release-operator-e2e.json
 [
 {
@@ -116,7 +116,7 @@ log level (default 1)
 ```
 
 - define app expectations
-```json
+```
 ❯ cat default-e2e-test-data/expectations/release-e2e.json
 [
 {
