@@ -9,6 +9,7 @@ import (
 	"time"
 
 	. "github.com/onsi/ginkgo"
+	. "github.com/onsi/gomega"
 	"github.com/onsi/gomega/gexec"
 	clt "github.com/open-cluster-management/applifecycle-backend-e2e/client"
 	"github.com/open-cluster-management/applifecycle-backend-e2e/webapp/server"
@@ -21,7 +22,7 @@ const (
 	//empty dataDir means test will use the compiled binary data for test
 	defaultDataDir = ""
 	logLvl         = 1
-	testTimeout    = 30
+	testTimeout    = 45
 	pullInterval   = 3 * time.Second
 	evnKubeConfig  = "KUBE_DIR"
 )
