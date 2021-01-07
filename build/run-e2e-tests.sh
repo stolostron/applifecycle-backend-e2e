@@ -150,3 +150,18 @@ setup_operators
 export KUBE_DIR="../../default-kubeconfigs"
 echo "Process the test cases"
 go test -v ./client/...
+
+
+if [ "$TRAVIS_BUILD" != 1 ]; then
+	mkdir -p /opt/results
+
+	docker run \
+	  --volume	/opt/results:/opt/e2e/client/canary/results \
+	  --volume default-kubeconfigs:/opt/e2e/default-kubeconfigs/hub \
+	  --env KUBE_DIR=/opt/e2e/default-kubeconfigs \
+	  --name app-backend-e2e \
+	  quay.io/open-cluster-management/applifecycle-backend-e2e:${TRAVIS_PULL_REQUEST}-${TRAVIS_COMMIT}
+
+
+	ls /opt/results
+fi
