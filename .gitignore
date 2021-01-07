@@ -26,6 +26,7 @@ OPENSOURCE.check
 
 default-kubeconfigs/*
 kubeconfigs/*
+kubeconfigs/hub
 
 # override build harness vendoring
 !vbh/.build-harness-vendorized
