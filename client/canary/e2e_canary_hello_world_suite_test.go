@@ -33,7 +33,7 @@ const (
 
 var (
 	//this will be depend on the caller's location
-	cfgDir = "../../default-kubeconfigs"
+	cfgDir = "../../kubeconfigs"
 )
 
 func TestAppLifecycle_API_E2E(t *testing.T) {
