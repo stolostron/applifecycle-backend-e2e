@@ -271,7 +271,11 @@ Once your test case is tagged, you can point to the specific tag in a repo and c
 
     https://github.com/open-cluster-management/applifecycle-backend-e2e/blob/main/client/canary/e2e_canary_hello_world_test.go
 
-2. then PR your changes and make sure your change is merged to `release-2.2` branch of test server.
+2. then PR your changes
+3. update the Dockerfile to the new tag/version 
+
+    [Dockerfile](https://github.com/open-cluster-management/applifecycle-backend-e2e/blob/0a60d8de754e3d144ebb300c41a480821e5bcfd3/Dockerfile#L19)
+4. make sure your change is merged to `release-2.2` branch of test server.
 
 
 
