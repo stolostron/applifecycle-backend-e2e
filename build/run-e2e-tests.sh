@@ -151,9 +151,13 @@ export KUBE_DIR="../../default-kubeconfigs"
 echo "Process the test cases"
 go test -v ./client/...
 
+docker kill app-backend-e2e || true
+
+docker rm app-backend-e2e || true
 
 if [ "$TRAVIS_BUILD" != 1 ]; then
 	mkdir -p /opt/results
+	targetFile="/opt/results/app-backend-e2e.xml"
 
 	docker run \
 	  --volume	/opt/results:/opt/e2e/client/canary/results \
@@ -163,5 +167,10 @@ if [ "$TRAVIS_BUILD" != 1 ]; then
 	  quay.io/open-cluster-management/applifecycle-backend-e2e:${TRAVIS_PULL_REQUEST}-${TRAVIS_COMMIT}
 
 
-	ls /opt/results
+	if [ ! -e "$targetFile" ]; then
+    	echo "result is not genated to targe file: ${targetFile}"
+    	exit 1
+	fi
 fi
+
+exit 0
