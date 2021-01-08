@@ -29,8 +29,6 @@ func MatcherRouter(name string) Matcher {
 	default:
 		return nil
 	}
-
-	return nil
 }
 
 type ByName struct{}
