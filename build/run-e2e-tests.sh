@@ -152,9 +152,11 @@ export KUBE_DIR="../../default-kubeconfigs"
 echo "Process the test cases"
 go test -v ./client/...
 
-docker kill app-backend-e2e || true
+if [ "$TRAVIS_BUILD" == 1 ]; then
+	docker kill app-backend-e2e || true
+	docker rm app-backend-e2e || true
+fi
 
-docker rm app-backend-e2e || true
 
 if [ "$TRAVIS_BUILD" != 1 ]; then
 	mkdir -p /opt/results
