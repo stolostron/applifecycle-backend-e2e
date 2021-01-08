@@ -24,7 +24,7 @@ Created by [gh-md-toc](https://github.com/ekalinin/github-markdown-toc)
 
 # Design
 
-https://hackmd.io/d50Lam9hS2eM4w-PburJWA
+https://hackmd.io/d50Lam9hS2eM4w-PburJWA?view
 
 # Usage
 `applifecyce-backend-e2e` is a web server which provides a few endpoints, to help you ease the test burden and serve some automation needs.
