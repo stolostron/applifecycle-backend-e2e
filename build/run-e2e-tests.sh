@@ -7,6 +7,7 @@ IMG=$(cat COMPONENT_NAME 2> /dev/null)
 echo "print ENVs: "
 echo "travis_build: ${TRAVIS_BUILD}"
 echo "travis_event_type: ${TRAVIS_EVENT_TYPE}"
+echo "component version: ${COMPONENT_VERSION}"
 echo "component_tag_extension: ${COMPONENT_TAG_EXTENSION}"
 echo "pull_request-travis_commit: ${TRAVIS_PULL_REQUEST}-${TRAVIS_COMMIT}"
 echo "end of printing ENVs"
@@ -159,12 +160,13 @@ if [ "$TRAVIS_BUILD" != 1 ]; then
 	mkdir -p /opt/results
 	targetFile="/opt/results/app-backend-e2e.xml"
 
+
 	docker run \
 	  --volume	/opt/results:/opt/e2e/client/canary/results \
 	  --volume default-kubeconfigs:/opt/e2e/default-kubeconfigs/hub \
 	  --env KUBE_DIR=/opt/e2e/default-kubeconfigs \
 	  --name app-backend-e2e \
-	  quay.io/open-cluster-management/applifecycle-backend-e2e:${TRAVIS_PULL_REQUEST}-${TRAVIS_COMMIT}
+	  quay.io/open-cluster-management/applifecycle-backend-e2e:${COMPONENT_VERSION}${COMPONENT_TAG_EXTENSION}
 
 
 	if [ ! -e "$targetFile" ]; then
