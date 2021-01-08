@@ -7,5 +7,5 @@ root_dir=$my_dir/../../../..
 
 KUBECTL_CMD="kubectl --kubeconfig /opt/e2e/default-kubeconfigs/hub"
 
-# Deploy Gogs Git server
+# Uninstall Gogs Git server
 $KUBECTL_CMD delete -f gogs.yaml
