@@ -21,5 +21,3 @@ require (
 )
 
 replace k8s.io/client-go => k8s.io/client-go v0.19.3
-
-replace github.com/open-cluster-management/applifecycle-backend-e2e => /Users/ianzhang/golang/src/multicloud-operators-channel/
