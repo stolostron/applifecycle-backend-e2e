@@ -1,5 +1,7 @@
 #!/bin/bash
 
+echo "==== Deploying Gogs Git server with custom certificate ===="
+
 # Find the directory we're in (used to reference other scripts)
 my_dir=$(dirname $(readlink -f $0))
 # The main directory of canary-scripts
@@ -9,7 +11,7 @@ kubeconfig_dir=$root_dir/kubeconfig
 KUBECTL_CMD="kubectl --kubeconfig $kubeconfig_dir/import-kubeconfig"
 
 # Get the application domain
-APP_DOMAIN=$(kubectl -n openshift-console get routes console -o jsonpath='{.status.ingress[0].routerCanonicalHostname}')
+APP_DOMAIN=`$KUBECTL_CMD -n openshift-console get routes console -o jsonpath='{.status.ingress[0].routerCanonicalHostname}'`
 echo "Application domain is $APP_DOMAIN"
 
 GIT_HOSTNAME=gogs-svc-default.$APP_DOMAIN
@@ -21,9 +23,34 @@ sed -i "s/__HOSTNAME__/$GIT_HOSTNAME/" gogs.yaml
 # Deploy Gogs Git server
 $KUBECTL_CMD apply -f gogs.yaml
 
+sleep 5
+
 # Get Gogs pod name
-GOGS_POD_NAME=$(kubectl --kubeconfig $kubeconfig_dir/import-kubeconfig get pods -n default -o=custom-columns='DATA:metadata.name' | grep gogs-)
+GOGS_POD_NAME=`$KUBECTL_CMD get pods -n default -o=custom-columns='DATA:metadata.name' | grep gogs-`
 echo "Gogs pod name is $GOGS_POD_NAME"
+
+# Wait for Gogs to be running
+FOUND=1
+MINUTE=0
+while [ ${FOUND} -eq 1 ]; do
+    # Wait up to 5min
+    if [ $MINUTE -gt 300 ]; then
+        echo "Timeout waiting for Gogs pod ${GOGS_POD_NAME}."
+        echo "List of current pods:"
+        $KUBECTL_CMD -n default get pods
+        echo
+        exit 1
+    fi
+
+    pod=`$KUBECTL_CMD -n default get pod $GOGS_POD_NAME`
+
+    if [[ $(echo $pod | grep "${running}") ]]; then
+        echo "${GOGS_POD_NAME} is running"
+        break
+    fi
+    sleep 3
+    (( MINUTE = MINUTE + 3 ))
+done
 
 # Run script in Gogs container to add Git admin user
 $KUBECTL_CMD exec $GOGS_POD_NAME -- /tmp/adduser.sh
