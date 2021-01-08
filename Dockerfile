@@ -9,6 +9,8 @@ RUN  microdnf update -y \
         && microdnf install openssh-clients \
         && microdnf install golang \
         && microdnf install curl \
+        && microdnf install tar \
+        && microdnf install vi \
         && microdnf clean all
 
 ENV USER_UID=1001 \

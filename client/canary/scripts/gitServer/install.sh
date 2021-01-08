@@ -6,9 +6,9 @@ echo "==== Deploying Gogs Git server with custom certificate ===="
 my_dir=$(dirname $(readlink -f $0))
 # The main directory of canary-scripts
 root_dir=$my_dir/../../../..
-kubeconfig_dir=$root_dir/kubeconfig
+kubeconfig=/opt/e2e/default-kubeconfigs/hub
 
-KUBECTL_CMD="kubectl --kubeconfig $kubeconfig_dir/import-kubeconfig"
+KUBECTL_CMD="oc --kubeconfig /opt/e2e/default-kubeconfigs/hub"
 
 # Get the application domain
 APP_DOMAIN=`$KUBECTL_CMD -n openshift-console get routes console -o jsonpath='{.status.ingress[0].routerCanonicalHostname}'`
@@ -44,7 +44,7 @@ while [ ${FOUND} -eq 1 ]; do
 
     pod=`$KUBECTL_CMD -n default get pod $GOGS_POD_NAME`
 
-    if [[ $(echo $pod | grep "${running}") ]]; then
+    if [[ $(echo $pod | grep "${running}") ]]; then 
         echo "${GOGS_POD_NAME} is running"
         break
     fi
@@ -62,6 +62,9 @@ curl -u testadmin:testadmin -X POST -H "content-type: application/json" -d '{"na
 mkdir testrepo
 cd testrepo
 git init
+git config --global user.email "testadmin@redhat.com"
+git config --global user.name "testadmin"
+git config http.sslVerify "false"
 cp -r ../repoContents/* .
 git add .
 git commit -m "first commit"

@@ -9,7 +9,7 @@ import (
 	. "github.com/onsi/gomega"
 )
 
-var _ = Describe("e2e-server", func() {
+var _ = Describe("App-lifecycle: Install and configure Git server with custom certificate", func() {
 	It("git-custom-certs-test", func() {
 		cmd := exec.Command("./scripts/gitServer/install.sh")
 		stdout, err := cmd.Output()
