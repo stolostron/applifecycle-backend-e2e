@@ -72,7 +72,7 @@ build-apache-basic-auth-image:
 	docker build -t ${APACHE_BASIC_AUTH_IMAGE} -f apache-basic-auth/Dockerfile .
 
 boot-apache-basic-auth-service: build-apache-basic-auth-image
-	docker run -d --name ${APACHE_BASIC_AUTH_CONTAINER}  -p 8080:8080 ${APACHE_BASIC_AUTH_IMAGE}
+	docker run -d --name ${APACHE_BASIC_AUTH_CONTAINER}  -p 8080:80 ${APACHE_BASIC_AUTH_IMAGE}
 
 export CONTAINER_NAME=$(shell echo "e2e")
 run: build-images
