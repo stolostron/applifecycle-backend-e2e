@@ -107,7 +107,7 @@ push: tag
 ############################################################
 # clean section
 ############################################################
-clean:
+clean::
 	rm -f build/$(IMG)
 	docker stop ${APACHE_BASIC_AUTH_CONTAINER}
 	docker rm ${APACHE_BASIC_AUTH_CONTAINER}
