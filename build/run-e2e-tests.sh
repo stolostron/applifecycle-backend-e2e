@@ -162,13 +162,12 @@ if [ "$TRAVIS_BUILD" != 1 ]; then
 	mkdir -p /opt/results
 	targetFile="/opt/results/app-backend-e2e.xml"
 
-
 	docker run \
 	  --volume	/opt/results:/opt/e2e/client/canary/results \
 	  --volume default-kubeconfigs:/opt/e2e/default-kubeconfigs/hub \
 	  --env KUBE_DIR=/opt/e2e/default-kubeconfigs \
 	  --name app-backend-e2e \
-	  quay.io/open-cluster-management/applifecycle-backend-e2e:${COMPONENT_VERSION}${COMPONENT_TAG_EXTENSION}
+	  quay.io/open-cluster-management/applifecycle-backend-e2e:latest
 
 
 	if [ ! -e "$targetFile" ]; then
