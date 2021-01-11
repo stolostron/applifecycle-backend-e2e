@@ -7,9 +7,9 @@
 },
 
 {
-  "test_id": "release-003",
-  "desc": "helmrelease with secret install test: guestbook deploy",
-  "urls": ["https://raw.githubusercontent.com/pezhang/helm-release-API-test/gh-pages/test-guestbook010-secret.yaml"],
+  "test_id": "release-004",
+  "desc": "helmrelease with git install test: guestbook deploy",
+  "urls": ["https://raw.githubusercontent.com/open-cluster-management/multicloud-operators-subscription-release/release-004/examples/test-guestbook-git.yaml"],
   "target_cluster": "hub"
 }
 ]
