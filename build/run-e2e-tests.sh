@@ -148,29 +148,10 @@ setup_operators(){
 setup_operators
 
 export KUBE_DIR="../../default-kubeconfigs"
-echo "Process the test cases"
-go test -v ./client/...
+echo "Process the canary test cases"
+go test -v ./client/canary/...
 
-docker kill app-backend-e2e || true
-
-docker rm app-backend-e2e || true
-
-if [ "$TRAVIS_BUILD" != 1 ]; then
-	mkdir -p /opt/results
-	targetFile="/opt/results/app-backend-e2e.xml"
-
-	docker run \
-	  --volume	/opt/results:/opt/e2e/client/canary/results \
-	  --volume default-kubeconfigs:/opt/e2e/default-kubeconfigs/hub \
-	  --env KUBE_DIR=/opt/e2e/default-kubeconfigs \
-	  --name app-backend-e2e \
-	  quay.io/open-cluster-management/applifecycle-backend-e2e:${TRAVIS_PULL_REQUEST}-${TRAVIS_COMMIT}
-
-
-	if [ ! -e "$targetFile" ]; then
-    	echo "result is not genated to targe file: ${targetFile}"
-    	exit 1
-	fi
-fi
+echo "Process the API test cases"
+go test -v ./client/e2e_client/...
 
 exit 0
