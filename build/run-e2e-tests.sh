@@ -149,8 +149,8 @@ setup_operators(){
 setup_operators
 
 export KUBE_DIR="../../default-kubeconfigs"
-echo "Process the test cases"
-go test -v ./client/...
+echo "Process the canary test cases"
+go test -v ./client/canary/...
 
 if [ "$TRAVIS_BUILD" == 1 ]; then
 	docker kill app-backend-e2e || true
@@ -176,5 +176,10 @@ if [ "$TRAVIS_BUILD" != 1 ]; then
     	exit 1
 	fi
 fi
+
+
+echo "Process the API test cases"
+go test -v ./client/e2e_client/...
+
 
 exit 0
