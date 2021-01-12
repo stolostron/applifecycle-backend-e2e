@@ -2,7 +2,7 @@
 {
 		"test_id": "sub-001",
 		"target_cluster": "hub",
-		"desc": "should have a channel on hub",
+		"desc": "should have a secret on hub",
 		"apiversion": "v1",
 		"kind": "secret",
 		"name": "dev-test",
@@ -13,7 +13,7 @@
 {
 		"test_id": "sub-001",
 		"target_cluster": "hub",
-		"desc": "should have a channel on hub",
+		"desc": "should have a deployable on hub",
 		"apiversion": "apps.open-cluster-management.io/v1",
 		"kind": "deployable",
 		"name": "payload-cfg-namespace-channel",
@@ -46,7 +46,7 @@
 {
 		"test_id": "sub-001",
 		"target_cluster": "hub",
-		"desc": "should have a secret",
+		"desc": "should have a duplicate secret in subscription namespace",
 		"apiversion": "v1",
 		"kind": "secret",
 		"name": "dev-test",
@@ -57,7 +57,7 @@
 {
 		"test_id": "sub-001",
 		"target_cluster": "hub",
-		"desc": "should have a configmap",
+		"desc": "should have a configmap in subscription namespace",
 		"apiversion": "v1",
 		"kind": "configmap",
 		"name": "cfg-from-ch-qa",
@@ -101,7 +101,7 @@
 {
 		"test_id": "sub-002",
 		"target_cluster": "hub",
-		"desc": "should have channel",
+		"desc": "should have helmrelease in subscription namespace",
 		"apiversion": "apps.open-cluster-management.io/v1",
 		"kind": "helmrelease",
 		"name": "helm-ch",
