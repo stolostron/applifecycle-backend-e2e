@@ -6,7 +6,7 @@
 		"apiversion": "v1",
 		"kind": "secret",
 		"name": "dev-test",
-		"namespace": "ch-ns",
+		"namespace": "ch-sub-ns",
 		"matcher": "byname",
 		"args": {}
 	},
@@ -17,7 +17,7 @@
 		"apiversion": "apps.open-cluster-management.io/v1",
 		"kind": "deployable",
 		"name": "payload-cfg-namespace-channel",
-		"namespace": "ch-ns",
+		"namespace": "ch-sub-ns",
 		"matcher": "byname",
 		"args": {}
 	},
@@ -28,7 +28,7 @@
 		"apiversion": "apps.open-cluster-management.io/v1",
 		"kind": "channel",
 		"name": "ns",
-		"namespace": "ch-ns",
+		"namespace": "ch-sub-ns",
 		"matcher": "byname",
 		"args": {}
 	},
