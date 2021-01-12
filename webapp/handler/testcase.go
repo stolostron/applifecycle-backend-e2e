@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"os/exec"
 
+	"github.com/go-logr/logr"
 	"github.com/open-cluster-management/applifecycle-backend-e2e/pkg"
 	gerr "github.com/pkg/errors"
 )
@@ -41,11 +42,13 @@ func processResource(tURL, kCfgDir string, subCmd ocCommand) error {
 	return nil
 }
 
-func processResources(urls []string, kCfgDir string, subCmd ocCommand) error {
+func processResources(urls []string, kCfgDir string, subCmd ocCommand, logger logr.Logger) error {
 	for _, url := range urls {
 		if err := processResource(url, kCfgDir, subCmd); err != nil {
 			return gerr.Wrapf(err, "failed to apply url: %s", url)
 		}
+
+		logger.Info(fmt.Sprintf("%s URL %s\n", subCmd, url))
 	}
 
 	return nil
