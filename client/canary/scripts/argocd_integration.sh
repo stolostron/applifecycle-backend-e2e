@@ -131,6 +131,7 @@ SPOKE_CLUSTER=$($KUBECTL_HUB get managedclusters -o name |grep -v local-cluster 
 echo "SPOKE_CLUSTER: $SPOKE_CLUSTER"
 
 $KUBECTL_HUB patch klusterletaddonconfig -n $SPOKE_CLUSTER $SPOKE_CLUSTER --type merge -p '{"spec":{"applicationManager":{"argocdCluster":true}}}'
+sleep 10
 
 echo "==== verifying the the managed cluster secret in argocd cluster list ===="
 argocd cluster list  |grep -w $SPOKE_CLUSTER
