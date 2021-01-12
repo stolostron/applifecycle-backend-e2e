@@ -148,6 +148,15 @@ setup_operators(){
 
 setup_operators
 
+function cleanup()
+{
+  echo -e "\nPod status\n"
+
+	kubectl get po -A
+}
+
+trap cleanup EXIT
+
 export KUBE_DIR="../../default-kubeconfigs"
 echo "Process the canary test cases"
 go test -v ./client/canary/...
@@ -155,5 +164,5 @@ go test -v ./client/canary/...
 echo "Process the API test cases"
 go test -v ./client/e2e_client/...
 
-
 exit 0
+
