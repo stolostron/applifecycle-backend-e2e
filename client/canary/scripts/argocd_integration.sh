@@ -44,7 +44,8 @@ waitForPod() {
 }
 
 uninstallArgocd() {
-    $KUBECTL_SPOKE delete all -n default  --all
+    $KUBECTL_SPOKE delete deployments -n default  guestbook-ui
+    $KUBECTL_SPOKE delete services -n default  guestbook-ui
 
     $KUBECTL_HUB get namespace argocd
     if [ $? -eq 0 ]; then
