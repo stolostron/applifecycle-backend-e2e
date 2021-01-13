@@ -7,6 +7,7 @@ IMG=$(cat COMPONENT_NAME 2> /dev/null)
 echo "print ENVs: "
 echo "travis_build: ${TRAVIS_BUILD}"
 echo "travis_event_type: ${TRAVIS_EVENT_TYPE}"
+echo "component version: ${COMPONENT_VERSION}"
 echo "component_tag_extension: ${COMPONENT_TAG_EXTENSION}"
 echo "pull_request-travis_commit: ${TRAVIS_PULL_REQUEST}-${TRAVIS_COMMIT}"
 echo "end of printing ENVs"
@@ -70,6 +71,8 @@ setup_channel_operator(){
         git clone https://github.com/open-cluster-management/multicloud-operators-channel.git
     fi
 
+	sed -i -e "s|image: .*$|image: quay.io/open-cluster-management/multicluster-operators-channel:community-${COMPONENT_VERSION}|" multicloud-operators-channel/deploy/operator.yaml
+
     kubectl apply -f multicloud-operators-channel/deploy/crds
     kubectl apply -f multicloud-operators-channel/deploy/standalone
 
@@ -89,6 +92,9 @@ setup_subscription_operator(){
 
     kubectl apply -f multicloud-operators-subscription/deploy/common
     sleep 5
+
+	echo "before sed $COMPONENT_VERSION"
+    sed -i -e "s|image: .*$|image: quay.io/open-cluster-management/multicluster-operators-subscription:community-$COMPONENT_VERSION|" multicloud-operators-subscription/deploy/standalone/operator.yaml
 
     kubectl apply -f multicloud-operators-subscription/deploy/standalone
 
@@ -116,7 +122,7 @@ setup_helmrelease_operator(){
         git clone https://github.com/open-cluster-management/multicloud-operators-subscription-release.git
     fi
 
-    sed -i -e "s|image: .*:latest$|image: quay.io/open-cluster-management/multicluster-operators-subscription-release:community-latest|" multicloud-operators-subscription-release/deploy/operator.yaml
+    sed -i -e "s|image: .*$|image: quay.io/open-cluster-management/multicluster-operators-subscription-release:community-$COMPONENT_VERSION|" multicloud-operators-subscription-release/deploy/operator.yaml
 
     kubectl apply -f multicloud-operators-subscription-release/deploy/crds
     kubectl apply -f multicloud-operators-subscription-release/deploy
@@ -131,12 +137,12 @@ setup_helmrelease_operator(){
 
 setup_operators(){
     setup_application_operator
-    setup_subscription_operator
+	setup_placementrule_operator
 
+	setup_subscription_operator
     setup_channel_operator
-
     setup_helmrelease_operator
-    setup_placementrule_operator
+
 
     if [ "$TRAVIS_BUILD" != 1 ]; then
         sleep 90
@@ -147,6 +153,15 @@ setup_operators(){
 
 setup_operators
 
+function cleanup()
+{
+  echo -e "\nPod status\n"
+
+	kubectl get po -A
+}
+
+trap cleanup EXIT
+
 export KUBE_DIR="../../default-kubeconfigs"
 echo "Process the canary test cases"
 go test -v ./client/canary/...
@@ -155,3 +170,4 @@ echo "Process the API test cases"
 go test -v ./client/e2e_client/...
 
 exit 0
+
