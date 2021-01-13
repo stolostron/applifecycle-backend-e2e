@@ -134,7 +134,6 @@ setup_helmrelease_operator(){
     fi
 }
 
-
 setup_operators(){
     setup_application_operator
 	setup_placementrule_operator
@@ -148,17 +147,27 @@ setup_operators(){
         sleep 90
     fi
 
-    kubectl get deploy -A
+    echo -e "\nPod status\n"
+
+	kubectl get po -A
+}
+
+function cleanup()
+{
+  	echo -e "\nPod status\n"
+
+	kubectl get po -A
+
+	echo "channel webhook resource"
+	kubectl get svc -n default multicluster-operators-channel-svc
+	kubectl get ValidatingWebhookConfiguration -n default channel-webhook-validator
+
+	docker kill apache-basic-auth-container || true
+	docker rm apache-basic-auth-container || true
 }
 
 setup_operators
 
-function cleanup()
-{
-  echo -e "\nPod status\n"
-
-	kubectl get po -A
-}
 
 trap cleanup EXIT
 

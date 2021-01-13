@@ -3,6 +3,8 @@ package handler
 import (
 	"fmt"
 	"net/http"
+	"os"
+	"os/exec"
 	"time"
 
 	"github.com/open-cluster-management/applifecycle-backend-e2e/pkg"
@@ -153,6 +155,17 @@ func (s *Processor) Run(testID string, tc pkg.TestCasesReg) (AppliedCase, error)
 	return out, nil
 }
 
+func showClusterStatus() {
+	cmd := exec.Command("kubectl", "get pod", "-A")
+
+	stdoutStderr, err := cmd.CombinedOutput()
+	if err != nil {
+		fmt.Fprintf(os.Stdout, "failed to show cluster status, err: %v", err)
+	}
+
+	fmt.Fprintf(os.Stdout, "current we have pods %s\n", string(stdoutStderr))
+}
+
 func (s *Processor) Check(testID string, timeout time.Duration, expReg pkg.ExpctationReg) (*TResponse, error) {
 	ticker := time.NewTicker(pullInterval)
 	timeOut := time.After(timeout)
@@ -168,6 +181,7 @@ func (s *Processor) Check(testID string, timeout time.Duration, expReg pkg.Expct
 			}
 
 			s.logger.Error(err, "faild")
+			showClusterStatus()
 			return &TResponse{}, fmt.Errorf(out)
 		case <-timeOut:
 			return &TResponse{TestID: testID, Status: Failed, Error: out}, fmt.Errorf(out)
