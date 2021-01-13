@@ -154,16 +154,17 @@ setup_operators(){
 
 function cleanup()
 {
+
+	docker kill apache-basic-auth-container || true
+	docker rm apache-basic-auth-container || true
+
   	echo -e "\nPod status\n"
 
 	kubectl get po -A
 
 	echo "channel webhook resource"
-	kubectl get svc -n default multicluster-operators-channel-svc
-	kubectl get ValidatingWebhookConfiguration -n default channel-webhook-validator
-
-	docker kill apache-basic-auth-container || true
-	docker rm apache-basic-auth-container || true
+	kubectl get svc -n default
+	kubectl get ValidatingWebhookConfiguration -n default
 }
 
 setup_operators
