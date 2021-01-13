@@ -116,7 +116,7 @@ func (s *Processor) CasesRunnerHandler(w http.ResponseWriter, r *http.Request) {
 
 	defer func() {
 		//TODO here need to be handle different, might lead to goroutine leak
-		go s.Clean(applied)
+		s.Clean(applied)
 	}()
 
 	tr, err = s.Check(testID, s.timeout, s.expectations)
