@@ -7,7 +7,7 @@ REGISTRY ?= quay.io/open-cluster-management
 TRAVIS_BUILD_DIR ?= $(shell pwd)
 
 COMPONENT_VERSION ?= $(shell cat COMPONENT_VERSION 2> /dev/null)
-
+export COMPONENT_VERSION
 VERSION ?= $(shell cat COMPONENT_VERSION 2> /dev/null)
 
 IMAGE_NAME_AND_VERSION ?= $(REGISTRY)/$(IMG)
@@ -66,6 +66,14 @@ build-images: gobuild
 	@echo "build image ${IMAGE_NAME_AND_VERSION}"
 	@docker build -t ${IMAGE_NAME_AND_VERSION} .
 
+APACHE_BASIC_AUTH_IMAGE ?= apache-basic-auth-image
+APACHE_BASIC_AUTH_CONTAINER ?= apache-basic-auth-container
+build-apache-basic-auth-image:
+	docker build -t ${APACHE_BASIC_AUTH_IMAGE} -f apache-basic-auth/Dockerfile .
+
+boot-apache-basic-auth-service: build-apache-basic-auth-image
+	docker run -d --name ${APACHE_BASIC_AUTH_CONTAINER}  -p 8080:8080 ${APACHE_BASIC_AUTH_IMAGE}
+
 export CONTAINER_NAME=$(shell echo "e2e")
 run: build-images
 	kind get kubeconfig > default-kubeconfigs/hub
@@ -80,7 +88,7 @@ kind-setup:
 	kind get kubeconfig > default-kubeconfigs/hub
 	kubectl config use-context kind-kind
 
-e2e: gobuild
+e2e: gobuild boot-apache-basic-auth-service
 	build/run-e2e-tests.sh
 
 tag: build-images
@@ -101,6 +109,8 @@ push: tag
 ############################################################
 clean::
 	rm -f build/$(IMG)
+	docker stop ${APACHE_BASIC_AUTH_CONTAINER}
+	docker rm ${APACHE_BASIC_AUTH_CONTAINER}
 
 gen:
 	@echo "generate the default test data for binary"
