@@ -39,7 +39,7 @@ func init() {
 	flag.IntVar(
 		&timeout,
 		"t",
-		15,
+		45,
 		"timeout for running each expectation unit",
 	)
 

@@ -18,7 +18,7 @@ const (
 	Failed       = "failed"
 	InfoLevel    = 0
 	DebugLevel   = 1
-	pullInterval = time.Second * 5
+	pullInterval = time.Second * 10
 )
 
 type Processor struct {
