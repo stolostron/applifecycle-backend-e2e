@@ -163,8 +163,8 @@ function cleanup()
 trap cleanup EXIT
 
 export KUBE_DIR="../../default-kubeconfigs"
-echo "Process the canary test cases"
-go test -v ./client/canary/...
+# echo "Process the canary test cases"
+# go test -v ./client/canary/...
 
 echo "Process the API test cases"
 go test -v ./client/e2e_client/...
