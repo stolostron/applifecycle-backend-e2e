@@ -7,7 +7,7 @@ KUBECONFIG_SPOKE="/opt/e2e/default-kubeconfigs/import-kubeconfig"
 KUBECTL_HUB="kubectl --kubeconfig $KUBECONFIG_HUB"
 KUBECTL_SPOKE="kubectl --kubeconfig $KUBECONFIG_SPOKE"
 
-function waitForPod() {
+waitForPod() {
     FOUND=1
     MINUTE=0
     kubeConfig=$1
@@ -43,7 +43,7 @@ function waitForPod() {
     done
 }
 
-function uninstallArgocd() {
+uninstallArgocd() {
     $KUBECTL_SPOKE delete all -n default  --all
 
     $KUBECTL_HUB get namespace argocd
