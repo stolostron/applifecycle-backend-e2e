@@ -156,7 +156,7 @@ func (s *Processor) Run(testID string, tc pkg.TestCasesReg) (AppliedCase, error)
 }
 
 func showClusterStatus() {
-	cmd := exec.Command("kubectl", "get pod", "-A")
+	cmd := exec.Command("kubectl", "get", "pod", "-A")
 
 	stdoutStderr, err := cmd.CombinedOutput()
 	if err != nil {
