@@ -71,7 +71,7 @@ setup_channel_operator(){
         git clone https://github.com/open-cluster-management/multicloud-operators-channel.git
     fi
 
-	sed -i -e "s|image: .*$|image: quay.io/open-cluster-management/multicluster-operators-channel:community-${COMPONENT_VERSION}|" multicloud-operators-channel/deploy/operator.yaml
+	sed -i -e "s|image: .*$|image: quay.io/open-cluster-management/multicluster-operators-channel:community-${COMPONENT_VERSION}|" multicloud-operators-channel/deploy/standalone/operator.yaml
 
     kubectl apply -f multicloud-operators-channel/deploy/crds
     kubectl apply -f multicloud-operators-channel/deploy/standalone
@@ -147,6 +147,9 @@ setup_operators(){
         sleep 90
     fi
 
+   	echo -e "\nRunning images\n"
+	kubectl get deploy -A -o jsonpath='{.items[*].spec.template.spec.containers[*].image}' | xargs -n1 echo
+
     echo -e "\nPod status\n"
 
 	kubectl get po -A
@@ -161,9 +164,6 @@ function cleanup()
   	echo -e "\nPod status\n"
 
 	kubectl get po -A
-
-	echo -e "\nRunning images\n"
-	kubectl get deploy -A -o jsonpath='{.items[*].spec.template.spec.containers[*].image}' | xargs -n1 echo
 
 	echo "channel webhook resource"
 	kubectl get svc -n default
