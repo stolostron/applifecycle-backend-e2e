@@ -28,8 +28,24 @@ var _ = Describe("e2e-server", func() {
 				return nil
 			}).Should(Succeed())
 	})
-	It("sub-003", func() {
-		Eventually(func() error { return DefaultRunner.Run("sub-003") }, 5*pullInterval, pullInterval).Should(Succeed())
+	It("subscribe", func() {
+		Eventually(
+			func() error {
+				cmd := exec.Command("/bin/sh", "./scripts/git_custom_certs.sh")
+
+				out, err := cmd.CombinedOutput()
+
+				fmt.Printf("Combined Output:\n%s\n", string(out))
+
+				if err != nil {
+					fmt.Printf("error: %s\n", err)
+					if exitError, ok := err.(*exec.ExitError); ok {
+						fmt.Printf("exit code: %d\n", exitError.ExitCode())
+					}
+					return err
+				}
+				return nil
+			}).Should(Succeed())
 	})
 	It("uninstall-git", func() {
 		Eventually(
