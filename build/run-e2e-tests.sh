@@ -71,7 +71,7 @@ setup_channel_operator(){
         git clone https://github.com/open-cluster-management/multicloud-operators-channel.git
     fi
 
-	sed -i -e "s|image: .*$|image: quay.io/open-cluster-management/multicluster-operators-channel:community-${COMPONENT_VERSION}|" multicloud-operators-channel/deploy/operator.yaml
+	sed -i -e "s|image: .*$|image: quay.io/open-cluster-management/multicluster-operators-channel:community-${COMPONENT_VERSION}|" multicloud-operators-channel/deploy/standalone/operator.yaml
 
     kubectl apply -f multicloud-operators-channel/deploy/crds
     kubectl apply -f multicloud-operators-channel/deploy/standalone
@@ -134,7 +134,6 @@ setup_helmrelease_operator(){
     fi
 }
 
-
 setup_operators(){
     setup_application_operator
 	setup_placementrule_operator
@@ -148,17 +147,31 @@ setup_operators(){
         sleep 90
     fi
 
-    kubectl get deploy -A
+   	echo -e "\nRunning images\n"
+	kubectl get deploy -A -o jsonpath='{.items[*].spec.template.spec.containers[*].image}' | xargs -n1 echo
+
+    echo -e "\nPod status\n"
+
+	kubectl get po -A
+}
+
+function cleanup()
+{
+
+	docker kill apache-basic-auth-container || true
+	docker rm apache-basic-auth-container || true
+
+  	echo -e "\nPod status\n"
+
+	kubectl get po -A
+
+	echo "channel webhook resource"
+	kubectl get svc -n default
+	kubectl get ValidatingWebhookConfiguration -n default
 }
 
 setup_operators
 
-function cleanup()
-{
-  echo -e "\nPod status\n"
-
-	kubectl get po -A
-}
 
 trap cleanup EXIT
 

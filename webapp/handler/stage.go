@@ -3,6 +3,8 @@ package handler
 import (
 	"fmt"
 	"net/http"
+	"os"
+	"os/exec"
 	"time"
 
 	"github.com/open-cluster-management/applifecycle-backend-e2e/pkg"
@@ -153,13 +155,24 @@ func (s *Processor) Run(testID string, tc pkg.TestCasesReg) (AppliedCase, error)
 	return out, nil
 }
 
+func showClusterStatus() {
+	cmd := exec.Command("kubectl", "get", "pod", "-A")
+
+	stdoutStderr, err := cmd.CombinedOutput()
+	if err != nil {
+		fmt.Fprintf(os.Stdout, "failed to show cluster status, err: %v", err)
+	}
+
+	fmt.Fprintf(os.Stdout, "current we have pods %s\n", string(stdoutStderr))
+}
+
 func (s *Processor) Check(testID string, timeout time.Duration, expReg pkg.ExpctationReg) (*TResponse, error) {
 	ticker := time.NewTicker(pullInterval)
 	timeOut := time.After(timeout)
 
-	out := "failed to  check all the expectations due to timeout"
+	out := fmt.Sprintf("failed to check all the expectations due to timeout %s seconds", timeout)
 
-	for {
+	for { // it will keep trying till it's time
 		select {
 		case <-ticker.C:
 			rsp, err := s.dispatchExpectation(testID, s.expectations[testID])
@@ -168,8 +181,9 @@ func (s *Processor) Check(testID string, timeout time.Duration, expReg pkg.Expct
 			}
 
 			s.logger.Error(err, "faild")
-			return &TResponse{}, fmt.Errorf(out)
+			out = fmt.Sprintf("failed to check all the expectations due to timeout %s seconds, laster error is: %v", timeout, err)
 		case <-timeOut:
+			showClusterStatus()
 			return &TResponse{TestID: testID, Status: Failed, Error: out}, fmt.Errorf(out)
 		}
 	}
