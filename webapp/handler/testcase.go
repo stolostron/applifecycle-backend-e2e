@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"net/http"
 	"os/exec"
+	"time"
 
 	"github.com/go-logr/logr"
 	"github.com/open-cluster-management/applifecycle-backend-e2e/pkg"
@@ -115,8 +116,8 @@ func (s *Processor) CasesRunnerHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	defer func() {
-		//TODO here need to be handle different, might lead to goroutine leak
 		s.Clean(applied)
+		time.Sleep(10 * time.Second)
 	}()
 
 	tr, err = s.Check(testID, s.timeout, s.expectations)
