@@ -6,9 +6,20 @@ import (
 	"strconv"
 
 	"github.com/go-logr/logr"
+	tlogr "github.com/go-logr/logr/testing"
 	gerr "github.com/pkg/errors"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 )
+
+func checkExpectation(clt client.Client, ep Expectation) error {
+	fn := MatcherRouter(ep.Matcher)
+	if fn == nil {
+		return gerr.New(fmt.Sprintf("expectation %v failed to find a matcher", ep))
+	}
+
+	t := tlogr.TestLogger{}
+	return fn.Match(clt, ep, t)
+}
 
 type Arg string
 
