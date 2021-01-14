@@ -162,6 +162,9 @@ function cleanup()
 
 	kubectl get po -A
 
+	echo -e "\nRunning images\n"
+	kubectl get deploy -A -o jsonpath='{.items[*].spec.template.spec.containers[*].image}' | xargs -n1 echo
+
 	echo "channel webhook resource"
 	kubectl get svc -n default
 	kubectl get ValidatingWebhookConfiguration -n default
