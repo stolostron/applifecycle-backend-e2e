@@ -1,9 +1,10 @@
 #!/bin/bash
 
-# Find the directory we're in (used to reference other scripts)
-my_dir=$(dirname $(readlink -f $0))
-# The main directory of canary-scripts
-root_dir=$my_dir/../../../..
+cur_dir=$(pwd)
+echo "Current directory is $cur_dir"
+
+cd scripts/gitServer
+echo "Current directory is $pwd"
 
 KUBECTL_CMD="kubectl --kubeconfig /opt/e2e/default-kubeconfigs/hub"
 

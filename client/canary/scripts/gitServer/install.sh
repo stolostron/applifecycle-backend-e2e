@@ -3,12 +3,14 @@
 echo "==== Deploying Gogs Git server with custom certificate ===="
 
 # Find the directory we're in (used to reference other scripts)
-my_dir=$(dirname $(readlink -f $0))
-# The main directory of canary-scripts
-root_dir=$my_dir/../../../..
+root_dir=$(pwd)
+cd scripts/gitServer
+cur_dir=$(pwd)
+echo "Current directory is $cur_dir"
+
 kubeconfig=/opt/e2e/default-kubeconfigs/hub
 
-KUBECTL_CMD="oc --kubeconfig /opt/e2e/default-kubeconfigs/hub"
+KUBECTL_CMD="oc --kubeconfig /opt/e2e/default-kubeconfigs/hub --insecure-skip-tls-verify=true"
 
 # Get the application domain
 APP_DOMAIN=`$KUBECTL_CMD -n openshift-console get routes console -o jsonpath='{.status.ingress[0].routerCanonicalHostname}'`
@@ -87,4 +89,4 @@ $KUBECTL_CMD delete route gogs-svc -n default
 $KUBECTL_CMD create route edge --service=gogs-svc --cert=server.crt --key=server.key --path=/ -n default
 
 # Generate a configmap to contain the root CA certificate
-$KUBECTL_CMD create configmap --dry-run git-ca --from-file=caCerts=rootCA.crt --output yaml > git-ca-configmap.yaml
+$KUBECTL_CMD create configmap --dry-run git-ca --from-file=caCerts=rootCA.crt --output yaml > $root_dir/inputData/sub-003/git-ca-configmap.yaml
