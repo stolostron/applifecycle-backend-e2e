@@ -170,9 +170,9 @@ func (s *Processor) Check(testID string, timeout time.Duration, expReg pkg.Expct
 	ticker := time.NewTicker(pullInterval)
 	timeOut := time.After(timeout)
 
-	out := "failed to  check all the expectations due to timeout"
+	out := fmt.Sprintf("failed to check all the expectations due to timeout %s seconds", timeout)
 
-	for {
+	for { // it will keep trying till it's time
 		select {
 		case <-ticker.C:
 			rsp, err := s.dispatchExpectation(testID, s.expectations[testID])
@@ -182,7 +182,8 @@ func (s *Processor) Check(testID string, timeout time.Duration, expReg pkg.Expct
 
 			s.logger.Error(err, "faild")
 			showClusterStatus()
-			return &TResponse{}, fmt.Errorf(out)
+
+			out = fmt.Sprintf("failed to check all the expectations due to timeout %s seconds, laster error is: %v", timeout, err)
 		case <-timeOut:
 			return &TResponse{TestID: testID, Status: Failed, Error: out}, fmt.Errorf(out)
 		}
