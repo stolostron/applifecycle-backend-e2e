@@ -181,10 +181,9 @@ func (s *Processor) Check(testID string, timeout time.Duration, expReg pkg.Expct
 			}
 
 			s.logger.Error(err, "faild")
-			showClusterStatus()
-
 			out = fmt.Sprintf("failed to check all the expectations due to timeout %s seconds, laster error is: %v", timeout, err)
 		case <-timeOut:
+			showClusterStatus()
 			return &TResponse{TestID: testID, Status: Failed, Error: out}, fmt.Errorf(out)
 		}
 	}
