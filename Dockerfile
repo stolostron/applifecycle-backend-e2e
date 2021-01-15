@@ -17,7 +17,7 @@ ENV USER_UID=1001 \
     ZONEINFO=/usr/share/timezone
 
 
-RUN git clone -b v0.2.2 --single-branch https://github.com/open-cluster-management/applifecycle-backend-e2e.git /opt/e2e
+RUN git clone -b release-2.2 --single-branch https://github.com/open-cluster-management/applifecycle-backend-e2e.git /opt/e2e
 
 RUN curl -LO https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl
 
