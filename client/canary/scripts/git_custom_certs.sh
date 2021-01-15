@@ -1,6 +1,6 @@
 #!/bin/bash
 
-echo "==== Subscribing to Git repo with custom certificate ===="
+echo "==== Subscribing application from Git repo with custom certificate ===="
 
 # Find the directory we're in (used to reference other scripts)
 root_dir=$(pwd)
