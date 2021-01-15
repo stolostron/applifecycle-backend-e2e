@@ -111,16 +111,5 @@
             "apps.open-cluster-management.io/hosting-subscription": "helm-local/local-sub-test",
             "count": "1"
 		}
-	},
-{
-		"test_id": "sub-003",
-		"target_cluster": "hub",
-		"desc": "should create a configmap containing Git server signer certificate in default namespace",
-		"apiversion": "v1",
-		"kind": "ConfigMap",
-		"name": "git-ca",
-		"namespace": "default",
-		"matcher": "byname",
-		"args": {}
 	}
 ]

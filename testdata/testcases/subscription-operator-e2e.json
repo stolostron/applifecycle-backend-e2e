@@ -11,11 +11,5 @@
   "desc": "subscription standalone deploy a helm type with a guestbook",
   "urls": ["https://raw.githubusercontent.com/ianzhang366/acm-applifecycle-samples/e2e/helm-ops/local-guestbook-helm-sub.yaml"],
   "target_cluster": "hub"
-},
-{
-  "test_id": "sub-003",
-  "desc": "canary test subscription connecting to Git server with custom certificates",
-  "urls": ["/opt/e2e/client/canary/inputData/sub-003/."],
-  "target_cluster": "hub"
 }
 ]
