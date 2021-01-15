@@ -9,6 +9,7 @@ RUN  microdnf update -y \
         && microdnf install openssh-clients \
         && microdnf install golang \
         && microdnf install curl \
+        && microdnf install tar \
         && microdnf clean all
 
 ENV USER_UID=1001 \
@@ -23,6 +24,12 @@ RUN curl -LO https://storage.googleapis.com/kubernetes-release/release/$(curl -s
 RUN chmod +x ./kubectl
 RUN mv ./kubectl /usr/local/bin
 
+RUN curl -kLo oc.tar.gz https://mirror.openshift.com/pub/openshift-v4/clients/ocp/4.6.4/openshift-client-linux-4.6.4.tar.gz
+RUN mkdir oc-unpacked
+RUN tar -xzf oc.tar.gz -C oc-unpacked
+RUN chmod +x ./oc-unpacked/oc
+RUN mv ./oc-unpacked/oc /usr/local/bin/oc
+RUN rm -rf ./oc-unpacked ./oc.tar.gz
 
 WORKDIR /opt/e2e/client/canary
 
