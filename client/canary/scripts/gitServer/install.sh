@@ -88,7 +88,7 @@ openssl x509 -req -in server.csr -CA rootCA.crt -CAkey rootCA.key -CAcreateseria
 $KUBECTL_CMD delete route gogs-svc -n default
 $KUBECTL_CMD create route edge --service=gogs-svc --cert=server.crt --key=server.key --path=/ -n default
 
-# Generate a configmap to contain the root CA certificate
+# Generate a channel configmap to contain the root CA certificate
 $KUBECTL_CMD create configmap --dry-run git-ca --from-file=caCerts=rootCA.crt --output yaml > $root_dir/tests/e2e-001/git-ca-configmap.yaml
 
 # Inject the real Git hostname into the test input YAML
