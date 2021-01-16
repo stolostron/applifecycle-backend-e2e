@@ -7,37 +7,44 @@ KUBECONFIG_SPOKE="/opt/e2e/default-kubeconfigs/import-kubeconfig"
 KUBECTL_HUB="kubectl --kubeconfig $KUBECONFIG_HUB"
 KUBECTL_SPOKE="kubectl --kubeconfig $KUBECONFIG_SPOKE"
 
-waitForPod() {
+waitForRes() {
     FOUND=1
     MINUTE=0
     kubeConfig=$1
-    podName=$2
-    podNamespace=$3
-    ignore=$4
+    resKinds=$2
+    resName=$3
+    resNamespace=$4
+    ignore=$5
     running="\([0-9]\+\)\/\1"
-    printf "\n#####\nWait for ${podNamespace}/${podName} to reach running state (4min).\n"
+    printf "\n#####\nWait for ${resNamespace}/${resName} to reach running state (4min).\n"
     while [ ${FOUND} -eq 1 ]; do
         # Wait up to 4min, should only take about 20-30s
         if [ $MINUTE -gt 240 ]; then
-            echo "Timeout waiting for the ${podNamespace}\/${podName}."
-            echo "List of current pods:"
-            kubectl --kubeconfig ${kubeConfig} -n ${podNamespace} get pods
-            echo "You should see ${podNamespace}/${podName} pod"
+            echo "Timeout waiting for the ${resNamespace}\/${resName}."
+            echo "List of current resources:"
+            kubectl --kubeconfig ${kubeConfig} -n ${resNamespace} get ${resKinds}
+            echo "You should see ${resNamespace}/${resName} ${resKinds}"
+            if [ "${resKinds}" == "pods" ]; then
+                kubectl --kubeconfig ${kubeConfig} -n ${resNamespace} describe deployments ${resName}
+            fi
             exit 1
         fi
         if [ "$ignore" == "" ]; then
-            echo "kubectl --kubeconfig ${kubeConfig} -n ${podNamespace} get pods | grep ${podName}"
-            operatorPod=`kubectl --kubeconfig ${kubeConfig} -n ${podNamespace} get pods | grep ${podName}`
+            echo "kubectl --kubeconfig ${kubeConfig} -n ${resNamespace} get ${resKinds} | grep ${resName}"
+            operatorRes=`kubectl --kubeconfig ${kubeConfig} -n ${resNamespace} get ${resKinds} | grep ${resName}`
         else
-            operatorPod=`kubectl --kubeconfig ${kubeConfig} -n ${podNamespace} get pods | grep ${podName} | grep -v ${ignore}`
+            operatorRes=`kubectl --kubeconfig ${kubeConfig} -n ${resNamespace} get ${resKinds} | grep ${resName} | grep -v ${ignore}`
         fi
-        if [[ $(echo $operatorPod | grep "${running}") ]]; then
-            echo "* ${podName} is running"
+        if [[ $(echo $operatorRes | grep "${running}") ]]; then
+            echo "* ${resName} is running"
             break
-        elif [ "$operatorPod" == "" ]; then
-            operatorPod="Waiting"
+        elif [[ ("${operatorRes}" > "") && ("${resKinds}" == "deployments") ]]; then
+            echo "* ${resKinds} created: ${operatorRes}"
+            break
+        elif [ "$operatorRes" == "" ]; then
+            operatorRes="Waiting"
         fi
-        echo "* STATUS: $operatorPod"
+        echo "* STATUS: $operatorRes"
         sleep 3
         (( MINUTE = MINUTE + 3 ))
     done
@@ -76,11 +83,11 @@ $KUBECTL_HUB create namespace argocd
 $KUBECTL_HUB apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
 sleep 5
 
-waitForPod $KUBECONFIG_HUB "argocd-server" "argocd" ""
-waitForPod $KUBECONFIG_HUB "argocd-repo-server" "argocd" ""
-waitForPod $KUBECONFIG_HUB "argocd-redis" "argocd" ""
-waitForPod $KUBECONFIG_HUB "argocd-dex-server" "argocd" ""
-waitForPod $KUBECONFIG_HUB "argocd-application-controller" "argocd" ""
+waitForRes $KUBECONFIG_HUB "pods" "argocd-server" "argocd" ""
+waitForRes $KUBECONFIG_HUB "pods" "argocd-repo-server" "argocd" ""
+waitForRes $KUBECONFIG_HUB "pods" "argocd-redis" "argocd" ""
+waitForRes $KUBECONFIG_HUB "pods" "argocd-dex-server" "argocd" ""
+waitForRes $KUBECONFIG_HUB "pods" "argocd-application-controller" "argocd" ""
 
 kill $(ps aux | grep 'port-forward svc\/argocd-server' | awk '{print $2}')
 $KUBECTL_HUB -n argocd port-forward svc/argocd-server -n argocd 8080:443 > /dev/null 2>&1 &
@@ -147,7 +154,7 @@ SPOKE_CLUSTER_SERVER=$(argocd cluster list  |grep -w $SPOKE_CLUSTER |awk -F' ' '
 argocd app create guestbook --repo https://github.com/argoproj/argocd-example-apps.git --path guestbook --dest-server $SPOKE_CLUSTER_SERVER --dest-namespace default
 argocd app sync guestbook
 
-waitForPod $KUBECONFIG_SPOKE "guestbook-ui" "default" ""
+waitForRes $KUBECONFIG_SPOKE "deployments" "guestbook-ui" "default" ""
 
 # uninstallArgocd
 

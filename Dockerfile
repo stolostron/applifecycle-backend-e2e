@@ -9,6 +9,7 @@ RUN  microdnf update -y \
         && microdnf install openssh-clients \
         && microdnf install golang \
         && microdnf install curl \
+        && microdnf install procps \
         && microdnf install tar \
         && microdnf clean all
 
