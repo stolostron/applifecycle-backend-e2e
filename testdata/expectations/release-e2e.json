@@ -44,6 +44,28 @@
 		"args": {}
 	},
 {
+                "test_id": "release-003",
+                "target_cluster": "hub",
+                "desc": "should have a HelmRelease called guestbook on hub",
+                "apiversion": "apps.open-cluster-management.io/v1",
+                "kind": "HelmRelease",
+                "name": "guestbook",
+                "namespace": "helmrelease-secret-test",
+                "matcher": "byname",
+                "args": {}
+        },
+{
+                "test_id": "release-003",
+                "target_cluster": "hub",
+                "desc": "should have a deployment called nginx-deployment on hub",
+                "apiversion": "apps/v1",
+                "kind": "deployment",
+                "name": "nginx-deployment",
+                "namespace": "helmrelease-secret-test",
+                "matcher": "byname",
+                "args": {}
+        },
+{
                 "test_id": "release-004",
                 "target_cluster": "hub",
                 "desc": "should have a HelmRelease called guestbook on hub",

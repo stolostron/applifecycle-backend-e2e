@@ -6,6 +6,12 @@
   "target_cluster": "hub"
 },
 {
+  "test_id": "release-003",
+  "desc": "helmrelease with secret install test: guestbook deploy",
+  "urls": ["https://raw.githubusercontent.com/open-cluster-management/multicloud-operators-subscription-release/master/examples/test-guestbook-secret.yaml"],
+  "target_cluster": "hub"
+},
+{
   "test_id": "release-004",
   "desc": "helmrelease with git install test: guestbook deploy",
   "urls": ["https://raw.githubusercontent.com/open-cluster-management/multicloud-operators-subscription-release/master/examples/test-guestbook-git.yaml"],
