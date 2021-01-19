@@ -1,0 +1,6 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: test-configmap
+data:
+  message: "This is a test configmap resource."

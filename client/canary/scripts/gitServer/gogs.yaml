@@ -1,0 +1,140 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: gogs-admin-user
+  namespace: default
+data:
+  adduser.sh: |
+    #!/bin/bash
+    su git -c "/app/gogs/gogs admin create-user --name testadmin --password testadmin --email testadmin@redhat.com --admin"
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: gogs-config
+  namespace: default
+data:
+  app.ini: |
+    APP_NAME = Gogs
+    RUN_USER = git
+    RUN_MODE = prod
+
+    [database]
+    DB_TYPE  = sqlite3
+    HOST     = 127.0.0.1:5432
+    NAME     = gogs
+    USER     = gogs
+    PASSWD   = gogs
+    SSL_MODE = disable
+    PATH     = /app/gogs/data/gogs.db
+
+    [repository]
+    ROOT = /data/git/gogs-repositories
+
+    [server]
+    DOMAIN           = __HOSTNAME__
+    HTTP_PORT        = 3000
+    ROOT_URL         = https://__HOSTNAME__/
+    DISABLE_SSH      = false
+    SSH_PORT         = 22
+    START_SSH_SERVER = false
+    OFFLINE_MODE     = false
+
+    [mailer]
+    ENABLED = false
+
+    [service]
+    REGISTER_EMAIL_CONFIRM = false
+    ENABLE_NOTIFY_MAIL     = false
+    DISABLE_REGISTRATION   = false
+    ENABLE_CAPTCHA         = true
+    REQUIRE_SIGNIN_VIEW    = false
+
+    [picture]
+    DISABLE_GRAVATAR        = false
+    ENABLE_FEDERATED_AVATAR = true
+
+    [session]
+    PROVIDER = file
+
+    [log]
+    MODE      = file
+    LEVEL     = Info
+    ROOT_PATH = /app/gogs/log
+
+    [security]
+    INSTALL_LOCK = true
+    SECRET_KEY   = QC5KjsCQuSkVWYE
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gogs
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: gogs
+  template:
+    metadata:
+      labels:
+        app: gogs
+        version: v1
+    spec:
+      containers:
+      - name: gogs
+        image: gogs/gogs:0.12.1
+        ports:
+        - containerPort: 3000
+          name: http
+        - containerPort: 22
+          name: ssh
+        env:
+        - name: SOCAT_LINK
+          value: "false"
+        volumeMounts:
+        - name: gogs-config-volume
+          mountPath: /data/gogs/conf
+        - name: admin-user-add-script-volume
+          mountPath: /tmp         
+      volumes:
+        - name: gogs-config-volume
+          configMap:
+            name: gogs-config
+        - name: admin-user-add-script-volume
+          configMap:
+            name: gogs-admin-user
+            defaultMode: 0777
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: gogs-svc
+  namespace: default
+spec:
+  type: ClusterIP
+  selector:
+    app: gogs
+  ports:
+  - name: http
+    protocol: TCP
+    port: 10080
+    targetPort: 3000
+---
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  name: gogs-svc
+  namespace: default
+spec:
+  path: /
+  port:
+    targetPort: http
+  tls:
+    termination: edge
+  to:
+    kind: Service
+    name: gogs-svc
+    weight: 100
+  wildcardPolicy: None

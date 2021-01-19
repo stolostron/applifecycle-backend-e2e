@@ -17,12 +17,12 @@ import (
 )
 
 const (
-	StartTimeout = 60 // seconds
+	suiteTimeout = 60 // seconds
 	defaultAddr  = "localhost:8765"
 	//empty dataDir means test will use the compiled binary data for test
 	defaultDataDir = ""
 	logLvl         = 1
-	testTimeout    = 45
+	testTimeout    = 90
 	pullInterval   = 3 * time.Second
 	evnKubeConfig  = "KUBE_DIR"
 )
@@ -63,10 +63,10 @@ var _ = BeforeSuite(func(done Done) {
 
 	Eventually(func() error {
 		return clt.IsSeverUp(defaultAddr, "/clusters")
-	}, StartTimeout, pullInterval)
+	}, suiteTimeout, pullInterval)
 
 	close(done)
-}, StartTimeout)
+}, suiteTimeout)
 
 var _ = AfterSuite(func() {
 	By("tearing down the test environment")
