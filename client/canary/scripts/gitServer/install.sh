@@ -54,6 +54,18 @@ while [ ${FOUND} -eq 1 ]; do
     (( MINUTE = MINUTE + 3 ))
 done
 
+OC_VERSION=`$KUBECTL_CMD version`
+echo "$OC_VERSION"
+
+echo "Switching to default namespace"
+$KUBECTL_CMD project default
+
+echo "$pod"
+
+DESC_POD=`$KUBECTL_CMD describe pod $GOGS_POD_NAME`
+echo "$DESC_POD"
+
+echo "Adding testadmin user in Gogs"
 # Run script in Gogs container to add Git admin user
 $KUBECTL_CMD exec $GOGS_POD_NAME -- /tmp/adduser.sh
 

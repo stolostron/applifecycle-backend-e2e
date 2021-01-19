@@ -39,4 +39,4 @@ while [ ${FOUND} -eq 1 ]; do
 done
 
 # Delete subscription
-$KUBECTL_CMD delete -f . -n e2e-001
+$KUBECTL_CMD delete -f application.yaml -n e2e-001
