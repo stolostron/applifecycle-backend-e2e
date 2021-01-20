@@ -156,6 +156,6 @@ argocd app sync guestbook
 
 waitForRes $KUBECONFIG_SPOKE "deployments" "guestbook-ui" "default" ""
 
-# uninstallArgocd
+uninstallArgocd
 
 exit 0
