@@ -22,6 +22,12 @@ echo "Git hostname is $GIT_HOSTNAME"
 # Inject the real Git hostname into the Gogs deployment YAML
 sed -i "s/__HOSTNAME__/$GIT_HOSTNAME/" gogs.yaml
 
+echo "Switching to default namespace"
+$KUBECTL_CMD project default
+
+# want to run the gogs container as root
+oc adm policy add-scc-to-user anyuid -z default
+
 # Deploy Gogs Git server
 $KUBECTL_CMD apply -f gogs.yaml
 
@@ -56,9 +62,6 @@ done
 
 OC_VERSION=`$KUBECTL_CMD version`
 echo "$OC_VERSION"
-
-echo "Switching to default namespace"
-$KUBECTL_CMD project default
 
 echo "$pod"
 
