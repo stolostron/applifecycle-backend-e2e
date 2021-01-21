@@ -14,6 +14,11 @@ KUBECTL_CMD="oc --kubeconfig /opt/e2e/default-kubeconfigs/hub --insecure-skip-tl
 
 # Get the application domain
 APP_DOMAIN=`$KUBECTL_CMD -n openshift-console get routes console -o jsonpath='{.status.ingress[0].routerCanonicalHostname}'`
+if [ $? -ne 0 ]; then
+    echo "failed to get the application domain"
+    exit 1
+fi
+
 echo "Application domain is $APP_DOMAIN"
 
 GIT_HOSTNAME=gogs-svc-default.$APP_DOMAIN
@@ -21,25 +26,44 @@ echo "Git hostname is $GIT_HOSTNAME"
 
 # Inject the real Git hostname into the Gogs deployment YAML
 sed -i "s/__HOSTNAME__/$GIT_HOSTNAME/" gogs.yaml
+if [ $? -ne 0 ]; then
+    echo "failed to substitue __HOSTNAME__ in gogs.yaml"
+    exit 1
+fi
+
 
 echo "Switching to default namespace"
 $KUBECTL_CMD project default
 
 # want to run the gogs container as root
 $KUBECTL_CMD adm policy add-scc-to-user anyuid -z default
+if [ $? -ne 0 ]; then
+    echo "failed to update security policy"
+    exit 1
+fi
 
 # Deploy Gogs Git server
 $KUBECTL_CMD apply -f gogs.yaml
+if [ $? -ne 0 ]; then
+    echo "failed to deploy Gogs server"
+    exit 1
+fi
 
 sleep 5
 
 # Get Gogs pod name
 GOGS_POD_NAME=`$KUBECTL_CMD get pods -n default -o=custom-columns='DATA:metadata.name' | grep gogs-`
+if [ $? -ne 0 ]; then
+    echo "failed to get the pod name"
+    exit 1
+fi
+
 echo "Gogs pod name is $GOGS_POD_NAME"
 
 # Wait for Gogs to be running
 FOUND=1
 MINUTE=0
+running="\([0-9]\+\)\/\1"
 while [ ${FOUND} -eq 1 ]; do
     # Wait up to 5min
     if [ $MINUTE -gt 300 ]; then
@@ -71,9 +95,17 @@ echo "$DESC_POD"
 echo "Adding testadmin user in Gogs"
 # Run script in Gogs container to add Git admin user
 $KUBECTL_CMD exec $GOGS_POD_NAME -- /tmp/adduser.sh
+if [ $? -ne 0 ]; then
+    echo "failed to add testadmin user"
+    exit 1
+fi
 
 # Create a test Git repository. This creates a repo named testrepo under user testadmin.
 curl -u testadmin:testadmin -X POST -H "content-type: application/json" -d '{"name": "testrepo", "description": "test repo", "private": false}' https://${GIT_HOSTNAME}/api/v1/admin/users/testadmin/repos --insecure
+if [ $? -ne 0 ]; then
+    echo "failed to create testrepo"
+    exit 1
+fi
 
 # Populate the repo with test data
 mkdir testrepo
@@ -86,6 +118,11 @@ cp -r ../repoContents/* .
 git add .
 git commit -m "first commit"
 git push https://testadmin:testadmin@${GIT_HOSTNAME}/testadmin/testrepo.git --all
+if [ $? -ne 0 ]; then
+    echo "failed to push to testrepo Git repository"
+    exit 1
+fi
+
 cd ..
 
 # Inject the real Git hostname into certificate config files
@@ -98,13 +135,34 @@ openssl req -x509 -new -nodes -key rootCA.key -sha256 -days 1024 -out rootCA.crt
 openssl genrsa -out server.key 4096
 openssl req -new -key server.key -out server.csr -config ca.conf
 openssl x509 -req -in server.csr -CA rootCA.crt -CAkey rootCA.key -CAcreateserial -out server.crt -days 500 -sha256 -extfile san.ext
+if [ $? -ne 0 ]; then
+    echo "failed to create a self-signed certificate"
+    exit 1
+fi
 
 # Recreate Gogs route with the generated self-signed certificates
 $KUBECTL_CMD delete route gogs-svc -n default
+if [ $? -ne 0 ]; then
+    echo "failed to delete Gogs route"
+    exit 1
+fi
+
 $KUBECTL_CMD create route edge --service=gogs-svc --cert=server.crt --key=server.key --path=/ -n default
+if [ $? -ne 0 ]; then
+    echo "failed to create Gogs route with the self-signed certificate"
+    exit 1
+fi
 
 # Generate a channel configmap to contain the root CA certificate
 $KUBECTL_CMD create configmap --dry-run git-ca --from-file=caCerts=rootCA.crt --output yaml > $root_dir/tests/e2e-001/git-ca-configmap.yaml
+if [ $? -ne 0 ]; then
+    echo "failed to create configmap with the self-signed certificate"
+    exit 1
+fi
 
 # Inject the real Git hostname into the test input YAML
 sed -i "s/__HOSTNAME__/$GIT_HOSTNAME/" $root_dir/tests/e2e-001/application.yaml
+if [ $? -ne 0 ]; then
+    echo "failed to substitute __HOSTNAME__ in application.yaml"
+    exit 1
+fi
