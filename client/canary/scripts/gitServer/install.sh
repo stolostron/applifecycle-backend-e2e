@@ -26,7 +26,7 @@ echo "Switching to default namespace"
 $KUBECTL_CMD project default
 
 # want to run the gogs container as root
-oc adm policy add-scc-to-user anyuid -z default
+$KUBECTL_CMD adm policy add-scc-to-user anyuid -z default
 
 # Deploy Gogs Git server
 $KUBECTL_CMD apply -f gogs.yaml
