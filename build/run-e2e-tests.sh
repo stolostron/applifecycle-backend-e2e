@@ -128,6 +128,7 @@ setup_helmrelease_operator(){
     kubectl apply -f multicloud-operators-subscription-release/deploy
 
     kubectl rollout status deployment/multicluster-operators-subscription-release
+    kubectl apply -f ../apache-basic-auth/apache-basic-auth-service.yaml
     if [ $? != 0 ]; then
         echo "failed to deploy the subscription operator"
         exit $?;
