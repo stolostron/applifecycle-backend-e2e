@@ -108,12 +108,14 @@ func (b ByAnnotationCount) Match(clt client.Client, ep Expectation, logger logr.
 		return gerr.Wrapf(err, "failed to get instanceList %s of kind %s", key.String(), ep.Kind)
 	}
 
+	logger.Info(fmt.Sprintf("got ins %v, details %#v\n", len(insList.Items), insList.Items))
+
 	c := 0
 	for _, item := range insList.Items {
 		if contains(ep.Args, item.GetAnnotations(), "count") {
 			c += 1
 		}
-		logger.Info(fmt.Sprintf("wanted matched annotation %#v, got %#v", ep.Args, item.GetAnnotations()))
+		logger.Info(fmt.Sprintf("wanted matched annotation %#v, got %#v\n", ep.Args, item.GetAnnotations()))
 	}
 
 	logger.Info(fmt.Sprintf("found kind %s of %s which matched annotation %+v", ep.Kind, key.String(), ep.Args))
