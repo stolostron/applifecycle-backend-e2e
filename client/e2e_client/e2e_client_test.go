@@ -23,7 +23,7 @@ var _ = Describe("channel-test", func() {
 	It("chn-003", func() {
 		Eventually(func() error { return DefaultRunner.Run("chn-003") }, 5*pullInterval, pullInterval).Should(Succeed())
 	})
-	FIt("chn-004", func() {
+	It("chn-004", func() {
 		Eventually(func() error { return DefaultRunner.Run("chn-004") }, 5*pullInterval, pullInterval).Should(Succeed())
 	})
 })
