@@ -65,8 +65,8 @@
 		"namespace": "ch-obj",
 		"matcher": "byannotationcount",
 		"args": {
-            "apps.open-cluster-management.io/hosting-deployable": "default/payload-cfg-obj-channel",
-            "count": "1"
+			"apps.open-cluster-management.io/hosting-deployable": "default/payload-cfg-obj-channel",
+			"count": "1"
 		}
 	},
 
@@ -113,8 +113,8 @@
 		"namespace": "ch-ns",
 		"matcher": "byannotationcount",
 		"args": {
-            "apps.open-cluster-management.io/hosting-deployable": "default/payload-cfg-namespace-channel",
-            "count": "1"
+			"apps.open-cluster-management.io/hosting-deployable": "default/payload-cfg-namespace-channel",
+			"count": "1"
 		}
 	}
 ]

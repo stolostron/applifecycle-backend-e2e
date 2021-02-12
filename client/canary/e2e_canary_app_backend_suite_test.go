@@ -32,7 +32,7 @@ const (
 )
 
 var (
-	//this will be depend on the caller's location
+	//this will be depended on the caller's location
 	cfgDir = "../../default-kubeconfigs"
 )
 
