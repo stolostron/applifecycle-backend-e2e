@@ -9,6 +9,9 @@ var _ = Describe("helmrelease-test", func() {
 	It("release-001", func() {
 		Eventually(func() error { return DefaultRunner.Run("release-001") }, 5*pullInterval, pullInterval).Should(Succeed())
 	})
+	It("release-003", func() {
+		Eventually(func() error { return DefaultRunner.Run("release-003") }, 5*pullInterval, pullInterval).Should(Succeed())
+	})
 })
 
 var _ = Describe("channel-test", func() {
