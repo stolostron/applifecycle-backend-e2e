@@ -31,7 +31,7 @@ if [ "$TRAVIS_BUILD" != 1 ]; then
     fi
 
     echo -e "\nDownload and install KinD\n"
-    go get sigs.k8s.io/kind
+    go get sigs.k8s.io/kind:v1.19.1
 
 fi
 
