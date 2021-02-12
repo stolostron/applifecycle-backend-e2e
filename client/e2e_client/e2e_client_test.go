@@ -11,7 +11,7 @@ var _ = Describe("helmrelease-test", func() {
 	})
 })
 
-var _ = Describe("channel-test", func() {
+var _ = FDescribe("channel-test", func() {
 	It("chn-001", func() {
 		Eventually(func() error { return DefaultRunner.Run("chn-001") }, 5*pullInterval, pullInterval).Should(Succeed())
 	})

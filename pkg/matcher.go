@@ -113,6 +113,7 @@ func (b ByAnnotationCount) Match(clt client.Client, ep Expectation, logger logr.
 		if contains(ep.Args, item.GetAnnotations(), "count") {
 			c += 1
 		}
+		logger.Info(fmt.Sprintf("wanted matched annotation %#v, got %#v", ep.Args, item.GetAnnotations()))
 	}
 
 	logger.Info(fmt.Sprintf("found kind %s of %s which matched annotation %+v", ep.Kind, key.String(), ep.Args))
