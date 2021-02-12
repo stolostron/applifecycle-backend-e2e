@@ -31,7 +31,7 @@ if [ "$TRAVIS_BUILD" != 1 ]; then
     fi
 
     echo -e "\nDownload and install KinD\n"
-    go get sigs.k8s.io/kind
+    go get sigs.k8s.io/kind@v0.9.0
 
 fi
 
@@ -138,6 +138,8 @@ setup_helmrelease_operator(){
 }
 
 setup_operators(){
+	kubectl apply -f https://raw.githubusercontent.com/open-cluster-management/multicloud-operators-placementrule/master/hack/test/crds/clusters.open-cluster-management.io_managedclusters.crd.yaml
+
     setup_application_operator
 	setup_placementrule_operator
 
