@@ -184,3 +184,4 @@ go test -v ./client/e2e_client/...
 
 exit 0
 
+kubectl logs -n default -l app=multicluster-operators-channel
