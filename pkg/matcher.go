@@ -108,6 +108,12 @@ func (b ByAnnotationCount) Match(clt client.Client, ep Expectation, logger logr.
 		return gerr.Wrapf(err, "failed to get instanceList %s of kind %s", key.String(), ep.Kind)
 	}
 
+	debug := func(){
+		deList := ep.GetInstanceList()
+		_ = clt.List(context.TODO(), deList, &client.ListOptions{}
+		logger.Info(fmt.Sprintf("got ins %v, details %#v\n", len(deList.Items), deList.Items))
+	}()
+
 	logger.Info(fmt.Sprintf("got ins %v, details %#v\n", len(insList.Items), insList.Items))
 
 	c := 0
