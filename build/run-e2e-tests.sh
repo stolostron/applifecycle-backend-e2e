@@ -181,7 +181,6 @@ export KUBE_DIR="../../default-kubeconfigs"
 
 echo "Process the API test cases"
 go test -v ./client/e2e_client/...
-
+kubectl logs -n default -l app=multicluster-operators-channel
 exit 0
 
-kubectl logs -n default -l app=multicluster-operators-channel
