@@ -86,5 +86,16 @@
                 "namespace": "helmrelease-git-test",
                 "matcher": "byname",
                 "args": {}
+        },
+{
+                "test_id": "release-004-upgrade",
+                "target_cluster": "hub",
+                "desc": "should have a deployment called nginx-deployment-upgrade on hub",
+                "apiversion": "apps/v1",
+                "kind": "deployment",
+                "name": "nginx-deployment-upgrade",
+                "namespace": "helmrelease-git-test",
+                "matcher": "byname",
+                "args": {}
         }
 ]

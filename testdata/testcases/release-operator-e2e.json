@@ -16,5 +16,11 @@
   "desc": "helmrelease with git install test: guestbook deploy",
   "urls": ["https://raw.githubusercontent.com/open-cluster-management/multicloud-operators-subscription-release/master/examples/test-guestbook-git.yaml"],
   "target_cluster": "hub"
+},
+{
+  "test_id": "release-004-upgrade",
+  "desc": "helmrelease with git chart upgrade install test: guestbook deploy",
+  "urls": ["https://raw.githubusercontent.com/open-cluster-management/multicloud-operators-subscription-release/master/examples/test-guestbook-git-upgrade.yaml"],
+  "target_cluster": "hub"
 }
 ]
