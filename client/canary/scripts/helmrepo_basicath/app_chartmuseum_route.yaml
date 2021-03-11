@@ -1,0 +1,15 @@
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  name: chartmuseum-chartmuseum
+  namespace: ns-chartmuseum
+spec:
+  host:
+  path: /charts
+  to:
+    kind: Service
+    name: chartmuseum-chartmuseum
+    weight: 100
+  port:
+    targetPort: http
+  wildcardPolicy: None
