@@ -7,8 +7,10 @@ IMG=$(cat COMPONENT_NAME 2> /dev/null)
 export GO111MODULE=on
 
 # just for pass the PROW onboard
+
 exit 0
 echo "passed exit"
+
 if [ ! -d "default-kubeconfigs" ]; then
 	mkdir default-kubeconfigs
 fi
