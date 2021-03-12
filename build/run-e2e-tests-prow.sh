@@ -4,15 +4,6 @@ echo "e2e TEST"
 # need to find a way to use the Makefile to set these
 IMG=$(cat COMPONENT_NAME 2> /dev/null)
 
-echo "print ENVs: "
-echo "travis_build: ${TRAVIS_BUILD}"
-echo "travis_event_type: ${TRAVIS_EVENT_TYPE}"
-echo "component version: ${COMPONENT_VERSION}"
-echo "component_tag_extension: ${COMPONENT_TAG_EXTENSION}"
-echo "pull_request-travis_commit: ${TRAVIS_PULL_REQUEST}-${TRAVIS_COMMIT}"
-echo "end of printing ENVs"
-echo
-
 export GO111MODULE=on
 
 # just for pass the PROW onboard
