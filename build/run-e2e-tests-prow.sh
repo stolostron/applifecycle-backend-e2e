@@ -7,14 +7,14 @@ IMG=$(cat COMPONENT_NAME 2> /dev/null)
 export GO111MODULE=on
 
 # just for pass the PROW onboard
-exit 0;
-
+exit 0
+echo "passed exit"
 if [ ! -d "default-kubeconfigs" ]; then
 	mkdir default-kubeconfigs
 fi
 
 
-cat $HOME/.kube/config > default-kubeconfigs/hub
+
 
 setup_application_operator(){
     echo "Clone the application repo"
@@ -137,6 +137,7 @@ function cleanup()
 	kubectl get ValidatingWebhookConfiguration -n default
 }
 
+cat $HOME/.kube/config > default-kubeconfigs/hub
 setup_operators
 
 
