@@ -126,7 +126,7 @@ function cleanup()
 
 
 # api-ci KUBECONFIG https://docs.ci.openshift.org/docs/architecture/step-registry/#a-note-on-kubeconfig
-cat $HOME/.kube/config > default-kubeconfigs/hub
+cat $KUBECONFIG > default-kubeconfigs/hub
 setup_operators
 
 
