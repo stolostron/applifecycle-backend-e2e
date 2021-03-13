@@ -1,21 +1,6 @@
 #! /bin/bash
 set -e
 echo "e2e TEST"
-# need to find a way to use the Makefile to set these
-IMG=$(cat COMPONENT_NAME 2> /dev/null)
-
-export GO111MODULE=on
-
-# just for pass the PROW onboard
-
-exit 0
-echo "passed exit"
-
-if [ ! -d "default-kubeconfigs" ]; then
-	mkdir default-kubeconfigs
-fi
-
-
 
 
 setup_application_operator(){
@@ -139,6 +124,8 @@ function cleanup()
 	kubectl get ValidatingWebhookConfiguration -n default
 }
 
+
+# api-ci KUBECONFIG https://docs.ci.openshift.org/docs/architecture/step-registry/#a-note-on-kubeconfig
 cat $HOME/.kube/config > default-kubeconfigs/hub
 setup_operators
 
