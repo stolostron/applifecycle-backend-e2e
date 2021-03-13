@@ -126,7 +126,26 @@ function cleanup()
 
 
 # api-ci KUBECONFIG https://docs.ci.openshift.org/docs/architecture/step-registry/#a-note-on-kubeconfig
-cat $KUBECONFIG > default-kubeconfigs/hub
+# however the KUBECONFIG doesn't have the prevelige to deploy CRD
+#cat $KUBECONFIG > default-kubeconfigs/hub
+
+go get sigs.k8s.io/kind@v0.9.0
+
+
+kind create cluster
+if [ $? != 0 ]; then
+        exit $?;
+fi
+
+sleep 15
+
+if [ ! -d "default-kubeconfigs" ]; then
+	mkdir default-kubeconfigs
+fi
+
+
+kind get kubeconfig > default-kubeconfigs/hub
+
 setup_operators
 
 
