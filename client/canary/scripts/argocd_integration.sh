@@ -51,8 +51,8 @@ waitForRes() {
 }
 
 uninstallArgocd() {
-    $KUBECTL_SPOKE delete deployments -n default  guestbook-ui
-    $KUBECTL_SPOKE delete services -n default  guestbook-ui
+    $KUBECTL_HUB delete deployments -n default  guestbook-ui
+    $KUBECTL_HUB delete services -n default  guestbook-ui
 
     $KUBECTL_HUB get namespace argocd
     if [ $? -eq 0 ]; then
@@ -89,7 +89,8 @@ waitForRes $KUBECONFIG_HUB "pods" "argocd-redis" "argocd" ""
 waitForRes $KUBECONFIG_HUB "pods" "argocd-dex-server" "argocd" ""
 waitForRes $KUBECONFIG_HUB "pods" "argocd-application-controller" "argocd" ""
 
-kill $(ps aux | grep 'port-forward svc\/argocd-server' | awk '{print $2}')
+for pid in $(ps aux | grep 'port-forward svc\/argocd-server' | awk '{print $2}'); do kill -9 $pid; done
+
 $KUBECTL_HUB -n argocd port-forward svc/argocd-server -n argocd 8080:443 > /dev/null 2>&1 &
 
 sleep 5
@@ -133,18 +134,37 @@ while [ true ]; do
     (( MINUTE = MINUTE + 10 ))
 done
 
-echo "==== Enabling ArgoCd cluster collection for the managed cluster ===="
-SPOKE_CLUSTER=$($KUBECTL_HUB get managedclusters -o name |grep -v local-cluster |head -n 1 |awk -F/ '{print $2}')
+echo "==== Enabling ArgoCd cluster collection for the managed local-cluster ===="
+SPOKE_CLUSTER=$($KUBECTL_HUB get managedclusters -l local-cluster=true -o name |head -n 1 |awk -F/ '{print $2}')
 
 echo "SPOKE_CLUSTER: $SPOKE_CLUSTER"
 
 $KUBECTL_HUB patch klusterletaddonconfig -n $SPOKE_CLUSTER $SPOKE_CLUSTER --type merge -p '{"spec":{"applicationManager":{"argocdCluster":true}}}'
+
+MINUTE=0
+while [ true ]; do
+    # Wait up to 5min, should only take about 1-2 min
+    if [ $MINUTE -gt 300 ]; then
+        echo "Timeout waiting for the spoke cluster token being imported to the argocd Namespace."
+        exit 1
+    fi
+    $KUBECTL_HUB get secrets -n argocd "$SPOKE_CLUSTER-cluster-secret"
+    if [ $? -eq 0 ]; then
+        break
+    fi
+    echo "* STATUS: The spoke cluster token is NOT in the argocd Namespace. Re-check in 10 sec"
+    sleep 10
+    (( MINUTE = MINUTE + 10 ))
+done
+
+echo "$SPOKE_CLUSTER cluster secrets imported to the argocd namespace successfully."
+
 sleep 10
 
 echo "==== verifying the the managed cluster secret in argocd cluster list ===="
-argocd cluster list  |grep -w $SPOKE_CLUSTER
+argocd cluster list  |grep -w $SPOKE_CLUSTER 
 if [ $? -ne 0 ]; then
-    echo "Managed cluster $SPOKE_CLUSTER is not in ArgoCD cluster list"
+    echo "Managed cluster $SPOKE_CLUSTER is NOT in the ArgoCD cluster list"
     exit 1
 fi
 
@@ -154,7 +174,7 @@ SPOKE_CLUSTER_SERVER=$(argocd cluster list  |grep -w $SPOKE_CLUSTER |awk -F' ' '
 argocd app create guestbook --repo https://github.com/argoproj/argocd-example-apps.git --path guestbook --dest-server $SPOKE_CLUSTER_SERVER --dest-namespace default
 argocd app sync guestbook
 
-waitForRes $KUBECONFIG_SPOKE "deployments" "guestbook-ui" "default" ""
+waitForRes $KUBECONFIG_HUB "deployments" "guestbook-ui" "default" ""
 
 uninstallArgocd
 
