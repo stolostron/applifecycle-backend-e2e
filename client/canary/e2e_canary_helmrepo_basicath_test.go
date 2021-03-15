@@ -8,7 +8,7 @@ import (
 	. "github.com/onsi/gomega"
 )
 
-var _ = Describe("e2e-server", func() {
+var _ = Describe("RHACM4K-2350: e2e-server", func() {
 	It("helmrepo-basicath", func() {
 		Eventually(
 			func() error {
