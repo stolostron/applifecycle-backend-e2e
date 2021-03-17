@@ -1,8 +1,0 @@
-apiVersion: apps.open-cluster-management.io/v1
-kind: Channel
-metadata:
-  name: sample-kube-resources-git
-  namespace: kuberesources
-spec:
-    type: Git
-    pathname: https://github.com/open-cluster-management/multicloud-operators-subscription.git
