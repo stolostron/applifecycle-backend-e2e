@@ -40,7 +40,7 @@ if [ $? != 0 ]; then
         exit $?;
 fi
 
-kind create cluster
+kind create cluster --image=kindest/node:v1.19.1
 if [ $? != 0 ]; then
         exit $?;
 fi
