@@ -22,6 +22,9 @@ defaults:
 jobs:
   main:
     runs-on: ubuntu-18.04
+    env:
+      REGISTRY: localhost:5000
+      RUN_ON: github
     strategy:
       matrix:
         go: [ '1.15' ]
@@ -34,6 +37,6 @@ jobs:
     - name: Run e2e test on KinD cluster
       working-directory: ${{env.GITHUB_WORKSPACE}}
       run: |
-        echo "$PWD"
+        echo "------> $PWD, $RUN_ON"
         make e2e
 
