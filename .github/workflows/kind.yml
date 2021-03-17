@@ -6,9 +6,13 @@ name: KinD tests
 on:
   # Triggers the workflow on push or pull request events but only for the main branch
   push:
-    branches: [ main, release-2.3 ]
+    branches: 
+      - main
+      - 'releases-2**'
   pull_request:
-    branches: [ main, release-2.2 ]
+    branches: 
+      - main
+      - 'release-2**'
 
 defaults:
   run:
@@ -19,8 +23,6 @@ defaults:
 jobs:
   main:
     runs-on: ubuntu-18.04
-    env:
-      REGISTRY: localhost:5000
     strategy:
       matrix:
         go: [ '1.15' ]
@@ -28,5 +30,6 @@ jobs:
     steps:
     - name: Run e2e test on KinD cluster
       run: |
+        echo "$PWD"
         make e2e
 
