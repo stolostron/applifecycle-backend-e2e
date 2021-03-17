@@ -97,5 +97,27 @@
                 "namespace": "helmrelease-git-test",
                 "matcher": "byname",
                 "args": {}
-        }
+        },
+{
+                "test_id": "RHACM4K-2352",
+                "target_cluster": "hub",
+                "desc": "should have a HelmRelease called guestbook on hub",
+                "apiversion": "apps.open-cluster-management.io/v1",
+                "kind": "HelmRelease",
+                "name": "guestbook",
+                "namespace": "helmrelease-spec-test",
+                "matcher": "byname",
+                "args": {}
+        },
+{
+                "test_id": "RHACM4K-2352",
+                "target_cluster": "hub",
+                "desc": "should have a deployment labled with HelmRelease spec value 'replicas: 4'",
+                "apiversion": "apps/v1",
+                "kind": "deployment",
+                "name": "nginx-deployment",
+                "namespace": "helmrelease-spec-test",
+                "matcher": "bylabel",
+                "args": {"replicas":"4"}
+}
 ]

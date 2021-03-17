@@ -1,0 +1,24 @@
+apiVersion: apps.open-cluster-management.io/v1
+kind: Deployable
+metadata:
+  annotations:
+    apps.open-cluster-management.io/is-local-deployable: "false"
+  name: sub-orig-target-deployable
+  namespace: default
+spec:
+  template:
+    apiVersion: apps.open-cluster-management.io/v1
+    kind: Subscription
+    metadata:
+      labels:
+        app: app222
+      name: sub-orig
+      namespace: default
+    spec:
+      channel: dev1/dev1
+      packageFilter:
+        version: =1.2.4
+      placement:
+        local: true
+    status:
+      lastUpdateTime: null

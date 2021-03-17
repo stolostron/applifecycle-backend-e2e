@@ -1,0 +1,26 @@
+apiVersion: apps.open-cluster-management.io/v1
+kind: Deployable
+metadata:
+  annotations:
+    apps.open-cluster-management.io/is-local-deployable: "false"
+  labels:
+    deployable-label: "passed-in"
+  name: example-configmap
+  namespace: default
+spec:
+  template:
+    apiVersion: v1
+    kind: ConfigMap
+    metadata:
+      name: config1
+      namespace: default
+    data:
+      purpose: for test
+  placement:
+    clusterSelector: {}
+  overrides:
+  - clusterName: endpoint2-ns
+    clusterOverrides:
+    - path: data
+      value:
+        foo: bar
