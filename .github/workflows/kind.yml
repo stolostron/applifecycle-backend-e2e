@@ -1,0 +1,33 @@
+# This is a basic workflow to help you get started with Actions
+
+name: KinD tests
+
+# Controls when the action will run. 
+on:
+  # Triggers the workflow on push or pull request events but only for the main branch
+  push:
+    branches: [ main, release-2.3 ]
+  pull_request:
+    branches: [ main, release-2.2 ]
+
+defaults:
+  run:
+    shell: bash
+    working-directory: applifecycle-backend-e2e
+    
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  main:
+    runs-on: ubuntu-18.04
+    env:
+      REGISTRY: localhost:5000
+    strategy:
+      matrix:
+        go: [ '1.15' ]
+    name: KinD tests
+    steps:
+    - name: Run e2e test on KinD cluster
+      run: |
+        make setup-tests.sh
+        make run-e2e-tests-prow.sh
+
