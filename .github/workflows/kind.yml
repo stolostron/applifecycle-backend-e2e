@@ -28,6 +28,10 @@ jobs:
         go: [ '1.15' ]
     name: KinD tests
     steps:
+    # Checks out a copy of your repository on the ubuntu-latest machine
+    - name: Checkout code
+      uses: actions/checkout@v2
+      
     - name: Run e2e test on KinD cluster
       run: |
         echo "$PWD"
