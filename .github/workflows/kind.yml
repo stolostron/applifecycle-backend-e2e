@@ -37,6 +37,6 @@ jobs:
     - name: Run e2e test on KinD cluster
       working-directory: ${{env.GITHUB_WORKSPACE}}
       run: |
-        echo "------> $PWD, $RUN_ON"
-        make e2e
+        echo "------> run on platform: $RUN_ON"
+        make -f Makefile.prow test
 
