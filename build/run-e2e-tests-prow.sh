@@ -1,21 +1,13 @@
 #! /bin/bash
 set -e
 echo "e2e TEST"
-# need to find a way to use the Makefile to set these
-IMG=$(cat COMPONENT_NAME 2> /dev/null)
-
-export GO111MODULE=on
 
 # just for pass the PROW onboard
 
-exit 0
-echo "passed exit"
-
-if [ ! -d "default-kubeconfigs" ]; then
-	mkdir default-kubeconfigs
+if [ "$RUN_ON" != "github" ]; then
+	echo "skip e2e on prow, maybe when clusterpool is on, we will enable it"
+	exit 0
 fi
-
-
 
 
 setup_application_operator(){
@@ -140,8 +132,29 @@ function cleanup()
 }
 
 cat $HOME/.kube/config > default-kubeconfigs/hub
-setup_operators
 
+
+
+kind delete cluster
+if [ $? != 0 ]; then
+        exit $?;
+fi
+
+kind create cluster --image=kindest/node:v1.19.1
+if [ $? != 0 ]; then
+        exit $?;
+fi
+
+sleep 15
+
+if [ ! -d "default-kubeconfigs" ]; then
+	mkdir default-kubeconfigs
+fi
+
+
+kind get kubeconfig > default-kubeconfigs/hub
+
+setup_operators
 
 trap cleanup EXIT
 
