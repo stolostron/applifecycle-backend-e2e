@@ -17,8 +17,10 @@ ENV USER_UID=1001 \
     USER_NAME=app-backend \
     ZONEINFO=/usr/share/timezone
 
+ARG COMPONENT_VERSION
+RUN echo "COMPONENT_VERSION = ${COMPONENT_VERSION}"
 
-RUN git clone -b release-2.2 --single-branch https://github.com/open-cluster-management/applifecycle-backend-e2e.git /opt/e2e
+RUN git clone -b release-${COMPONENT_VERSION} --single-branch https://github.com/open-cluster-management/applifecycle-backend-e2e.git /opt/e2e
 
 RUN curl -LO https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl
 
