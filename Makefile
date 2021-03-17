@@ -64,7 +64,7 @@ gobuild:
 
 build-images: gobuild
 	@echo "build image ${IMAGE_NAME_AND_VERSION}"
-	@docker build --build-arg COMPONENT_VERSION=${COMPONENT_VERSION} -t ${IMAGE_NAME_AND_VERSION} .
+	@docker build -t ${IMAGE_NAME_AND_VERSION} .
 
 APACHE_BASIC_AUTH_IMAGE ?= apache-basic-auth-image
 APACHE_BASIC_AUTH_CONTAINER ?= apache-basic-auth-container
