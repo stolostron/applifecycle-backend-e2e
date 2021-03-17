@@ -15,6 +15,7 @@ var _ = Describe("helmrelease-test", func() {
         It("release-004", func() {
 		Eventually(func() error { return DefaultRunner.Run("release-004") }, 5*pullInterval, pullInterval).Should(Succeed())
 	})
+
         It("RHACM4K-2352", func() {
 		Eventually(func() error { return DefaultRunner.Run("RHACM4K-2352") }, 5*pullInterval, pullInterval).Should(Succeed())
 	})
