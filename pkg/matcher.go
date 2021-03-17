@@ -37,6 +37,8 @@ func MatcherRouter(name string) Matcher {
 		return ByAnnotation{}
 	case "byannotationcount":
 		return ByAnnotationCount{}
+	case "bylabel":
+		return ByLabel{}
 	default:
 		return nil
 	}
@@ -124,6 +126,32 @@ func (b ByAnnotationCount) Match(clt client.Client, ep Expectation, logger logr.
 	}
 
 	return nil
+}
+
+type ByLabel struct{}
+
+func (b ByLabel) Match(clt client.Client, ep Expectation, logger logr.Logger) error {
+        if len(ep.Args) == 0 {
+                return gerr.New("using the bylabel matcher, but NO label key:val is provided in the Args field")
+        }
+
+        ins := ep.GetInstance()
+        key := ep.GetKey()
+
+        if err := clt.Get(context.TODO(), key, ins); err != nil {
+                return gerr.Wrapf(err, "failed to get instance %s of kind %s", key.String(), ep.Kind)
+        }
+
+        labels := ins.GetLabels()
+
+        for k, v := range ep.Args {
+                if cv, ok := labels[k]; !ok || v != cv {
+                        return fmt.Errorf("kind %s of %s has label %s,  is not matching expectation %s", ep.Kind, key.String(), cv, v)
+                }
+        }
+
+        logger.Info(fmt.Sprintf("found kind %s of %s which matched label %+v", ep.Kind, key.String(), ep.Args))
+        return nil
 }
 
 func contains(small, big map[string]string, skip string) bool {
