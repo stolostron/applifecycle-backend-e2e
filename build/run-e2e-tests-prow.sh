@@ -2,8 +2,6 @@
 set -e
 echo "e2e TEST"
 
-# just for pass the PROW onboard
-
 if [ "$RUN_ON" != "github" ]; then
 	echo "skip e2e on prow, maybe when clusterpool is on, we will enable it"
 	exit 0
@@ -27,7 +25,7 @@ setup_channel_operator(){
         git clone https://github.com/open-cluster-management/multicloud-operators-channel.git
     fi
 
-	sed -i -e "s|image: .*$|image: quay.io/open-cluster-management/multicluster-operators-channel:community-${COMPONENT_VERSION}|" multicloud-operators-channel/deploy/standalone/operator.yaml
+    sed -i -e "s|image: .*$|image: quay.io/open-cluster-management/multicluster-operators-channel:community-${COMPONENT_VERSION}|" multicloud-operators-channel/deploy/standalone/operator.yaml
 
     kubectl apply -f multicloud-operators-channel/deploy/crds
     kubectl apply -f multicloud-operators-channel/deploy/standalone
@@ -49,7 +47,7 @@ setup_subscription_operator(){
     kubectl apply -f multicloud-operators-subscription/deploy/common
     sleep 5
 
-	echo "before sed $COMPONENT_VERSION"
+    echo "before sed $COMPONENT_VERSION"
     sed -i -e "s|image: .*$|image: quay.io/open-cluster-management/multicluster-operators-subscription:community-$COMPONENT_VERSION|" multicloud-operators-subscription/deploy/standalone/operator.yaml
 
     kubectl apply -f multicloud-operators-subscription/deploy/standalone
@@ -94,12 +92,12 @@ setup_helmrelease_operator(){
 }
 
 setup_operators(){
-	kubectl apply -f https://raw.githubusercontent.com/open-cluster-management/multicloud-operators-placementrule/master/hack/test/crds/clusters.open-cluster-management.io_managedclusters.crd.yaml
+    kubectl apply -f https://raw.githubusercontent.com/open-cluster-management/multicloud-operators-placementrule/master/hack/test/crds/clusters.open-cluster-management.io_managedclusters.crd.yaml
 
     setup_application_operator
-	setup_placementrule_operator
+    setup_placementrule_operator
 
-	setup_subscription_operator
+    setup_subscription_operator
     setup_channel_operator
     setup_helmrelease_operator
 
@@ -108,32 +106,28 @@ setup_operators(){
         sleep 90
     fi
 
-   	echo -e "\nRunning images\n"
-	kubectl get deploy -A -o jsonpath='{.items[*].spec.template.spec.containers[*].image}' | xargs -n1 echo
+    echo -e "\nRunning images\n"
+    kubectl get deploy -A -o jsonpath='{.items[*].spec.template.spec.containers[*].image}' | xargs -n1 echo
 
     echo -e "\nPod status\n"
 
-	kubectl get po -A
+    kubectl get po -A
 }
 
 function cleanup()
 {
 
-	docker kill apache-basic-auth-container || true
-	docker rm apache-basic-auth-container || true
+    docker kill apache-basic-auth-container || true
+    docker rm apache-basic-auth-container || true
 
-  	echo -e "\nPod status\n"
+    echo -e "\nPod status\n"
 
-	kubectl get po -A
+    kubectl get po -A
 
-	echo "channel webhook resource"
-	kubectl get svc -n default
-	kubectl get ValidatingWebhookConfiguration -n default
+    echo "channel webhook resource"
+    kubectl get svc -n default
+    kubectl get ValidatingWebhookConfiguration -n default
 }
-
-cat $HOME/.kube/config > default-kubeconfigs/hub
-
-
 
 kind delete cluster
 if [ $? != 0 ]; then
@@ -148,7 +142,7 @@ fi
 sleep 15
 
 if [ ! -d "default-kubeconfigs" ]; then
-	mkdir default-kubeconfigs
+    mkdir default-kubeconfigs
 fi
 
 

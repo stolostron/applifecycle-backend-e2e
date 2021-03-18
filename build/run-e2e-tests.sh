@@ -1,9 +1,13 @@
 #! /bin/bash
 set -e
 echo "e2e TEST"
-# need to find a way to use the Makefile to set these
-IMG=$(cat COMPONENT_NAME 2> /dev/null)
 
+if [ "$RUN_ON" != "github" ]; then
+	echo "skip e2e on prow, maybe when clusterpool is on, we will enable it"
+	exit 0
+fi
+
+# need to find a way to use the Makefile to set these
 echo "print ENVs: "
 echo "travis_build: ${TRAVIS_BUILD}"
 echo "travis_event_type: ${TRAVIS_EVENT_TYPE}"
@@ -16,7 +20,7 @@ echo
 export GO111MODULE=on
 
 if [ "$TRAVIS_BUILD" != 1 ]; then
-    echo "Build is on Travis"
+    echo "Build is on $RUN_ON"
 
     # Download and install kubectl
     echo -e "\nGet kubectl binary\n"
@@ -175,6 +179,14 @@ function cleanup()
 	kubectl get ValidatingWebhookConfiguration -n default
 }
 
+start_up_private_helm(){
+	echo "start up private helm registery"
+	docker build -t ${APACHE_BASIC_AUTH_IMAGE} -f apache-basic-auth/Dockerfile .
+	docker run -d --name ${APACHE_BASIC_AUTH_CONTAINER}  -p 8080:8080 ${APACHE_BASIC_AUTH_IMAGE}
+}
+
+
+start_up_private_helm
 setup_operators
 
 

@@ -68,6 +68,8 @@ build-images: gobuild
 
 APACHE_BASIC_AUTH_IMAGE ?= apache-basic-auth-image
 APACHE_BASIC_AUTH_CONTAINER ?= apache-basic-auth-container
+export APACHE_BASIC_AUTH_IMAGE
+export APACHE_BASIC_AUTH_CONTAINER
 build-apache-basic-auth-image:
 	docker build -t ${APACHE_BASIC_AUTH_IMAGE} -f apache-basic-auth/Dockerfile .
 
@@ -88,7 +90,7 @@ kind-setup:
 	kind get kubeconfig > default-kubeconfigs/hub
 	kubectl config use-context kind-kind
 
-e2e: gobuild boot-apache-basic-auth-service
+e2e: gobuild
 	build/run-e2e-tests.sh
 
 tag: build-images
