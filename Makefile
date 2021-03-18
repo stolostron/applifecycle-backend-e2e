@@ -88,7 +88,7 @@ kind-setup:
 	kind get kubeconfig > default-kubeconfigs/hub
 	kubectl config use-context kind-kind
 
-e2e: gobuild boot-apache-basic-auth-service
+e2e: gobuild
 	build/run-e2e-tests.sh
 
 tag: build-images

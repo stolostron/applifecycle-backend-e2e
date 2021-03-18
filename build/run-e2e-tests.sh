@@ -179,6 +179,14 @@ function cleanup()
 	kubectl get ValidatingWebhookConfiguration -n default
 }
 
+start_up_private_helm(){
+	echo "start up private helm registery"
+	docker build -t ${APACHE_BASIC_AUTH_IMAGE} -f apache-basic-auth/Dockerfile .
+	docker run -d --name ${APACHE_BASIC_AUTH_CONTAINER}  -p 8080:8080 ${APACHE_BASIC_AUTH_IMAGE}
+}
+
+
+start_up_private_helm
 setup_operators
 
 
