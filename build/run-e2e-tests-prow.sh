@@ -131,10 +131,6 @@ function cleanup()
 	kubectl get ValidatingWebhookConfiguration -n default
 }
 
-cat $HOME/.kube/config > default-kubeconfigs/hub
-
-
-
 kind delete cluster
 if [ $? != 0 ]; then
         exit $?;
