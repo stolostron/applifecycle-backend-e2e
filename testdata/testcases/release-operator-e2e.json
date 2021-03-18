@@ -22,5 +22,11 @@
   "desc": "helmrelease with git chart upgrade install test: guestbook deploy",
   "urls": ["https://raw.githubusercontent.com/open-cluster-management/multicloud-operators-subscription-release/master/examples/test-guestbook-git-upgrade.yaml"],
   "target_cluster": "hub"
+},
+{
+  "test_id": "RHACM4K-2352",
+  "desc": "helmrelease with spec field test: guestbook deploy",
+  "urls": ["https://raw.githubusercontent.com/open-cluster-management/multicloud-operators-subscription-release/main/examples/test-guestbook-spec.yaml"],
+  "target_cluster": "hub"
 }
 ]
