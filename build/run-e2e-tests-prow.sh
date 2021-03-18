@@ -2,8 +2,6 @@
 set -e
 echo "e2e TEST"
 
-# just for pass the PROW onboard
-
 if [ "$RUN_ON" != "github" ]; then
 	echo "skip e2e on prow, maybe when clusterpool is on, we will enable it"
 	exit 0

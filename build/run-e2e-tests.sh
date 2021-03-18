@@ -1,6 +1,12 @@
 #! /bin/bash
 set -e
 echo "e2e TEST"
+
+if [ "$RUN_ON" != "github" ]; then
+	echo "skip e2e on prow, maybe when clusterpool is on, we will enable it"
+	exit 0
+fi
+
 # need to find a way to use the Makefile to set these
 IMG=$(cat COMPONENT_NAME 2> /dev/null)
 
@@ -16,7 +22,7 @@ echo
 export GO111MODULE=on
 
 if [ "$TRAVIS_BUILD" != 1 ]; then
-    echo "Build is on Travis"
+    echo "Build is on $RUN_ON"
 
     # Download and install kubectl
     echo -e "\nGet kubectl binary\n"
