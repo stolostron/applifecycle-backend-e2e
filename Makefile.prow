@@ -13,6 +13,7 @@
 # limitations under the License.
 
 -include /opt/build-harness/Makefile.prow
+-include Makefile
 
 IMG ?= $(shell cat COMPONENT_NAME 2> /dev/null)
 export GOPACKAGES   = $(shell go list ./... | grep -v /manager | grep -v /bindata  | grep -v /vendor | grep -v /internal | grep -v /build | grep -v /test | grep -v /e2e )
@@ -34,5 +35,5 @@ lint:
 
 .PHONY: test
 
-test:
-	@build/run-e2e-tests.sh
+test: e2e
+	@echo "Run e2e"
