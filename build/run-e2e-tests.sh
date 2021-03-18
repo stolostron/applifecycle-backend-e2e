@@ -8,7 +8,6 @@ if [ "$RUN_ON" != "github" ]; then
 fi
 
 # need to find a way to use the Makefile to set these
-COMPONENT_VERSION ?= $(shell cat COMPONENT_VERSION 2> /dev/null)
 echo "print ENVs: "
 echo "travis_build: ${TRAVIS_BUILD}"
 echo "travis_event_type: ${TRAVIS_EVENT_TYPE}"
