@@ -38,7 +38,6 @@ jobs:
       working-directory: ${{env.GITHUB_WORKSPACE}}
       run: |
         echo "------> run on platform: $RUN_ON"
-        make boot-apache-basic-auth-service
         make -f Makefile.prow test
 
     - name: Debug
