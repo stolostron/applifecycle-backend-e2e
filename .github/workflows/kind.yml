@@ -2,22 +2,22 @@
 
 name: KinD tests
 
-# Controls when the action will run. 
+# Controls when the action will run.
 on:
   # Triggers the workflow on push or pull request events but only for the main branch
   push:
-    branches: 
+    branches:
       - main
       - 'releases-2**'
   pull_request:
-    branches: 
+    branches:
       - main
       - 'release-2**'
 
 defaults:
   run:
     shell: bash
-    
+
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   main:
@@ -33,10 +33,15 @@ jobs:
     # Checks out a copy of your repository on the ubuntu-latest machine
     - name: Checkout code
       uses: actions/checkout@v2
-      
+
     - name: Run e2e test on KinD cluster
       working-directory: ${{env.GITHUB_WORKSPACE}}
       run: |
         echo "------> run on platform: $RUN_ON"
+        make boot-apache-basic-auth-service
         make -f Makefile.prow test
 
+    - name: Debug
+      if: ${{ failure() }}
+      run: |
+        kubectl get pod -A
