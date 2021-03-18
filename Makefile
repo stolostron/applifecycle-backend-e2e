@@ -68,6 +68,8 @@ build-images: gobuild
 
 APACHE_BASIC_AUTH_IMAGE ?= apache-basic-auth-image
 APACHE_BASIC_AUTH_CONTAINER ?= apache-basic-auth-container
+export APACHE_BASIC_AUTH_IMAGE
+export APACHE_BASIC_AUTH_CONTAINER
 build-apache-basic-auth-image:
 	docker build -t ${APACHE_BASIC_AUTH_IMAGE} -f apache-basic-auth/Dockerfile .
 
