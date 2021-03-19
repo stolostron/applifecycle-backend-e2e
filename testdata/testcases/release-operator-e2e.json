@@ -28,5 +28,11 @@
   "desc": "helmrelease with spec field test: guestbook deploy",
   "urls": ["https://raw.githubusercontent.com/open-cluster-management/multicloud-operators-subscription-release/main/examples/test-guestbook-spec.yaml"],
   "target_cluster": "hub"
+},
+{
+  "test_id": "RHACM4K-2347",
+  "desc": "helmrelease with spec fields which are not used in chart test: guestbook deploy",
+  "urls": ["https://raw.githubusercontent.com/open-cluster-management/multicloud-operators-subscription-release/main/examples/test-guestbook-spec-unused.yaml"],
+  "target_cluster": "hub"
 }
 ]

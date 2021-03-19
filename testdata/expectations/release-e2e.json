@@ -53,7 +53,7 @@
                 "namespace": "helmrelease-secret-test",
                 "matcher": "byname",
                 "args": {}
-        },
+	},
 {
                 "test_id": "release-003",
                 "target_cluster": "hub",
@@ -64,7 +64,7 @@
                 "namespace": "helmrelease-secret-test",
                 "matcher": "byname",
                 "args": {}
-        },
+	},
 {
                 "test_id": "release-004",
                 "target_cluster": "hub",
@@ -75,7 +75,7 @@
                 "namespace": "helmrelease-git-test",
                 "matcher": "byname",
                 "args": {}
-        },
+	},
 {
                 "test_id": "release-004",
                 "target_cluster": "hub",
@@ -86,7 +86,7 @@
                 "namespace": "helmrelease-git-test",
                 "matcher": "byname",
                 "args": {}
-        },
+	},
 {
                 "test_id": "release-004-upgrade",
                 "target_cluster": "hub",
@@ -97,7 +97,7 @@
                 "namespace": "helmrelease-git-test",
                 "matcher": "byname",
                 "args": {}
-        },
+	},
 {
                 "test_id": "RHACM4K-2352",
                 "target_cluster": "hub",
@@ -108,7 +108,7 @@
                 "namespace": "helmrelease-spec-test",
                 "matcher": "byname",
                 "args": {}
-        },
+	},
 {
                 "test_id": "RHACM4K-2352",
                 "target_cluster": "hub",
@@ -119,5 +119,27 @@
                 "namespace": "helmrelease-spec-test",
                 "matcher": "bylabel",
                 "args": {"replicas":"4"}
-}
+	},
+{
+                "test_id": "RHACM4K-2347",
+                "target_cluster": "hub",
+                "desc": "should have a HelmRelease called guestbook on hub",
+                "apiversion": "apps.open-cluster-management.io/v1",
+                "kind": "HelmRelease",
+                "name": "guestbook",
+                "namespace": "helmrelease-spec-test",
+                "matcher": "byname",
+                "args": {}
+	},
+{
+                "test_id": "RHACM4K-2347",
+                "target_cluster": "hub",
+                "desc": "should have a deployment labled with chart default value 'replicas: 1'",
+                "apiversion": "apps/v1",
+                "kind": "deployment",
+                "name": "nginx-deployment",
+                "namespace": "helmrelease-spec-test",
+                "matcher": "bylabel",
+                "args": {"replicas":"1"}
+	}
 ]
