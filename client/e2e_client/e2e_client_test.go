@@ -21,6 +21,9 @@ var _ = Describe("helmrelease-test", func() {
 	It("RHACM4K-2347", func() {
 		Eventually(func() error { return DefaultRunner.Run("RHACM4K-2347") }, 5*pullInterval, pullInterval).Should(Succeed())
 	})
+	It("RHACM4K-2348", func() {
+		Eventually(func() error { return StageRunner.Run("RHACM4K-2348") }, 5*pullInterval, pullInterval).Should(Succeed())
+	})
 })
 
 var _ = Describe("channel-test", func() {

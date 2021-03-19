@@ -41,6 +41,7 @@ func TestAppLifecycle_API_E2E(t *testing.T) {
 }
 
 var DefaultRunner = clt.NewRunner(defaultAddr, "/run")
+var StageRunner = clt.NewRunner(defaultAddr, "/run/stage")
 
 var _ = BeforeSuite(func(done Done) {
 	By("bootstrapping test environment")
