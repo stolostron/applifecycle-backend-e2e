@@ -10,5 +10,17 @@
   "run_order": 2,
   "case_id": "release-004-upgrade",
   "clean": "true"
+},
+{
+  "id": "RHACM4K-2348",
+  "run_order": 1,
+  "case_id": "RHACM4K-2352",
+  "clean": "false"
+},
+{
+  "id": "RHACM4K-2348",
+  "run_order": 2,
+  "case_id": "RHACM4K-2348",
+  "clean": "true"
 }
 ]

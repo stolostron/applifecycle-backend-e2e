@@ -141,5 +141,16 @@
                 "namespace": "helmrelease-spec-test",
                 "matcher": "bylabel",
                 "args": {"replicas":"1"}
+	},
+{
+                "test_id": "RHACM4K-2348",
+                "target_cluster": "hub",
+                "desc": "should have a deployment labled with spec changed value 'replicas: 3'",
+                "apiversion": "apps/v1",
+                "kind": "deployment",
+                "name": "nginx-deployment",
+                "namespace": "helmrelease-spec-test",
+                "matcher": "bylabel",
+                "args": {"replicas":"3"}
 	}
 ]
