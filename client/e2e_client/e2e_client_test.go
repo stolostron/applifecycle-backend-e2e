@@ -9,8 +9,8 @@ var _ = Describe("helmrelease-test", func() {
 	It("release-001", func() {
 		Eventually(func() error { return DefaultRunner.Run("release-001") }, 5*pullInterval, pullInterval).Should(Succeed())
 	})
-	It("release-003", func() {
-		Eventually(func() error { return DefaultRunner.Run("release-003") }, 5*pullInterval, pullInterval).Should(Succeed())
+	It("RHACM4K-1680", func() {
+		Eventually(func() error { return DefaultRunner.Run("RHACM4K-1680") }, 5*pullInterval, pullInterval).Should(Succeed())
 	})
 	It("release-004", func() {
 		Eventually(func() error { return DefaultRunner.Run("release-004") }, 5*pullInterval, pullInterval).Should(Succeed())
@@ -23,6 +23,9 @@ var _ = Describe("helmrelease-test", func() {
 	})
 	It("RHACM4K-2348", func() {
 		Eventually(func() error { return StageRunner.Run("RHACM4K-2348") }, 5*pullInterval, pullInterval).Should(Succeed())
+	})
+	It("RHACM4K-1732", func() {
+		Eventually(func() error { return StageRunner.Run("RHACM4K-1732") }, 5*pullInterval, pullInterval).Should(Succeed())
 	})
 })
 

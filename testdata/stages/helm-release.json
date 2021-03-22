@@ -1,14 +1,14 @@
 [
 {
-  "id": "1",
+  "id": "RHACM4K-1732",
   "run_order": 1,
   "case_id": "release-004",
   "clean": "false"
 },
 {
-  "id": "1",
+  "id": "RHACM4K-1732",
   "run_order": 2,
-  "case_id": "release-004-upgrade",
+  "case_id": "RHACM4K-1732",
   "clean": "true"
 },
 {
