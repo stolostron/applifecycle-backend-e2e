@@ -77,35 +77,33 @@ deleteApp
 echo "==== Creating chartmuseum application ===="
 $KUBECTL_HUB create -f $dataPath/app_chartmuseum.yaml
 
-waitForRes $KUBECONFIG_HUB "pods" "chartmuseum-chartmuseum" "ns-chartmuseum" ""
+waitForRes $KUBECONFIG_HUB "pods" "chartmuseum" "ns-chartmuseum" ""
 
 echo "==== Adding route for chartmuseum ===="
 $KUBECTL_HUB create -f $dataPath/app_chartmuseum_route.yaml
 
 waitForRes $KUBECONFIG_HUB "routes" "chartmuseum-chartmuseum" "ns-chartmuseum" ""
 
+sleep 10
 echo "==== Upload helloworld app to HelmRepo ===="
-(cd $dataPath; curl -u wshi:redhat --data-binary "@helloworld-0.1.0.tgz" http://chartmuseum-chartmuseum-ns-chartmuseum.$ingressHub/charts/api/charts)
 
-sed -i "s/pathname:.*/pathname: 'http:\/\/chartmuseum-chartmuseum-ns-chartmuseum.$ingressHub\/charts'/" $dataPath/app_helloworld.yaml
-echo "==== Creating helloworld application ===="
+(cd $dataPath; curl -u wshi:redhat --data-binary '@helloworld-0.1.0.tgz' http://chartmuseum-chartmuseum-ns-chartmuseum.$ingressHub/charts/api/charts)
+
+sed -i -e "s/pathname:.*/pathname: 'http:\/\/chartmuseum-chartmuseum-ns-chartmuseum.$ingressHub\/charts'/" $dataPath/app_helloworld.yaml
+echo "\n==== Creating helloworld application ===="
 $KUBECTL_HUB create -f $dataPath/app_helloworld.yaml
 
 waitForRes $KUBECONFIG_HUB "routes" "helloworld-app-route" "ns-sub-wshi" ""
 
-status=`$KUBECTL_HUB get subscription app-helloworld-subscription-1 -n ns-sub-wshi -o custom-columns=NAME:.status.statuses.local-cluster.packages.*.phase --no-headers`
-if [[ "$status" != "Subscribed" ]]; then
-  echo "appsub status.statuses != Subscribed."
-  exit 1
-fi
-
-status=`$KUBECTL_HUB get subscription app-helloworld-subscription-1 -n ns-sub-wshi -o custom-columns=:.status.phase --no-headers`
+sleep 5
+status=`$KUBECTL_HUB get appsub app-helloworld-subscription-1 -n ns-sub-wshi -o custom-columns=:.status.phase --no-headers`
 if [[ "$status" != "Propagated" ]]; then
   echo "appsub status != Propagated."
   exit 1
 fi
 
-status=`$KUBECTL_HUB get subscription app-helloworld-subscription-1-local -n ns-sub-wshi -o custom-columns=:.status.phase --no-headers`
+sleep 5
+status=`$KUBECTL_HUB get appsub app-helloworld-subscription-1-local -n ns-sub-wshi -o custom-columns=:.status.phase --no-headers`
 if [[ "$status" != "Subscribed" ]]; then
   echo "appsub-local status != Subscribed."
   exit 1
