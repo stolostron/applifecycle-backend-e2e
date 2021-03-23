@@ -119,7 +119,7 @@ log level (default 1)
 # Expand the server
 ## Define and integrate your own test case and expectation
 
-### Form Inputs
+### Form Inputs 
 - define app yamls
 ```
 ❯ cat default-e2e-test-data/testcases/release-operator-e2e.json
