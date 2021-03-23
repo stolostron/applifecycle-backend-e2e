@@ -8,7 +8,7 @@ spec:
   path: /charts
   to:
     kind: Service
-    name: chartmuseum-chartmuseum
+    name: chartmuseum
     weight: 100
   port:
     targetPort: http
