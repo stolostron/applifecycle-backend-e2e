@@ -2,7 +2,7 @@
 {
   "id": "RHACM4K-1732",
   "run_order": 1,
-  "case_id": "release-004",
+  "case_id": "RHACM4K-1701",
   "clean": "false"
 },
 {

@@ -6,14 +6,14 @@ import (
 )
 
 var _ = Describe("helmrelease-test", func() {
-	It("release-001", func() {
-		Eventually(func() error { return DefaultRunner.Run("release-001") }, 5*pullInterval, pullInterval).Should(Succeed())
+	It("RHACM4K-2346", func() {
+		Eventually(func() error { return DefaultRunner.Run("RHACM4K-2346") }, 5*pullInterval, pullInterval).Should(Succeed())
 	})
 	It("RHACM4K-1680", func() {
 		Eventually(func() error { return DefaultRunner.Run("RHACM4K-1680") }, 5*pullInterval, pullInterval).Should(Succeed())
 	})
-	It("release-004", func() {
-		Eventually(func() error { return DefaultRunner.Run("release-004") }, 5*pullInterval, pullInterval).Should(Succeed())
+	It("RHACM4K-1701", func() {
+		Eventually(func() error { return DefaultRunner.Run("RHACM4K-1701") }, 5*pullInterval, pullInterval).Should(Succeed())
 	})
 	It("RHACM4K-2352", func() {
 		Eventually(func() error { return DefaultRunner.Run("RHACM4K-2352") }, 5*pullInterval, pullInterval).Should(Succeed())
