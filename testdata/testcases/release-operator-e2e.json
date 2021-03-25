@@ -1,6 +1,6 @@
 [
 {
-  "test_id": "release-001",
+  "test_id": "RHACM4K-2346",
   "desc": "Users can download chart from a helm repo. The chart should be deployed successfully with it's all default values",
   "urls": ["https://raw.githubusercontent.com/open-cluster-management/multicloud-operators-subscription-release/master/examples/test-guestbook010.yaml"],
   "target_cluster": "hub"
@@ -12,7 +12,7 @@
   "target_cluster": "hub"
 },
 {
-  "test_id": "release-004",
+  "test_id": "RHACM4K-1701",
   "desc": "Users can download a chart from git repo. The chart should be deployed successfully with it's all default values",
   "urls": ["https://raw.githubusercontent.com/open-cluster-management/multicloud-operators-subscription-release/master/examples/test-guestbook-git.yaml"],
   "target_cluster": "hub"

@@ -1,6 +1,6 @@
 [
 {
-		"test_id": "release-001",
+		"test_id": "RHACM4K-2346",
 		"target_cluster": "hub",
 		"desc": "should have a helmrelease on hub",
 		"apiversion": "apps.open-cluster-management.io/v1",
@@ -11,7 +11,7 @@
 		"args": {}
 	},
 {
-		"test_id": "release-001",
+		"test_id": "RHACM4K-2346",
 		"target_cluster": "hub",
 		"desc": "should have a frontend deployment on hub",
 		"apiversion": "apps/v1",
@@ -22,7 +22,7 @@
 		"args": {}
 	},
 {
-		"test_id": "release-001",
+		"test_id": "RHACM4K-2346",
 		"target_cluster": "hub",
 		"desc": "should have a master deployment on hub",
 		"apiversion": "apps/v1",
@@ -33,7 +33,7 @@
 		"args": {}
 	},
 {
-		"test_id": "release-001",
+		"test_id": "RHACM4K-2346",
 		"target_cluster": "hub",
 		"desc": "should have a slave deployment on hub",
 		"apiversion": "apps/v1",
@@ -66,7 +66,7 @@
                 "args": {}
 	},
 {
-                "test_id": "release-004",
+                "test_id": "RHACM4K-1701",
                 "target_cluster": "hub",
                 "desc": "should have a HelmRelease called guestbook on hub",
                 "apiversion": "apps.open-cluster-management.io/v1",
@@ -77,7 +77,7 @@
                 "args": {}
 	},
 {
-                "test_id": "release-004",
+                "test_id": "RHACM4K-1701",
                 "target_cluster": "hub",
                 "desc": "should have a deployment called nginx-deployment on hub",
                 "apiversion": "apps/v1",
