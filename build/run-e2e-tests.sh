@@ -196,8 +196,10 @@ export KUBE_DIR="../../default-kubeconfigs"
 # echo "Process the canary test cases"
 # go test -v ./client/canary/...
 
+
+# The default go test time is 10 minutes, we need to increase test time after adding more test cases
 echo "Process the API test cases"
-go test -v ./client/e2e_client/...
+go test -v ./client/e2e_client/... -timeout 30m
 
 exit 0
 
