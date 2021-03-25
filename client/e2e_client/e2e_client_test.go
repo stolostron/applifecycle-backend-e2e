@@ -28,16 +28,16 @@ var _ = Describe("helmrelease-test", func() {
 		Eventually(func() error { return DefaultRunner.Run("RHACM4K-2569") }, 5*pullInterval, pullInterval).Should(Succeed())
 	})
 	It("RHACM4K-2348", func() {
-		Eventually(func() error { return StageRunner.Run("RHACM4K-2348") }, 5*pullInterval, pullInterval).Should(Succeed())
+		Eventually(func() error { return StageRunner.Run("RHACM4K-2348") }, 10*pullInterval, pullInterval).Should(Succeed())
 	})
 	It("RHACM4K-1732", func() {
-		Eventually(func() error { return StageRunner.Run("RHACM4K-1732") }, 5*pullInterval, pullInterval).Should(Succeed())
+		Eventually(func() error { return StageRunner.Run("RHACM4K-1732") }, 10*pullInterval, pullInterval).Should(Succeed())
 	})
 	It("RHACM4K-2566", func() {
-		Eventually(func() error { return StageRunner.Run("RHACM4K-2566") }, 5*pullInterval, pullInterval).Should(Succeed())
+		Eventually(func() error { return StageRunner.Run("RHACM4K-2566") }, 10*pullInterval, pullInterval).Should(Succeed())
 	})
 	It("RHACM4K-2568", func() {
-		Eventually(func() error { return StageRunner.Run("RHACM4K-2568") }, 5*pullInterval, pullInterval).Should(Succeed())
+		Eventually(func() error { return StageRunner.Run("RHACM4K-2568") }, 10*pullInterval, pullInterval).Should(Succeed())
 	})
 })
 
