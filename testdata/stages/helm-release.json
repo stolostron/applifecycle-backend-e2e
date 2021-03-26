@@ -46,5 +46,17 @@
   "run_order": 2,
   "case_id": "RHACM4K-2568",
   "clean": "true"
+},
+{
+  "id": "RHACM4K-2585",
+  "run_order": 1,
+  "case_id": "RHACM4K-1701",
+  "clean": "false"
+},
+{
+  "id": "RHACM4K-2585",
+  "run_order": 2,
+  "case_id": "RHACM4K-2585",
+  "clean": "true"
 }
 ]

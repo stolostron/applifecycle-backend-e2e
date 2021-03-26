@@ -70,5 +70,11 @@
   "desc": "Users still can deploy their chart(from helm repo) successfully even though they define HelmRelease with spec fields which are not used in their chart",
   "urls": ["https://raw.githubusercontent.com/open-cluster-management/multicloud-operators-subscription-release/main/examples/test-guestbook-helmrepo-spec-unused.yaml"],
   "target_cluster": "hub"
+},
+{
+  "test_id": "RHACM4K-2585",
+  "desc": "A new chart that produces no manifest diff which will force the HelmRelease to skip performing the upgrade",
+  "urls": ["https://raw.githubusercontent.com/open-cluster-management/multicloud-operators-subscription-release/master/examples/test-guestbook-git.yaml"],
+  "target_cluster": "hub"
 }
 ]

@@ -240,5 +240,16 @@
                 "namespace": "helmrelease-helmrepo-spec-test",
                 "matcher": "bylabel",
                 "args": {"replicas":"1"}
+        },
+{
+                "test_id": "RHACM4K-2585",
+                "target_cluster": "hub",
+                "desc": "should have a HelmRelease have generation with value 1",
+                "apiversion": "apps.open-cluster-management.io/v1",
+                "kind": "HelmRelease",
+                "name": "guestbook",
+                "namespace": "helmrelease-git-test",
+                "matcher": "bygeneration",
+                "args": {"generation":"1"}
         }
 ]
