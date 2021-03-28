@@ -1,100 +1,145 @@
-//go:generate go run generator.go
 package storage
 
 import (
+	"embed"
+	"fmt"
+	"io/fs"
+	"os"
+
 	"github.com/open-cluster-management/applifecycle-backend-e2e/pkg"
 )
 
-type embedData struct {
-	store map[string][]byte
+type store struct {
+	fsName   string
+	rootPath string //this one would be the directory which include, expectations/ stages/ testcases/
+	embedFS  embed.FS
+	fs       fs.FS
 }
 
-// Create new box for embed files
-func newEmbedData() *embedData {
-	return &embedData{store: make(map[string][]byte)}
-}
-
-// Add a file to box
-func (e *embedData) Add(file string, content []byte) {
-	e.store[file] = content
-}
-
-// Get file's content
-// Always use / for looking up
-// For example: /init/README.md is actually configs/init/README.md
-func (e *embedData) Get(file string) []byte {
-	if f, ok := e.store[file]; ok {
-		return f
+func NewStorage(p string, embedStore embed.FS) *store {
+	if p != "" {
+		return &store{fsName: "os", embedFS: embedStore, rootPath: p, fs: os.DirFS(p)}
 	}
-	return nil
+
+	return &store{fsName: "embed.FS", embedFS: embedStore, rootPath: "testdata", fs: embedStore}
 }
 
-// Find for a file
-func (e *embedData) Has(file string) bool {
-	if _, ok := e.store[file]; ok {
-		return true
+func (e *store) ReadFile(filename string) ([]byte, error) {
+	if e.fsName == "os" {
+		return os.ReadFile(filename)
 	}
-	return false
+
+	return e.embedFS.ReadFile(filename)
 }
 
-// Embed TestCase
-var DefaultTestCaseStore = newEmbedData()
+func (e *store) getTestPath() string {
+	//	if e.fsName == "os" {
+	//		return fmt.Sprintf("testcases")
+	//	}
 
-func LoadTestCases() (pkg.TestCasesReg, error) {
+	return fmt.Sprintf("%s/testcases", e.rootPath)
+}
+
+func (e *store) getExpectationPath() string {
+	//	if e.fsName == "os" {
+	//		return fmt.Sprintf("expectations")
+	//	}
+
+	return fmt.Sprintf("%s/expectations", e.rootPath)
+}
+
+func (e *store) getStagePath() string {
+	//	if e.fsName == "os" {
+	//		return fmt.Sprintf("stages")
+	//	}
+
+	return fmt.Sprintf("%s/stages", e.rootPath)
+}
+
+func (e *store) LoadTestCases() (pkg.TestCasesReg, error) {
 	out := pkg.TestCasesReg{}
-	if len(DefaultTestCaseStore.store) == 0 {
-		return out, nil
-	}
-
-	for _, b := range DefaultTestCaseStore.store {
-		tc, err := pkg.BytesToTestCases(b)
-		if err != nil {
-			return out, err
+	wFunc := func(path string, d fs.DirEntry, err error) error {
+		fmt.Println("izhang >>>>>", path, d)
+		if d == nil || d.IsDir() {
+			return nil
 		}
 
-		out = pkg.ToTcReg(out, tc)
+		b, err := e.ReadFile(path)
+		if err != nil {
+			return err
+		}
+
+		t, err := pkg.BytesToTestCases(b)
+		if err != nil {
+			return err
+		}
+
+		out = pkg.ToTcReg(out, t)
+
+		return nil
+	}
+
+	if err := fs.WalkDir(e.fs, e.getTestPath(), wFunc); err != nil {
+		return out, err
 	}
 
 	return out, nil
 }
 
-// Embed Expectation
-var DefaultExpectationStore = newEmbedData()
-
-func LoadExpectations() (pkg.ExpctationReg, error) {
+func (e *store) LoadExpectations() (pkg.ExpctationReg, error) {
 	out := pkg.ExpctationReg{}
-	if len(DefaultExpectationStore.store) == 0 {
-		return out, nil
-	}
 
-	for _, b := range DefaultExpectationStore.store {
-		tc, err := pkg.BytesToExpectations(b)
-		if err != nil {
-			return out, err
+	wFunc := func(path string, d fs.DirEntry, err error) error {
+		if d == nil || d.IsDir() {
+			return nil
 		}
 
-		out = pkg.ToExpReg(out, tc)
+		b, err := e.ReadFile(path)
+		if err != nil {
+			return err
+		}
+
+		t, err := pkg.BytesToExpectations(b)
+		if err != nil {
+			return err
+		}
+
+		out = pkg.ToExpReg(out, t)
+
+		return nil
+	}
+
+	if err := fs.WalkDir(e.fs, e.getExpectationPath(), wFunc); err != nil {
+		return out, err
 	}
 
 	return out, nil
 }
 
-// Embed Stage
-var DefaultStageStore = newEmbedData()
-
-func LoadStages() (pkg.StageReg, error) {
+func (e *store) LoadStages() (pkg.StageReg, error) {
 	out := pkg.StageReg{}
-	if len(DefaultStageStore.store) == 0 {
-		return out, nil
-	}
-
-	for _, b := range DefaultStageStore.store {
-		st, err := pkg.BytesToStages(b)
-		if err != nil {
-			return out, err
+	wFunc := func(path string, d fs.DirEntry, err error) error {
+		if d == nil || d.IsDir() {
+			return nil
 		}
 
-		out = pkg.ToStageReg(out, st)
+		b, err := e.ReadFile(path)
+		if err != nil {
+			return err
+		}
+
+		t, err := pkg.BytesToStages(b)
+		if err != nil {
+			return err
+		}
+
+		out = pkg.ToStageReg(out, t)
+
+		return nil
+	}
+
+	if err := fs.WalkDir(e.fs, e.getStagePath(), wFunc); err != nil {
+		return out, err
 	}
 
 	return out, nil

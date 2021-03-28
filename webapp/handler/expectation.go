@@ -66,21 +66,7 @@ func (s *Processor) ExpectationCheckerHandler(w http.ResponseWriter, r *http.Req
 		TestID: "",
 		Name:   "list registered expectation",
 	}
-
-	s.mux.Lock()
-	newExps, err := s.expectations.Load(s.dataDir)
-	if err != nil {
-		tr.Status = Failed
-		tr.Error = fmt.Errorf("failed reload the expectations").Error()
-
-		fmt.Fprint(w, tr.String())
-		return
-	}
-
-	s.expectations = newExps
-
-	s.mux.Unlock()
-
+	var err error
 	testID := r.URL.Query().Get("id")
 
 	s.logger.Info(fmt.Sprintf("Start checking test ID %s", testID))

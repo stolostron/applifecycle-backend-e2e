@@ -111,33 +111,6 @@ func ToExpReg(in ExpctationReg, exps *Expectations) ExpctationReg {
 	return in
 }
 
-func (e ExpctationReg) Load(dir string) (ExpctationReg, error) {
-	dir = fmt.Sprintf("%s/%s", dir, expDirSuffix)
-	files, err := ioutil.ReadDir(dir)
-
-	if err != nil {
-		return ExpctationReg{}, err
-	}
-
-	out := ExpctationReg{}
-	for _, file := range files {
-		p := fmt.Sprintf("%s/%s", dir, file.Name())
-		c, err := ioutil.ReadFile(p)
-		if err != nil {
-			return out, gerr.Wrap(err, "failed to load expectations")
-		}
-
-		exps, err := BytesToExpectations(c)
-		if err != nil {
-			return out, err
-		}
-
-		out = ToExpReg(out, exps)
-	}
-
-	return out, nil
-}
-
 func (e Expectation) GetInstance() *unstructured.Unstructured {
 	ins := &unstructured.Unstructured{}
 	ins.SetAPIVersion(e.APIVersion)
