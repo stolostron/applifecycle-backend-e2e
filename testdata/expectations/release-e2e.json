@@ -1,6 +1,6 @@
 [
 {
-		"test_id": "release-001",
+		"test_id": "RHACM4K-2346",
 		"target_cluster": "hub",
 		"desc": "should have a helmrelease on hub",
 		"apiversion": "apps.open-cluster-management.io/v1",
@@ -11,7 +11,7 @@
 		"args": {}
 	},
 {
-		"test_id": "release-001",
+		"test_id": "RHACM4K-2346",
 		"target_cluster": "hub",
 		"desc": "should have a frontend deployment on hub",
 		"apiversion": "apps/v1",
@@ -22,7 +22,7 @@
 		"args": {}
 	},
 {
-		"test_id": "release-001",
+		"test_id": "RHACM4K-2346",
 		"target_cluster": "hub",
 		"desc": "should have a master deployment on hub",
 		"apiversion": "apps/v1",
@@ -33,7 +33,7 @@
 		"args": {}
 	},
 {
-		"test_id": "release-001",
+		"test_id": "RHACM4K-2346",
 		"target_cluster": "hub",
 		"desc": "should have a slave deployment on hub",
 		"apiversion": "apps/v1",
@@ -66,7 +66,7 @@
                 "args": {}
 	},
 {
-                "test_id": "release-004",
+                "test_id": "RHACM4K-1701",
                 "target_cluster": "hub",
                 "desc": "should have a HelmRelease called guestbook on hub",
                 "apiversion": "apps.open-cluster-management.io/v1",
@@ -77,7 +77,7 @@
                 "args": {}
 	},
 {
-                "test_id": "release-004",
+                "test_id": "RHACM4K-1701",
                 "target_cluster": "hub",
                 "desc": "should have a deployment called nginx-deployment on hub",
                 "apiversion": "apps/v1",
@@ -152,5 +152,104 @@
                 "namespace": "helmrelease-spec-test",
                 "matcher": "bylabel",
                 "args": {"replicas":"3"}
-	}
+	},
+{
+                "test_id": "Base-for-RHACM4K-2566",
+                "target_cluster": "hub",
+                "desc": "should have a HelmRelease called guestbook on hub",
+                "apiversion": "apps.open-cluster-management.io/v1",
+                "kind": "HelmRelease",
+                "name": "guestbook",
+                "namespace": "helmrelease-helmrepo-test",
+                "matcher": "byname",
+                "args": {}
+        },
+{
+                "test_id": "Base-for-RHACM4K-2566",
+                "target_cluster": "hub",
+                "desc": "should have a deployment called nginx-deployment on hub",
+                "apiversion": "apps/v1",
+                "kind": "deployment",
+                "name": "nginx-deployment",
+                "namespace": "helmrelease-helmrepo-test",
+                "matcher": "byname",
+                "args": {}
+        },
+{
+                "test_id": "RHACM4K-2566",
+                "target_cluster": "hub",
+                "desc": "should have a deployment called nginx-deployment-upgrade on hub",
+                "apiversion": "apps/v1",
+                "kind": "deployment",
+                "name": "nginx-deployment-upgrade",
+                "namespace": "helmrelease-helmrepo-test",
+                "matcher": "byname",
+                "args": {}
+        },
+{
+                "test_id": "RHACM4K-2570",
+                "target_cluster": "hub",
+                "desc": "should have a HelmRelease called guestbook on hub",
+                "apiversion": "apps.open-cluster-management.io/v1",
+                "kind": "HelmRelease",
+                "name": "guestbook",
+                "namespace": "helmrelease-helmrepo-spec-test",
+                "matcher": "byname",
+                "args": {}
+        },
+{
+                "test_id": "RHACM4K-2570",
+                "target_cluster": "hub",
+                "desc": "should have a deployment labled with HelmRelease spec value 'replicas: 4'",
+                "apiversion": "apps/v1",
+                "kind": "deployment",
+                "name": "nginx-deployment",
+                "namespace": "helmrelease-helmrepo-spec-test",
+                "matcher": "bylabel",
+                "args": {"replicas":"4"}
+        },
+{
+                "test_id": "RHACM4K-2568",
+                "target_cluster": "hub",
+                "desc": "should have a deployment labled with spec changed value 'replicas: 3'",
+                "apiversion": "apps/v1",
+                "kind": "deployment",
+                "name": "nginx-deployment",
+                "namespace": "helmrelease-helmrepo-spec-test",
+                "matcher": "bylabel",
+                "args": {"replicas":"3"}
+        },
+{
+                "test_id": "RHACM4K-2569",
+                "target_cluster": "hub",
+                "desc": "should have a HelmRelease called guestbook on hub",
+                "apiversion": "apps.open-cluster-management.io/v1",
+                "kind": "HelmRelease",
+                "name": "guestbook",
+                "namespace": "helmrelease-helmrepo-spec-test",
+                "matcher": "byname",
+                "args": {}
+        },
+{
+                "test_id": "RHACM4K-2569",
+                "target_cluster": "hub",
+                "desc": "should have a deployment labled with chart default value 'replicas: 1'",
+                "apiversion": "apps/v1",
+                "kind": "deployment",
+                "name": "nginx-deployment",
+                "namespace": "helmrelease-helmrepo-spec-test",
+                "matcher": "bylabel",
+                "args": {"replicas":"1"}
+        },
+{
+                "test_id": "RHACM4K-2585",
+                "target_cluster": "hub",
+                "desc": "should have a HelmRelease have generation with value 1",
+                "apiversion": "apps.open-cluster-management.io/v1",
+                "kind": "HelmRelease",
+                "name": "guestbook",
+                "namespace": "helmrelease-git-test",
+                "matcher": "bygeneration",
+                "args": {"generation":"1"}
+        }
 ]

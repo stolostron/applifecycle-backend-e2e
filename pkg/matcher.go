@@ -39,6 +39,8 @@ func MatcherRouter(name string) Matcher {
 		return ByAnnotationCount{}
 	case "bylabel":
 		return ByLabel{}
+	case "bygeneration":
+		return ByGeneration{}
 	default:
 		return nil
 	}
@@ -131,27 +133,59 @@ func (b ByAnnotationCount) Match(clt client.Client, ep Expectation, logger logr.
 type ByLabel struct{}
 
 func (b ByLabel) Match(clt client.Client, ep Expectation, logger logr.Logger) error {
-        if len(ep.Args) == 0 {
-                return gerr.New("using the bylabel matcher, but NO label key:val is provided in the Args field")
-        }
+	if len(ep.Args) == 0 {
+		return gerr.New("using the bylabel matcher, but NO label key:val is provided in the Args field")
+	}
 
-        ins := ep.GetInstance()
-        key := ep.GetKey()
+	ins := ep.GetInstance()
+	key := ep.GetKey()
 
-        if err := clt.Get(context.TODO(), key, ins); err != nil {
-                return gerr.Wrapf(err, "failed to get instance %s of kind %s", key.String(), ep.Kind)
-        }
+	if err := clt.Get(context.TODO(), key, ins); err != nil {
+		return gerr.Wrapf(err, "failed to get instance %s of kind %s", key.String(), ep.Kind)
+	}
 
-        labels := ins.GetLabels()
+	labels := ins.GetLabels()
 
-        for k, v := range ep.Args {
-                if cv, ok := labels[k]; !ok || v != cv {
-                        return fmt.Errorf("kind %s of %s has label %s,  is not matching expectation %s", ep.Kind, key.String(), cv, v)
-                }
-        }
+	for k, v := range ep.Args {
+		if cv, ok := labels[k]; !ok || v != cv {
+			return fmt.Errorf("kind %s of %s has label %s,  is not matching expectation %s", ep.Kind, key.String(), cv, v)
+		}
+	}
 
-        logger.Info(fmt.Sprintf("found kind %s of %s which matched label %+v", ep.Kind, key.String(), ep.Args))
-        return nil
+	logger.Info(fmt.Sprintf("found kind %s of %s which matched label %+v", ep.Kind, key.String(), ep.Args))
+	return nil
+}
+
+type ByGeneration struct{}
+
+func (b ByGeneration) Match(clt client.Client, ep Expectation, logger logr.Logger) error {
+	if len(ep.Args) == 0 {
+		return gerr.New("using the bylabel matcher, but NO label key:val is provided in the Args field")
+	}
+
+	ins := ep.GetInstance()
+	key := ep.GetKey()
+
+	if err := clt.Get(context.TODO(), key, ins); err != nil {
+		return gerr.Wrapf(err, "failed to get instance %s of kind %s", key.String(), ep.Kind)
+	}
+
+	generation := ins.GetGeneration()
+
+	v, ok := ep.Args["generation"]
+	if !ok {
+		return fmt.Errorf("generation is not definced in expectation args")
+	}
+	cv, err := strconv.ParseInt(v, 10, 64)
+	if err != nil {
+		return gerr.New("can't parse the generation filed to int64")
+	}
+	if cv != generation {
+		return fmt.Errorf("kind %s of %s has generation is not matching expectation %s", ep.Kind, key.String(), v)
+	}
+
+	logger.Info(fmt.Sprintf("found kind %s of %s which matched generation", ep.Kind, key.String()))
+	return nil
 }
 
 func contains(small, big map[string]string, skip string) bool {

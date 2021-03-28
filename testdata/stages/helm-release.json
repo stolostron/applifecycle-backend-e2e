@@ -2,7 +2,7 @@
 {
   "id": "RHACM4K-1732",
   "run_order": 1,
-  "case_id": "release-004",
+  "case_id": "RHACM4K-1701",
   "clean": "false"
 },
 {
@@ -21,6 +21,42 @@
   "id": "RHACM4K-2348",
   "run_order": 2,
   "case_id": "RHACM4K-2348",
+  "clean": "true"
+},
+{
+  "id": "RHACM4K-2566",
+  "run_order": 1,
+  "case_id": "Base-for-RHACM4K-2566",
+  "clean": "false"
+},
+{
+  "id": "RHACM4K-2566",
+  "run_order": 2,
+  "case_id": "RHACM4K-2566",
+  "clean": "true"
+},
+{
+  "id": "RHACM4K-2568",
+  "run_order": 1,
+  "case_id": "RHACM4K-2570",
+  "clean": "false"
+},
+{
+  "id": "RHACM4K-2568",
+  "run_order": 2,
+  "case_id": "RHACM4K-2568",
+  "clean": "true"
+},
+{
+  "id": "RHACM4K-2585",
+  "run_order": 1,
+  "case_id": "RHACM4K-1701",
+  "clean": "false"
+},
+{
+  "id": "RHACM4K-2585",
+  "run_order": 2,
+  "case_id": "RHACM4K-2585",
   "clean": "true"
 }
 ]
