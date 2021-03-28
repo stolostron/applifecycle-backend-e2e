@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io/fs"
 	"os"
+	"path/filepath"
 
 	"github.com/open-cluster-management/applifecycle-backend-e2e/pkg"
 )
@@ -18,7 +19,12 @@ type store struct {
 
 func NewStorage(p string, embedStore embed.FS) *store {
 	if p != "" {
-		return &store{fsName: "os", embedFS: embedStore, rootPath: p, fs: os.DirFS(p)}
+		str := filepath.Base(p)
+		rp := "testdata"
+		if str != "." {
+			rp = str
+		}
+		return &store{fsName: "os", embedFS: embedStore, rootPath: rp, fs: os.DirFS(filepath.Dir(p))}
 	}
 
 	return &store{fsName: "embed.FS", embedFS: embedStore, rootPath: "testdata", fs: embedStore}
@@ -32,35 +38,10 @@ func (e *store) ReadFile(filename string) ([]byte, error) {
 	return e.embedFS.ReadFile(filename)
 }
 
-func (e *store) getTestPath() string {
-	//	if e.fsName == "os" {
-	//		return fmt.Sprintf("testcases")
-	//	}
-
-	return fmt.Sprintf("%s/testcases", e.rootPath)
-}
-
-func (e *store) getExpectationPath() string {
-	//	if e.fsName == "os" {
-	//		return fmt.Sprintf("expectations")
-	//	}
-
-	return fmt.Sprintf("%s/expectations", e.rootPath)
-}
-
-func (e *store) getStagePath() string {
-	//	if e.fsName == "os" {
-	//		return fmt.Sprintf("stages")
-	//	}
-
-	return fmt.Sprintf("%s/stages", e.rootPath)
-}
-
 func (e *store) LoadTestCases() (pkg.TestCasesReg, error) {
 	out := pkg.TestCasesReg{}
 	wFunc := func(path string, d fs.DirEntry, err error) error {
-		fmt.Println("izhang >>>>>", path, d)
-		if d == nil || d.IsDir() {
+		if d.IsDir() {
 			return nil
 		}
 
@@ -79,7 +60,7 @@ func (e *store) LoadTestCases() (pkg.TestCasesReg, error) {
 		return nil
 	}
 
-	if err := fs.WalkDir(e.fs, e.getTestPath(), wFunc); err != nil {
+	if err := fs.WalkDir(e.fs, fmt.Sprintf("%s/testcases", e.rootPath), wFunc); err != nil {
 		return out, err
 	}
 
@@ -90,7 +71,7 @@ func (e *store) LoadExpectations() (pkg.ExpctationReg, error) {
 	out := pkg.ExpctationReg{}
 
 	wFunc := func(path string, d fs.DirEntry, err error) error {
-		if d == nil || d.IsDir() {
+		if d.IsDir() {
 			return nil
 		}
 
@@ -109,7 +90,7 @@ func (e *store) LoadExpectations() (pkg.ExpctationReg, error) {
 		return nil
 	}
 
-	if err := fs.WalkDir(e.fs, e.getExpectationPath(), wFunc); err != nil {
+	if err := fs.WalkDir(e.fs, fmt.Sprintf("%s/expectations", e.rootPath), wFunc); err != nil {
 		return out, err
 	}
 
@@ -119,7 +100,7 @@ func (e *store) LoadExpectations() (pkg.ExpctationReg, error) {
 func (e *store) LoadStages() (pkg.StageReg, error) {
 	out := pkg.StageReg{}
 	wFunc := func(path string, d fs.DirEntry, err error) error {
-		if d == nil || d.IsDir() {
+		if d.IsDir() {
 			return nil
 		}
 
@@ -138,7 +119,7 @@ func (e *store) LoadStages() (pkg.StageReg, error) {
 		return nil
 	}
 
-	if err := fs.WalkDir(e.fs, e.getStagePath(), wFunc); err != nil {
+	if err := fs.WalkDir(e.fs, fmt.Sprintf("%s/stages", e.rootPath), wFunc); err != nil {
 		return out, err
 	}
 
