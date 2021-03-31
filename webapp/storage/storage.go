@@ -51,7 +51,7 @@ func WithInputTestDataDir(path string) Option {
 		s.fsName = "os"
 		s.rootPath = rp
 		parentDir := filepath.Dir(path)
- 		s.fs = os.DirFS(parentDir)
+		s.fs = os.DirFS(parentDir)
 	}
 }
 
