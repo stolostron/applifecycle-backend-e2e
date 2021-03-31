@@ -4,6 +4,7 @@ import (
 	"embed"
 	"fmt"
 	"io/fs"
+	"io/ioutil"
 	"os"
 	"path/filepath"
 
@@ -49,13 +50,18 @@ func WithInputTestDataDir(path string) Option {
 	return func(s *Store) {
 		s.fsName = "os"
 		s.rootPath = rp
-		s.fs = os.DirFS(filepath.Dir(path))
+		parentDir := filepath.Dir(path)
+ 		s.fs = os.DirFS(parentDir)
 	}
 }
 
 func (e *Store) ReadFile(filename string) ([]byte, error) {
 	if e.fsName == "os" {
-		return os.ReadFile(filename)
+		file, err := e.fs.Open(filename)
+		if err != nil {
+			return []byte{}, err
+		}
+		return ioutil.ReadAll(file)
 	}
 
 	return e.embedFS.ReadFile(filename)

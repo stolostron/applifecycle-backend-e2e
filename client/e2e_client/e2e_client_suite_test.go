@@ -21,7 +21,7 @@ const (
 	suiteTimeout = 60 // seconds
 	defaultAddr  = "localhost:8765"
 	//empty dataDir means test will use the compiled binary data for test
-	defaultDataDir = ""
+	defaultDataDir = "../../testdata"
 	logLvl         = 1
 	testTimeout    = 90
 	pullInterval   = 3 * time.Second
@@ -53,7 +53,7 @@ var _ = BeforeSuite(func(done Done) {
 		cfgDir = envDir
 	}
 
-	store := storage.NewStorage(storage.WithInputTestDataDir("../../testdata"))
+	store := storage.NewStorage(storage.WithInputTestDataDir(defaultDataDir))
 	srv := server.NewServer(defaultAddr, cfgDir, logLvl, testTimeout, store)
 
 	go func() {
