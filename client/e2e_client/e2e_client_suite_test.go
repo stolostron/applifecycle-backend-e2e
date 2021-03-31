@@ -13,6 +13,7 @@ import (
 	"github.com/onsi/gomega/gexec"
 	clt "github.com/open-cluster-management/applifecycle-backend-e2e/client"
 	"github.com/open-cluster-management/applifecycle-backend-e2e/webapp/server"
+	"github.com/open-cluster-management/applifecycle-backend-e2e/webapp/storage"
 	"sigs.k8s.io/controller-runtime/pkg/envtest/printer"
 )
 
@@ -52,7 +53,8 @@ var _ = BeforeSuite(func(done Done) {
 		cfgDir = envDir
 	}
 
-	srv := server.NewServer(defaultAddr, cfgDir, defaultDataDir, logLvl, testTimeout)
+	store := storage.NewStorage(storage.WithInputTestDataDir("../../testdata"))
+	srv := server.NewServer(defaultAddr, cfgDir, logLvl, testTimeout, store)
 
 	go func() {
 		if err := srv.ListenAndServe(); err != nil && err != http.ErrServerClosed {

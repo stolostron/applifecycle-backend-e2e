@@ -19,7 +19,7 @@ import (
 const (
 	defaultAddr = "localhost:8765"
 	//this will be depend on the caller's location
-	defaultCfgDir  = "kubeconfigs"
+	defaultCfgDir  = "default-kubeconfigs"
 	defaultDataDir = ""
 
 	CONFIG_PATH = "CONFIGS"
@@ -73,7 +73,12 @@ type Storage interface {
 }
 
 func main() {
-	store := storage.NewStorage(dataPath, testData)
+	var store *storage.Store
+	if dataPath == "" {
+		store = storage.NewStorage(storage.WithEmbedTestData(testData))
+	} else {
+		store = storage.NewStorage(storage.WithInputTestDataDir(dataPath))
+	}
 	srv := server.NewServer(defaultAddr, configPath, LogLevel, timeout, store)
 
 	done := make(chan os.Signal, 1)

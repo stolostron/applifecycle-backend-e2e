@@ -10,27 +10,50 @@ import (
 	"github.com/open-cluster-management/applifecycle-backend-e2e/pkg"
 )
 
-type store struct {
+type Store struct {
 	fsName   string
 	rootPath string //this one would be the directory which include, expectations/ stages/ testcases/
 	embedFS  embed.FS
 	fs       fs.FS
 }
 
-func NewStorage(p string, embedStore embed.FS) *store {
-	if p != "" {
-		str := filepath.Base(p)
-		rp := "testdata"
-		if str != "." {
-			rp = str
-		}
-		return &store{fsName: "os", embedFS: embedStore, rootPath: rp, fs: os.DirFS(filepath.Dir(p))}
+type Option func(*Store)
+
+func NewStorage(opts ...Option) *Store {
+	s := &Store{}
+
+	for _, opt := range opts {
+		opt(s)
 	}
 
-	return &store{fsName: "embed.FS", embedFS: embedStore, rootPath: "testdata", fs: embedStore}
+	return s
 }
 
-func (e *store) ReadFile(filename string) ([]byte, error) {
+func WithEmbedTestData(embedStore embed.FS) Option {
+	// this is the ClientOption function type
+	return func(s *Store) {
+		s.fsName = "embed.FS"
+		s.embedFS = embedStore
+		s.rootPath = "testdata"
+		s.fs = embedStore
+	}
+}
+
+func WithInputTestDataDir(path string) Option {
+	str := filepath.Base(path)
+	rp := "testdata"
+	if str != "." {
+		rp = str
+	}
+
+	return func(s *Store) {
+		s.fsName = "os"
+		s.rootPath = rp
+		s.fs = os.DirFS(filepath.Dir(path))
+	}
+}
+
+func (e *Store) ReadFile(filename string) ([]byte, error) {
 	if e.fsName == "os" {
 		return os.ReadFile(filename)
 	}
@@ -38,7 +61,7 @@ func (e *store) ReadFile(filename string) ([]byte, error) {
 	return e.embedFS.ReadFile(filename)
 }
 
-func (e *store) LoadTestCases() (pkg.TestCasesReg, error) {
+func (e *Store) LoadTestCases() (pkg.TestCasesReg, error) {
 	out := pkg.TestCasesReg{}
 	wFunc := func(path string, d fs.DirEntry, err error) error {
 		if d.IsDir() {
@@ -67,7 +90,7 @@ func (e *store) LoadTestCases() (pkg.TestCasesReg, error) {
 	return out, nil
 }
 
-func (e *store) LoadExpectations() (pkg.ExpctationReg, error) {
+func (e *Store) LoadExpectations() (pkg.ExpctationReg, error) {
 	out := pkg.ExpctationReg{}
 
 	wFunc := func(path string, d fs.DirEntry, err error) error {
@@ -97,7 +120,7 @@ func (e *store) LoadExpectations() (pkg.ExpctationReg, error) {
 	return out, nil
 }
 
-func (e *store) LoadStages() (pkg.StageReg, error) {
+func (e *Store) LoadStages() (pkg.StageReg, error) {
 	out := pkg.StageReg{}
 	wFunc := func(path string, d fs.DirEntry, err error) error {
 		if d.IsDir() {
