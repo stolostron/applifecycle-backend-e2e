@@ -157,7 +157,7 @@ export KUBE_DIR="../../default-kubeconfigs"
 # go test -v ./client/canary/...
 
 echo "Process the API test cases"
-go test -v ./client/e2e_client/...
+go test -v ./client/e2e_client/... -timeout 30m
 
 exit 0
 
