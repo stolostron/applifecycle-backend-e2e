@@ -10,7 +10,7 @@ import (
 	"go.uber.org/zap"
 )
 
-func NewServer(addr, cfg, data string, lvl, timeout int) *http.Server {
+func NewServer(addr, cfg string, lvl, timeout int, storage handler.Storage) *http.Server {
 	zapLog, err := zap.NewDevelopment()
 	if err != nil {
 		panic(fmt.Sprintf("who watches the watchmen (%v)?", err))
@@ -18,7 +18,7 @@ func NewServer(addr, cfg, data string, lvl, timeout int) *http.Server {
 
 	logger := zapr.NewLogger(zapLog)
 
-	p, err := handler.NewProcessor(cfg, data, timeout, logger)
+	p, err := handler.NewProcessor(cfg, timeout, storage, logger)
 	if err != nil {
 		logger.Error(err, "failed to create test sever")
 		os.Exit(2)

@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"embed"
 	"flag"
 	"log"
 	"net/http"
@@ -10,13 +11,15 @@ import (
 	"syscall"
 	"time"
 
+	"github.com/open-cluster-management/applifecycle-backend-e2e/pkg"
 	"github.com/open-cluster-management/applifecycle-backend-e2e/webapp/server"
+	"github.com/open-cluster-management/applifecycle-backend-e2e/webapp/storage"
 )
 
 const (
 	defaultAddr = "localhost:8765"
 	//this will be depend on the caller's location
-	defaultCfgDir  = "kubeconfigs"
+	defaultCfgDir  = "default-kubeconfigs"
 	defaultDataDir = ""
 
 	CONFIG_PATH = "CONFIGS"
@@ -27,6 +30,9 @@ var LogLevel int
 var configPath string
 var dataPath string
 var timeout int
+
+//go:embed testdata/*
+var testData embed.FS
 
 func init() {
 	flag.IntVar(
@@ -60,8 +66,20 @@ func init() {
 	flag.Parse()
 }
 
+type Storage interface {
+	LoadTestCases() (pkg.TestCasesReg, error)
+	LoadExpectations() (pkg.ExpctationReg, error)
+	LoadStages() (pkg.StageReg, error)
+}
+
 func main() {
-	srv := server.NewServer(defaultAddr, configPath, dataPath, LogLevel, timeout)
+	var store *storage.Store
+	if dataPath == "" {
+		store = storage.NewStorage(storage.WithEmbedTestData(testData))
+	} else {
+		store = storage.NewStorage(storage.WithInputTestDataDir(dataPath))
+	}
+	srv := server.NewServer(defaultAddr, configPath, LogLevel, timeout, store)
 
 	done := make(chan os.Signal, 1)
 	signal.Notify(done, os.Interrupt, syscall.SIGINT, syscall.SIGTERM)

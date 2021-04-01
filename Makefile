@@ -113,7 +113,3 @@ clean::
 	rm -f build/$(IMG)
 	docker stop ${APACHE_BASIC_AUTH_CONTAINER}
 	docker rm ${APACHE_BASIC_AUTH_CONTAINER}
-
-gen:
-	@echo "generate the default test data for binary"
-	go generate ./...
