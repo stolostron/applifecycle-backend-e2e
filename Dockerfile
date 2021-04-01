@@ -36,7 +36,7 @@ RUN rm -rf ./oc-unpacked ./oc.tar.gz
 WORKDIR /opt/e2e/client/canary
 
 # the test data is in the binary format
-ENTRYPOINT go test -v
+ENTRYPOINT go test -v -timeout 30m
 
 # Document that the service listens on port 8765.
 EXPOSE 8765
