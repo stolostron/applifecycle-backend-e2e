@@ -190,7 +190,9 @@ trap cleanup EXIT
 export KUBE_DIR="../../default-kubeconfigs"
 # echo "Process the canary test cases"
 
-go test -v ./client/canary/...
+if [ "$RUN_ON" != "github" ]; then
+	go test -v ./client/canary/...
+fi
 
 # The default go test time is 10 minutes, we need to increase test time after adding more test cases
 echo "Process the API test cases"
