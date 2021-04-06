@@ -7,7 +7,6 @@ RUN  microdnf update -y \
         && microdnf install tzdata \
         && microdnf install git \
         && microdnf install openssh-clients \
-        && microdnf install golang \
         && microdnf install curl \
         && microdnf install procps \
         && microdnf install tar \
@@ -18,6 +17,13 @@ ENV USER_UID=1001 \
     ZONEINFO=/usr/share/timezone
 
 COPY COMPONENT_VERSION /COMPONENT_VERSION
+
+RUN curl -LO https://dl.google.com/go/go1.16.3.linux-amd64.tar.gz
+RUN rm -rf /usr/local/go && tar -C /usr/local -xzf go1.16.3.linux-amd64.tar.gz
+RUN mkdir -p /go/bin /go/src /go/pkg
+
+ENV GOPATH="/go"
+ENV PATH=$PATH:/usr/local/go/bin
 
 RUN export COMPONENT_VERSION=$(cat /COMPONENT_VERSION); git clone -b release-${COMPONENT_VERSION} --single-branch https://github.com/open-cluster-management/applifecycle-backend-e2e.git /opt/e2e
 
