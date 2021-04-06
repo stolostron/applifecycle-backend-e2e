@@ -190,11 +190,6 @@ trap cleanup EXIT
 export KUBE_DIR="../../default-kubeconfigs"
 # echo "Process the canary test cases"
 
-docker run \
-	--env KUBE_DIR=/opt/e2e/default-kubeconfigs \
-	--name app-backend-e2e \
-	quay.io/open-cluster-management/applifecycle-backend-e2e:${COMPONENT_TAG_EXTENSION}
-
 if [ "$RUN_ON" != "github" ]; then
 	go test -v ./client/canary/...
 fi
