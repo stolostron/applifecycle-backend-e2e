@@ -3,8 +3,6 @@
 FROM registry.access.redhat.com/ubi8/ubi-minimal:latest
 
 RUN  yum update -y \
-        && rpm -e --nodeps tzdata \
-        && yum install tzdata \
         && yum install openssh-clients \
         && yum install curl \
         && yum install procps \

@@ -1,15 +1,13 @@
 # Start from a Debian image with the latest version of Go installed
 # and a workspace (GOPATH) configured at /go.
-FROM registry.access.redhat.com/ubi8/ubi-minimal:latest
+FROM  registry.ci.openshift.org/open-cluster-management/builder:go1.16-linux-amd64
 
-RUN  microdnf update -y \
-        && rpm -e --nodeps tzdata \
-        && microdnf install tzdata \
-        && microdnf install openssh-clients \
-        && microdnf install curl \
-        && microdnf install procps \
-        && microdnf install tar \
-        && microdnf clean all
+RUN  yum update -y \
+        && yum install openssh-clients \
+        && yum install curl \
+        && yum install procps \
+        && yum install tar
+
 
 ENV USER_UID=1001 \
     USER_NAME=app-backend \
