@@ -19,11 +19,6 @@ COPY COMPONENT_VERSION /COMPONENT_VERSION
 
 RUN export COMPONENT_VERSION=$(cat /COMPONENT_VERSION); git clone -b release-${COMPONENT_VERSION} --single-branch https://github.com/open-cluster-management/applifecycle-backend-e2e.git /opt/e2e
 
-RUN curl -LO https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl
-
-RUN chmod +x ./kubectl
-RUN mv ./kubectl /usr/local/bin
-
 WORKDIR /opt/e2e/client/canary
 
 # the test data is in the binary format
