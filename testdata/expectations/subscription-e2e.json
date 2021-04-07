@@ -119,6 +119,7 @@
 		"apiversion": "v1",
 		"kind": "ConfigMap",
 		"name": "myapplication-v2",
+		"matcher": "byname",
 		"namespace": "sub003"
 	},
 {
@@ -128,6 +129,7 @@
 		"apiversion": "v1",
 		"kind": "ConfigMap",
 		"name": "myapplication-v3.0.1",
+		"matcher": "byname",
 		"namespace": "sub004"
 	}
 ]
