@@ -111,5 +111,23 @@
             "apps.open-cluster-management.io/hosting-subscription": "helm-local/local-sub-test",
             "count": "1"
 		}
+	},
+{
+		"test_id": "sub-003",
+		"target_cluster": "hub",
+		"desc": "should create configmap named myapplication-v2 in subscription namespace",
+		"apiversion": "v1",
+		"kind": "ConfigMap",
+		"name": "myapplication-v2",
+		"namespace": "sub003"
+	},
+{
+		"test_id": "sub-004",
+		"target_cluster": "hub",
+		"desc": "should create configmap named myapplication-v3.0.1 in subscription namespace",
+		"apiversion": "v1",
+		"kind": "ConfigMap",
+		"name": "myapplication-v3.0.1",
+		"namespace": "sub004"
 	}
 ]

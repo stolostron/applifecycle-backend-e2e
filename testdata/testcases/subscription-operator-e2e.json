@@ -11,5 +11,17 @@
   "desc": "subscription standalone deploy a helm type with a guestbook",
   "urls": ["https://raw.githubusercontent.com/ianzhang366/acm-applifecycle-samples/e2e/helm-ops/local-guestbook-helm-sub.yaml"],
   "target_cluster": "hub"
+},
+{
+  "test_id": "sub-003",
+  "desc": "subscribe to a release tag of Git repo",
+  "urls": ["https://raw.githubusercontent.com/open-cluster-management/multicloud-operators-subscription/main/examples/e2e_example/git-tag-subscription-e2e.yaml"],
+  "target_cluster": "hub"
+},
+{
+  "test_id": "sub-004",
+  "desc": "subscribe to a commit of Git repo",
+  "urls": ["https://raw.githubusercontent.com/open-cluster-management/multicloud-operators-subscription/main/examples/e2e_example/git-commit-subscription-e2e.yaml"],
+  "target_cluster": "hub"
 }
 ]
