@@ -14,7 +14,11 @@ ENV USER_UID=1001 \
 
 COPY COMPONENT_VERSION /COMPONENT_VERSION
 
+COPY APPSUB_COMPONENT_VERSION /APPSUB_COMPONENT_VERSION
+
 RUN export COMPONENT_VERSION=$(cat /COMPONENT_VERSION); git clone -b release-${COMPONENT_VERSION} --single-branch https://github.com/open-cluster-management/applifecycle-backend-e2e.git /opt/e2e
+
+RUN export APPSUB_COMPONENT_VERSION=$(cat /APPSUB_COMPONENT_VERSION)
 
 WORKDIR /opt/e2e/client/canary
 
