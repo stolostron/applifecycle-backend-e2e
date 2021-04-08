@@ -25,7 +25,7 @@ setup_channel_operator(){
         git clone https://github.com/open-cluster-management/multicloud-operators-channel.git
     fi
 
-    sed -i -e "s|image: .*$|image: quay.io/open-cluster-management/multicluster-operators-channel:${COMPONENT_VERSION}|" multicloud-operators-channel/deploy/standalone/operator.yaml
+    sed -i -e "s|image: .*$|image: quay.io/open-cluster-management/multicluster-operators-channel:latest|" multicloud-operators-channel/deploy/standalone/operator.yaml
 
     kubectl apply -f multicloud-operators-channel/deploy/crds
     kubectl apply -f multicloud-operators-channel/deploy/standalone
@@ -48,7 +48,7 @@ setup_subscription_operator(){
     sleep 5
 
     echo "before sed $COMPONENT_VERSION"
-    sed -i -e "s|image: .*$|image: quay.io/open-cluster-management/multicluster-operators-subscription:$COMPONENT_VERSION|" multicloud-operators-subscription/deploy/standalone/operator.yaml
+    sed -i -e "s|image: .*$|image: quay.io/open-cluster-management/multicluster-operators-subscription:latest|" multicloud-operators-subscription/deploy/standalone/operator.yaml
 
     kubectl apply -f multicloud-operators-subscription/deploy/standalone
 
@@ -76,7 +76,7 @@ setup_helmrelease_operator(){
         git clone https://github.com/open-cluster-management/multicloud-operators-subscription-release.git
     fi
 
-    sed -i -e "s|image: .*$|image: quay.io/open-cluster-management/multicluster-operators-subscription-release:$COMPONENT_VERSION|" multicloud-operators-subscription-release/deploy/operator.yaml
+    sed -i -e "s|image: .*$|image: quay.io/open-cluster-management/multicluster-operators-subscription-release:latest|" multicloud-operators-subscription-release/deploy/operator.yaml
 
     kubectl apply -f multicloud-operators-subscription-release/deploy/crds
     kubectl apply -f multicloud-operators-subscription-release/deploy
