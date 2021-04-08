@@ -113,7 +113,7 @@ fi
 chmod +x /usr/local/bin/argocd
 
 # login using the cli
-ARGOCD_PWD=$($KUBECTL_HUB get pods -n argocd -l app.kubernetes.io/name=argocd-server -o name | cut -d'/' -f 2)
+ARGOCD_PWD=$($KUBECTL_HUB -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d)
 ARGOCD_HOST="localhost:8080"
 
 echo "argocd login $ARGOCD_HOST --insecure --username admin --password $ARGOCD_PWD"
