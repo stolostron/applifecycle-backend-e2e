@@ -68,4 +68,10 @@ var _ = Describe("subscription-test", func() {
 	It("sub-002", func() {
 		Eventually(func() error { return DefaultRunner.Run("sub-002") }, 5*pullInterval, pullInterval).Should(Succeed())
 	})
+	It("sub-003", func() {
+		Eventually(func() error { return DefaultRunner.Run("sub-003") }, 5*pullInterval, pullInterval).Should(Succeed())
+	})
+	It("sub-004", func() {
+		Eventually(func() error { return DefaultRunner.Run("sub-004") }, 5*pullInterval, pullInterval).Should(Succeed())
+	})
 })

@@ -100,6 +100,8 @@ if [ $? -ne 0 ]; then
     exit 1
 fi
 
+$KUBECTL_CMD get route gogs-svc -n default -o yaml
+
 # Create a test Git repository. This creates a repo named testrepo under user testadmin.
 curl -u testadmin:testadmin -X POST -H "content-type: application/json" -d '{"name": "testrepo", "description": "test repo", "private": false}' https://${GIT_HOSTNAME}/api/v1/admin/users/testadmin/repos --insecure
 if [ $? -ne 0 ]; then
@@ -152,6 +154,8 @@ if [ $? -ne 0 ]; then
     echo "failed to create Gogs route with the self-signed certificate"
     exit 1
 fi
+
+$KUBECTL_CMD get route gogs-svc -n default -o yaml
 
 # Generate a channel configmap to contain the root CA certificate
 $KUBECTL_CMD create configmap --dry-run git-ca --from-file=caCerts=rootCA.crt --output yaml > $root_dir/tests/e2e-001/git-ca-configmap.yaml
