@@ -95,20 +95,24 @@ $KUBECTL_HUB create -f $dataPath/app_helloworld.yaml
 
 waitForRes $KUBECONFIG_HUB "routes" "helloworld-app-route" "ns-sub-wshi" ""
 
-sleep 5
-status=`$KUBECTL_HUB get appsub app-helloworld-subscription-1 -n ns-sub-wshi -o custom-columns=:.status.phase --no-headers`
-if [[ "$status" != "Propagated" ]]; then
-  echo "appsub status != Propagated."
-  exit 1
-fi
+MINUTE=0
+while [ true ]; do
+    # Wait up to 5min to see if the local appsub is subscribed
+    if [ $MINUTE -gt 300 ]; then
+        echo "Timeout waiting for local appsub status being subscribed."
+        exit 1
+    fi
+    status=`$KUBECTL_HUB get appsub app-helloworld-subscription-1-local -n ns-sub-wshi -o custom-columns=:.status.phase --no-headers`
+    if [ "$status" == "Subscribed" ]; then
+        break
+    fi
+    echo "* STATUS: local appsub NOT subscribed. Retry in 10 sec"
+    echo `$KUBECTL_HUB get appsub app-helloworld-subscription-1-local -n ns-sub-wshi -o custom-columns=:.status`
+    sleep 10
+    (( MINUTE = MINUTE + 10 ))
+done
 
-sleep 5
-status=`$KUBECTL_HUB get appsub app-helloworld-subscription-1-local -n ns-sub-wshi -o custom-columns=:.status.phase --no-headers`
-if [[ "$status" != "Subscribed" ]]; then
-  echo "appsub-local status != Subscribed."
-  exit 1
-fi
-
+echo "\n==== helloworld application deployed successfully ===="
 deleteApp
 
 exit 0
