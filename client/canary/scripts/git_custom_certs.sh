@@ -17,10 +17,10 @@ $KUBECTL_CMD apply -f . -n e2e-001
 
 # Wait for the test config map to be created
 FOUND=1
-MINUTE=0
+SECONDS=0
 while [ ${FOUND} -eq 1 ]; do
-    # Wait up to 2min
-    if [ $MINUTE -gt 120 ]; then
+    # Wait up to 10 minutes
+    if [ $SECONDS -gt 1200 ]; then
         echo "Timeout waiting for configmap test-configmap to be created in e2e-001 namespace."
         echo "List of current configmap:"
         $KUBECTL_CMD -n e2e-001 get configmap
@@ -34,8 +34,10 @@ while [ ${FOUND} -eq 1 ]; do
         echo "test-configmap is created"
         break
     fi
-    sleep 3
-    (( MINUTE = MINUTE + 3 ))
+
+    # Sleep for 10 seconds
+    sleep 10
+    (( SECONDS = SECONDS + 10 ))
 done
 
 # Delete subscription
