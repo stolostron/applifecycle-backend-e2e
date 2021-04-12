@@ -9,7 +9,7 @@ import (
 )
 
 var _ = Describe("RHACM4K-2350: e2e-server", func() {
-	It("helmrepo-basicath", func() {
+	It("[P1][Sev1][app-life-cycle] Test subscribing to Helm repo with basic authentication", func() {
 		Eventually(
 			func() error {
 				cmd := exec.Command("/bin/sh", "./scripts/helmrepo_basicath.sh")
