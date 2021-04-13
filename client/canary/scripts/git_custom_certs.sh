@@ -32,6 +32,14 @@ while [ ${FOUND} -eq 1 ]; do
         $KUBECTL_CMD get appsub e2e-001-subscription-local -n e2e-001 -o yaml
         echo
 
+        APPSUB_POD_NAME=`$KUBECTL_CMD get pod -n open-cluster-management -o custom-columns=":metadata.name" | grep hub-subscription`
+
+        $KUBECTL_CMD describe pod $APPSUB_POD_NAME -n open-cluster-management
+        echo
+
+        $KUBECTL_CMD logs $APPSUB_POD_NAME -n open-cluster-management
+        echo
+
         APPMGR_POD_NAME=`$KUBECTL_CMD get pod -n open-cluster-management-agent-addon -o custom-columns=":metadata.name" | grep appmgr`
 
         $KUBECTL_CMD logs $APPMGR_POD_NAME -n open-cluster-management-agent-addon
