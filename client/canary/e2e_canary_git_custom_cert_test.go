@@ -9,7 +9,7 @@ import (
 )
 
 var _ = Describe("e2e-server", func() {
-	It("[P1][Sev1][app-life-cycle] Install test Git repo server with custom certificate", func() {
+	It("[P1][Sev1][app-lifecycle] Install test Git repo server with custom certificate", func() {
 		Eventually(
 			func() error {
 				cmd := exec.Command("/bin/sh", "./scripts/gitServer/install.sh")
@@ -28,7 +28,7 @@ var _ = Describe("e2e-server", func() {
 				return nil
 			}).Should(Succeed())
 	})
-	It("[P1][Sev1][app-life-cycle] Test subscribing to Git repo with custom certificate", func() {
+	It("[P1][Sev1][app-lifecycle] Test subscribing to Git repo with custom certificate", func() {
 		Eventually(
 			func() error {
 				cmd := exec.Command("/bin/sh", "./scripts/git_custom_certs.sh")
@@ -47,7 +47,7 @@ var _ = Describe("e2e-server", func() {
 				return nil
 			}).Should(Succeed())
 	})
-	It("[P1][Sev1][app-life-cycle] Uninstall test Git repo server", func() {
+	It("[P1][Sev1][app-lifecycle] Uninstall test Git repo server", func() {
 		Eventually(
 			func() error {
 				cmd := exec.Command("/bin/sh", "./scripts/gitServer/uninstall.sh")

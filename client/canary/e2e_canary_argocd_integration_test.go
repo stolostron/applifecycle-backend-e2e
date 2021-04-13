@@ -9,7 +9,7 @@ import (
 )
 
 var _ = Describe("e2e-server", func() {
-	It("[P1][Sev1][app-life-cycle] Test argocd integration", func() {
+	It("[P1][Sev1][app-lifecycle] Test argocd integration", func() {
 		Eventually(
 			func() error {
 				cmd := exec.Command("/bin/sh", "./scripts/argocd_integration.sh")
