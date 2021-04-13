@@ -25,6 +25,21 @@ while [ ${FOUND} -eq 1 ]; do
         echo "List of current configmap:"
         $KUBECTL_CMD -n e2e-001 get configmap
         echo
+        
+        $KUBECTL_CMD get appsub e2e-001-subscription -n e2e-001 -o yaml
+        echo
+
+        $KUBECTL_CMD get appsub e2e-001-subscription-local -n e2e-001 -o yaml
+        echo
+
+        APPMGR_POD_NAME=`$KUBECTL_CMD get pod -n open-cluster-management-agent-addon -o custom-columns=":metadata.name" | grep appmgr`
+
+        $KUBECTL_CMD describe pod $APPMGR_POD_NAME -n open-cluster-management-agent-addon
+        echo
+
+        $KUBECTL_CMD logs $APPMGR_POD_NAME -n open-cluster-management-agent-addon
+        echo
+
         exit 1
     fi
 
