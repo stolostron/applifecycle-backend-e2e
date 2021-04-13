@@ -42,7 +42,11 @@ while [ ${FOUND} -eq 1 ]; do
 
         APPMGR_POD_NAME=`$KUBECTL_CMD get pod -n open-cluster-management-agent-addon -o custom-columns=":metadata.name" | grep appmgr`
 
+        $KUBECTL_CMD describe pod $APPMGR_POD_NAME -n open-cluster-management-agent-addon
+        echo
+
         $KUBECTL_CMD logs $APPMGR_POD_NAME -n open-cluster-management-agent-addon
+        echo
 
         exit 1
     fi
