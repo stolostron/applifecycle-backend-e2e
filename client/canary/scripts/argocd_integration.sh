@@ -91,13 +91,15 @@ waitForRes $KUBECONFIG_HUB "pods" "argocd-application-controller" "argocd" ""
 
 for pid in $(ps aux | grep 'port-forward svc\/argocd-server' | awk '{print $2}'); do kill -9 $pid; done
 
-$KUBECTL_HUB -n argocd port-forward svc/argocd-server -n argocd 8080:443 > /dev/null 2>&1 &
+$KUBECTL_HUB -n argocd port-forward svc/argocd-server -n argocd 8080:443 > /dev/null &
 
 sleep 5
 
 # install argocd cli
-ARGO_VERSION=$(curl --silent "https://api.github.com/repos/argoproj/argo-cd/releases/latest" | grep '"tag_name"' | sed -E 's/.*"([^"]+)".*/\1/')
+# ARGO_VERSION=$(curl --silent "https://api.github.com/repos/argoproj/argo-cd/releases/latest" | grep '"tag_name"' | sed -E 's/.*"([^"]+)".*/\1/')
 
+# apply the fixed version v 2.0.0. The latest v2.0.1 is not working.
+ARGO_VERSION=v2.0.0
 LOCAL_OS=$(uname)
 
 echo "$LOCAL_OS, $ARGO_VERSION"
@@ -116,7 +118,7 @@ chmod +x /usr/local/bin/argocd
 ARGOCD_PWD=$($KUBECTL_HUB -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d)
 ARGOCD_HOST="localhost:8080"
 
-echo "argocd login $ARGOCD_HOST --insecure --username admin --password $ARGOCD_PWD"
+echo "argocd login $ARGOCD_HOST --insecure --username admin --password $ARGOCD_PWD --grpc-web"
 
 MINUTE=0
 while [ true ]; do
@@ -125,7 +127,7 @@ while [ true ]; do
         echo "Timeout waiting for argocd cli login."
         exit 1
     fi
-    argocd login $ARGOCD_HOST --insecure --username admin --password $ARGOCD_PWD
+    argocd login $ARGOCD_HOST --insecure --username admin --password $ARGOCD_PWD --grpc-web
     if [ $? -eq 0 ]; then
         break
     fi
