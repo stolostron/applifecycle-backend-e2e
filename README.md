@@ -169,7 +169,7 @@ You can test your new case by doing:(assuming you install the server)
 1. start the server with your new test case locations
 
       `applifecycle-backend-e2e -cfg <your kubeconfig> -data default-e2e-test-data`
-2. run you new cases
+2. run your new test cases
     `http://localhost:8765/run?id=<new case ID>`
     
     You can check other parameters such as if the case is parsed correctly or not, by hitting different endpoints.
