@@ -2,30 +2,19 @@ package client_test
 
 import (
 	"fmt"
-	"os/exec"
+	"testing"
 
-	. "github.com/onsi/ginkgo"
-	. "github.com/onsi/gomega"
+	"github.com/onsi/gomega"
+	"github.com/open-cluster-management/applifecycle-backend-e2e/pkg"
 )
 
-var _ = Describe("RHACM4K-2350: e2e-server", func() {
-	It("[P1][Sev1][app-lifecycle] Test subscribing to Helm repo with basic authentication", func() {
-		Eventually(
-			func() error {
-				cmd := exec.Command("/bin/sh", "./scripts/helmrepo_basicath.sh")
+func Test_Helmrepo_Basic_Auth_E2E(t *testing.T) {
+	g := gomega.NewGomegaWithT(t)
 
-				out, err := cmd.CombinedOutput()
+	fmt.Println("RHACM4K-2350: e2e-server")
+	fmt.Println("[P1][Sev1][app-lifecycle] Test subscribing to Helm repo with basic authentication")
 
-				fmt.Printf("Combined Output:\n%s\n", string(out))
+	ret := pkg.RunCMD("./scripts/helmrepo_basicath.sh")
 
-				if err != nil {
-					fmt.Printf("error: %s\n", err)
-					if exitError, ok := err.(*exec.ExitError); ok {
-						fmt.Printf("exit code: %d\n", exitError.ExitCode())
-					}
-					return err
-				}
-				return nil
-			}).Should(Succeed())
-	})
-})
+	g.Expect(ret).To(gomega.Equal(true))
+}

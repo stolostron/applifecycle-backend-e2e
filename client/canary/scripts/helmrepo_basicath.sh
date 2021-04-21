@@ -115,5 +115,5 @@ done
 echo "\n==== helloworld application deployed successfully ===="
 deleteApp
 
+echo "E2E CANARY TEST DONE - Subscribe Helm repo with basic authentication"
 exit 0
-
