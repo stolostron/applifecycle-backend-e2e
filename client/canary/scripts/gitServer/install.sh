@@ -25,7 +25,7 @@ GIT_HOSTNAME=gogs-svc-default.$APP_DOMAIN
 echo "Git hostname is $GIT_HOSTNAME"
 
 # Inject the real Git hostname into the Gogs deployment YAML
-sed -i "s/__HOSTNAME__/$GIT_HOSTNAME/" gogs.yaml
+sed -i -e "s/__HOSTNAME__/$GIT_HOSTNAME/" gogs.yaml
 if [ $? -ne 0 ]; then
     echo "failed to substitue __HOSTNAME__ in gogs.yaml"
     exit 1
@@ -128,8 +128,8 @@ fi
 cd ..
 
 # Inject the real Git hostname into certificate config files
-sed -i "s/__HOSTNAME__/$GIT_HOSTNAME/" ca.conf
-sed -i "s/__HOSTNAME__/$GIT_HOSTNAME/" san.ext
+sed -i -e "s/__HOSTNAME__/$GIT_HOSTNAME/" ca.conf
+sed -i -e "s/__HOSTNAME__/$GIT_HOSTNAME/" san.ext
 
 # Generate certificates
 openssl genrsa -out rootCA.key 4096
@@ -165,8 +165,10 @@ if [ $? -ne 0 ]; then
 fi
 
 # Inject the real Git hostname into the test input YAML
-sed -i "s/__HOSTNAME__/$GIT_HOSTNAME/" $root_dir/tests/e2e-001/application.yaml
+sed -i -e "s/__HOSTNAME__/$GIT_HOSTNAME/" $root_dir/tests/e2e-001/application.yaml
 if [ $? -ne 0 ]; then
     echo "failed to substitute __HOSTNAME__ in application.yaml"
     exit 1
 fi
+
+echo "E2E CANARY TEST DONE - Install test Git repo server with custom certificate"

@@ -180,4 +180,4 @@ waitForRes $KUBECONFIG_HUB "deployments" "guestbook-ui" "default" ""
 
 uninstallArgocd
 
-exit 0
+echo "E2E CANARY TEST DONE - Argocd"

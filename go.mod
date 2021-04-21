@@ -3,6 +3,7 @@ module github.com/open-cluster-management/applifecycle-backend-e2e
 go 1.16
 
 require (
+	github.com/go-cmd/cmd v1.3.0
 	github.com/go-logr/logr v0.3.0
 	github.com/go-logr/zapr v0.3.0
 	github.com/onsi/ginkgo v1.12.1
@@ -21,4 +22,3 @@ require (
 )
 
 replace k8s.io/client-go => k8s.io/client-go v0.19.3
-
