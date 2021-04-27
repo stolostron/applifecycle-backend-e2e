@@ -1,20 +1,16 @@
 package client_test
 
 import (
-	"fmt"
-	"testing"
+	. "github.com/onsi/ginkgo"
+	. "github.com/onsi/gomega"
 
-	"github.com/onsi/gomega"
 	"github.com/open-cluster-management/applifecycle-backend-e2e/pkg"
 )
 
-func Test_Argocd_Integration_E2E(t *testing.T) {
-	g := gomega.NewGomegaWithT(t)
+var _ = Describe("e2e-server", func() {
+	It("[P1][Sev1][app-lifecycle] Test argocd integration", func() {
+		ret := pkg.RunCMD("./scripts/argocd_integration.sh")
 
-	fmt.Println("e2e-server")
-	fmt.Println("[P1][Sev1][app-lifecycle] Test argocd integration")
-
-	ret := pkg.RunCMD("./scripts/argocd_integration.sh")
-
-	g.Expect(ret).To(gomega.Equal(true))
-}
+		Expect(ret).To(Equal(0))
+	})
+})
