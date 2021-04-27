@@ -9,7 +9,8 @@ import (
 )
 
 // RunCMD execute long running script with disabling output buffering, and enabling streaming.
-func RunCMD(scriptName string) bool {
+// return the exit code of the script process.
+func RunCMD(scriptName string) int {
 	cmdOptions := cmd.Options{
 		Buffered:  false,
 		Streaming: true,
@@ -65,7 +66,7 @@ func RunCMD(scriptName string) bool {
 	<-doneChan
 
 	finalStatus := <-statusChan
-	fmt.Println("Script: ", scriptName, ", Runtime: ", finalStatus.Runtime, " Seconds")
+	fmt.Println("Script: ", scriptName, ", Runtime: ", finalStatus.Runtime, " Seconds", ", ExitCode: ", finalStatus.Exit)
 
-	return true
+	return finalStatus.Exit
 }
