@@ -48,6 +48,7 @@ while [ ${FOUND} -eq 1 ]; do
         $KUBECTL_CMD logs $APPMGR_POD_NAME -n open-cluster-management-agent-addon
         echo
 
+        echo "E2E CANARY TEST - EXIT WITH ERROR"
         exit 1
     fi
 
@@ -66,4 +67,4 @@ done
 # Delete subscription
 $KUBECTL_CMD delete -f application.yaml -n e2e-001
 
-echo "E2E CANARY TEST DONE - Subscribe Git repo with custom certificate"
+echo "E2E CANARY TEST - DONE"

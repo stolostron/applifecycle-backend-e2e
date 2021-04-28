@@ -29,6 +29,7 @@ waitForRes() {
             if [ "${resKinds}" == "pods" ]; then
                 kubectl --kubeconfig ${kubeConfig} -n ${resNamespace} describe deployments ${resName}
             fi
+            echo "E2E CANARY TEST - EXIT WITH ERROR"
             exit 1
         fi
         if [ "$ignore" == "" ]; then
@@ -61,12 +62,14 @@ echo "==== Validating hub and spoke cluster access ===="
 $KUBECTL_HUB cluster-info
 if [ $? -ne 0 ]; then
     echo "hub cluster Not accessed."
+    echo "E2E CANARY TEST - EXIT WITH ERROR"
     exit 1
 fi
 
 $KUBECTL_SPOKE cluster-info
 if [ $? -ne 0 ]; then
     echo "spoke cluster Not accessed."
+    echo "E2E CANARY TEST - EXIT WITH ERROR"
     exit 1
 fi
 
@@ -100,6 +103,7 @@ while [ true ]; do
     # Wait up to 5min to see if the local appsub is subscribed
     if [ $MINUTE -gt 300 ]; then
         echo "Timeout waiting for local appsub status being subscribed."
+        echo "E2E CANARY TEST - EXIT WITH ERROR"
         exit 1
     fi
     status=`$KUBECTL_HUB get appsub app-helloworld-subscription-1-local -n ns-sub-wshi -o custom-columns=:.status.phase --no-headers`
@@ -115,5 +119,5 @@ done
 echo "\n==== helloworld application deployed successfully ===="
 deleteApp
 
-echo "E2E CANARY TEST DONE - Subscribe Helm repo with basic authentication"
+echo "E2E CANARY TEST - DONE"
 exit 0
