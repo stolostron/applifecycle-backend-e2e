@@ -27,6 +27,7 @@ waitForRes() {
             if [ "${resKinds}" == "pods" ]; then
                 kubectl --kubeconfig ${kubeConfig} -n ${resNamespace} describe deployments ${resName}
             fi
+            echo "E2E CANARY TEST - EXIT WITH ERROR"
             exit 1
         fi
         if [ "$ignore" == "" ]; then
@@ -67,12 +68,14 @@ echo "==== Validating hub and spoke cluster access ===="
 $KUBECTL_HUB cluster-info
 if [ $? -ne 0 ]; then
     echo "hub cluster Not accessed."
+    echo "E2E CANARY TEST - EXIT WITH ERROR"
     exit 1
 fi
 
 $KUBECTL_SPOKE cluster-info
 if [ $? -ne 0 ]; then
     echo "spoke cluster Not accessed."
+    echo "E2E CANARY TEST - EXIT WITH ERROR"
     exit 1
 fi
 
@@ -125,6 +128,7 @@ while [ true ]; do
     # Wait up to 5min, should only take about 1-2 min
     if [ $MINUTE -gt 300 ]; then
         echo "Timeout waiting for argocd cli login."
+        echo "E2E CANARY TEST - EXIT WITH ERROR"
         exit 1
     fi
     argocd login $ARGOCD_HOST --insecure --username admin --password $ARGOCD_PWD --grpc-web
@@ -148,6 +152,7 @@ while [ true ]; do
     # Wait up to 5min, should only take about 1-2 min
     if [ $MINUTE -gt 300 ]; then
         echo "Timeout waiting for the spoke cluster token being imported to the argocd Namespace."
+        echo "E2E CANARY TEST - EXIT WITH ERROR"
         exit 1
     fi
     $KUBECTL_HUB get secrets -n argocd "$SPOKE_CLUSTER-cluster-secret"
@@ -167,6 +172,7 @@ echo "==== verifying the the managed cluster secret in argocd cluster list ===="
 argocd cluster list  |grep -w $SPOKE_CLUSTER 
 if [ $? -ne 0 ]; then
     echo "Managed cluster $SPOKE_CLUSTER is NOT in the ArgoCD cluster list"
+    echo "E2E CANARY TEST - EXIT WITH ERROR"
     exit 1
 fi
 
@@ -180,4 +186,4 @@ waitForRes $KUBECONFIG_HUB "deployments" "guestbook-ui" "default" ""
 
 uninstallArgocd
 
-echo "E2E CANARY TEST DONE - Argocd"
+echo "E2E CANARY TEST - DONE"

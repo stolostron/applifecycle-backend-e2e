@@ -16,6 +16,7 @@ KUBECTL_CMD="oc --kubeconfig /opt/e2e/default-kubeconfigs/hub --insecure-skip-tl
 APP_DOMAIN=`$KUBECTL_CMD -n openshift-console get routes console -o jsonpath='{.status.ingress[0].routerCanonicalHostname}'`
 if [ $? -ne 0 ]; then
     echo "failed to get the application domain"
+    echo "E2E CANARY TEST - EXIT WITH ERROR"
     exit 1
 fi
 
@@ -28,6 +29,7 @@ echo "Git hostname is $GIT_HOSTNAME"
 sed -i -e "s/__HOSTNAME__/$GIT_HOSTNAME/" gogs.yaml
 if [ $? -ne 0 ]; then
     echo "failed to substitue __HOSTNAME__ in gogs.yaml"
+    echo "E2E CANARY TEST - EXIT WITH ERROR"
     exit 1
 fi
 
@@ -39,6 +41,7 @@ $KUBECTL_CMD project default
 $KUBECTL_CMD adm policy add-scc-to-user anyuid -z default
 if [ $? -ne 0 ]; then
     echo "failed to update security policy"
+    echo "E2E CANARY TEST - EXIT WITH ERROR"
     exit 1
 fi
 
@@ -46,6 +49,7 @@ fi
 $KUBECTL_CMD apply -f gogs.yaml
 if [ $? -ne 0 ]; then
     echo "failed to deploy Gogs server"
+    echo "E2E CANARY TEST - EXIT WITH ERROR"
     exit 1
 fi
 
@@ -55,6 +59,7 @@ sleep 5
 GOGS_POD_NAME=`$KUBECTL_CMD get pods -n default -o=custom-columns='DATA:metadata.name' | grep gogs-`
 if [ $? -ne 0 ]; then
     echo "failed to get the pod name"
+    echo "E2E CANARY TEST - EXIT WITH ERROR"
     exit 1
 fi
 
@@ -71,6 +76,7 @@ while [ ${FOUND} -eq 1 ]; do
         echo "List of current pods:"
         $KUBECTL_CMD -n default get pods
         echo
+        echo "E2E CANARY TEST - EXIT WITH ERROR"
         exit 1
     fi
 
@@ -97,6 +103,7 @@ echo "Adding testadmin user in Gogs"
 $KUBECTL_CMD exec $GOGS_POD_NAME -- /tmp/adduser.sh
 if [ $? -ne 0 ]; then
     echo "failed to add testadmin user"
+    echo "E2E CANARY TEST - EXIT WITH ERROR"
     exit 1
 fi
 
@@ -106,6 +113,7 @@ $KUBECTL_CMD get route gogs-svc -n default -o yaml
 RESPONSE=$(curl -u testadmin:testadmin -X POST -H "content-type: application/json" -d '{"name": "testrepo", "description": "test repo", "private": false}' --write-out %{http_code} --silent --output /dev/null https://${GIT_HOSTNAME}/api/v1/admin/users/testadmin/repos --insecure)
 if [ $? -ne 0 ]; then
     echo "failed to create testrepo"
+    echo "E2E CANARY TEST - EXIT WITH ERROR"
     exit 1
 fi
 
@@ -126,6 +134,7 @@ if [ ${RESPONSE} -eq 500 ] || [ ${RESPONSE} -eq 501 ] || [ ${RESPONSE} -eq 502 ]
     RESPONSE2=$(curl -u testadmin:testadmin -X POST -H "content-type: application/json" -d '{"name": "testrepo", "description": "test repo", "private": false}' --write-out %{http_code} --silent --output /dev/null https://${GIT_HOSTNAME}/api/v1/admin/users/testadmin/repos --insecure)
     if [ $? -ne 0 ]; then
         echo "failed to create testrepo"
+        echo "E2E CANARY TEST - EXIT WITH ERROR"
         exit 1
     fi
 
@@ -138,6 +147,7 @@ if [ ${RESPONSE} -eq 500 ] || [ ${RESPONSE} -eq 501 ] || [ ${RESPONSE} -eq 502 ]
         $KUBECTL_CMD logs $GOGS_POD_NAME -n default
         echo
 
+        echo "E2E CANARY TEST - EXIT WITH ERROR"
         exit 1
     fi
 fi
@@ -155,6 +165,7 @@ git commit -m "first commit"
 git push https://testadmin:testadmin@${GIT_HOSTNAME}/testadmin/testrepo.git --all
 if [ $? -ne 0 ]; then
     echo "failed to push to testrepo Git repository"
+    echo "E2E CANARY TEST - EXIT WITH ERROR"
     exit 1
 fi
 
@@ -172,6 +183,7 @@ openssl req -new -key server.key -out server.csr -config ca.conf
 openssl x509 -req -in server.csr -CA rootCA.crt -CAkey rootCA.key -CAcreateserial -out server.crt -days 500 -sha256 -extfile san.ext
 if [ $? -ne 0 ]; then
     echo "failed to create a self-signed certificate"
+    echo "E2E CANARY TEST - EXIT WITH ERROR"
     exit 1
 fi
 
@@ -179,12 +191,14 @@ fi
 $KUBECTL_CMD delete route gogs-svc -n default
 if [ $? -ne 0 ]; then
     echo "failed to delete Gogs route"
+    echo "E2E CANARY TEST - EXIT WITH ERROR"
     exit 1
 fi
 
 $KUBECTL_CMD create route edge --service=gogs-svc --cert=server.crt --key=server.key --path=/ -n default
 if [ $? -ne 0 ]; then
     echo "failed to create Gogs route with the self-signed certificate"
+    echo "E2E CANARY TEST - EXIT WITH ERROR"
     exit 1
 fi
 
@@ -194,6 +208,7 @@ $KUBECTL_CMD get route gogs-svc -n default -o yaml
 $KUBECTL_CMD create configmap --dry-run git-ca --from-file=caCerts=rootCA.crt --output yaml > $root_dir/tests/e2e-001/git-ca-configmap.yaml
 if [ $? -ne 0 ]; then
     echo "failed to create configmap with the self-signed certificate"
+    echo "E2E CANARY TEST - EXIT WITH ERROR"
     exit 1
 fi
 
@@ -201,7 +216,8 @@ fi
 sed -i -e "s/__HOSTNAME__/$GIT_HOSTNAME/" $root_dir/tests/e2e-001/application.yaml
 if [ $? -ne 0 ]; then
     echo "failed to substitute __HOSTNAME__ in application.yaml"
+    echo "E2E CANARY TEST - EXIT WITH ERROR"
     exit 1
 fi
 
-echo "E2E CANARY TEST DONE - Install test Git repo server with custom certificate"
+echo "E2E CANARY TEST - DONE"

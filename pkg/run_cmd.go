@@ -39,7 +39,7 @@ func RunCMD(scriptName string) int {
 
 				fmt.Println(line)
 
-				if strings.Contains(line, "E2E CANARY TEST DONE -") {
+				if strings.Contains(line, "E2E CANARY TEST -") {
 					// For some reason, the Stdout and Stderr channels are not closed even after the script is done.
 					// Workaround: echo "E2E CANARY TEST DONE - ***" as the last line of the script.
 					// Stop the cmd when standard output contains such keywords
