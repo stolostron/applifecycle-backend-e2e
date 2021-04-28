@@ -103,10 +103,43 @@ fi
 $KUBECTL_CMD get route gogs-svc -n default -o yaml
 
 # Create a test Git repository. This creates a repo named testrepo under user testadmin.
-curl -u testadmin:testadmin -X POST -H "content-type: application/json" -d '{"name": "testrepo", "description": "test repo", "private": false}' https://${GIT_HOSTNAME}/api/v1/admin/users/testadmin/repos --insecure
+RESPONSE=$(curl -u testadmin:testadmin -X POST -H "content-type: application/json" -d '{"name": "testrepo", "description": "test repo", "private": false}' --write-out %{http_code} --silent --output /dev/null https://${GIT_HOSTNAME}/api/v1/admin/users/testadmin/repos --insecure)
 if [ $? -ne 0 ]; then
     echo "failed to create testrepo"
     exit 1
+fi
+
+echo "RESPONSE = ${RESPONSE}"
+
+if [ ${RESPONSE} -eq 500 ] || [ ${RESPONSE} -eq 501 ] || [ ${RESPONSE} -eq 502 ] || [ ${RESPONSE} -eq 503 ] || [ ${RESPONSE} -eq 504 ]; then
+    echo "Gog server error ${RESPONSE}"
+
+    DESC_POD=`$KUBECTL_CMD describe pod $GOGS_POD_NAME`
+    echo "$DESC_POD"
+
+    $KUBECTL_CMD logs $GOGS_POD_NAME -n default
+    echo
+
+    sleep 60
+
+    echo "trying to create testrepo again after 1 minute sleep"
+    RESPONSE2=$(curl -u testadmin:testadmin -X POST -H "content-type: application/json" -d '{"name": "testrepo", "description": "test repo", "private": false}' --write-out %{http_code} --silent --output /dev/null https://${GIT_HOSTNAME}/api/v1/admin/users/testadmin/repos --insecure)
+    if [ $? -ne 0 ]; then
+        echo "failed to create testrepo"
+        exit 1
+    fi
+
+    if [ ${RESPONSE2} -eq 500 ] || [ ${RESPONSE2} -eq 501 ] || [ ${RESPONSE2} -eq 502 ] || [ ${RESPONSE2} -eq 503 ] || [ ${RESPONSE2} -eq 504 ]; then
+        echo "failed to create testrepo again"
+
+        DESC_POD=`$KUBECTL_CMD describe pod $GOGS_POD_NAME`
+        echo "$DESC_POD"
+
+        $KUBECTL_CMD logs $GOGS_POD_NAME -n default
+        echo
+
+        exit 1
+    fi
 fi
 
 # Populate the repo with test data
