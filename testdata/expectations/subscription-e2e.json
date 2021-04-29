@@ -131,5 +131,39 @@
 		"name": "myapplication-v3.0.1",
 		"matcher": "byname",
 		"namespace": "sub004"
-	}
+	},
+        },
+{
+                "test_id": "sub-005",
+                "target_cluster": "hub",
+                "desc": "should have parent subscription deployed",
+                "apiversion": "apps.open-cluster-management.io/v1",
+                "kind": "subscription",
+                "name": "git-sub",
+                "namespace": "git-sub-ns",
+                "matcher": "byname",
+                "args": {}
+        },
+{
+                "test_id": "sub-005",
+                "target_cluster": "hub",
+                "desc": "should have child subscription deployed",
+                "apiversion": "apps.open-cluster-management.io/v1",
+                "kind": "subscription",
+                "name": "second-level-sub",
+                "namespace": "git-sub-ns",
+                "matcher": "byname",
+                "args": {}
+        },
+{
+                "test_id": "sub-005",
+                "target_cluster": "hub",
+                "desc": "should have child subscription deployed on local cluster",
+                "apiversion": "apps.open-cluster-management.io/v1",
+                "kind": "subscription",
+                "name": "second-level-sub-local",
+                "namespace": "git-sub-ns",
+                "matcher": "byname",
+                "args": {}
+        }
 ]
