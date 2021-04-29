@@ -132,7 +132,6 @@
 		"matcher": "byname",
 		"namespace": "sub004"
 	},
-        },
 {
                 "test_id": "sub-005",
                 "target_cluster": "hub",
@@ -140,7 +139,7 @@
                 "apiversion": "apps.open-cluster-management.io/v1",
                 "kind": "subscription",
                 "name": "git-sub",
-                "namespace": "git-sub-ns",
+                "namespace": "parentsub",
                 "matcher": "byname",
                 "args": {}
         },
@@ -151,7 +150,7 @@
                 "apiversion": "apps.open-cluster-management.io/v1",
                 "kind": "subscription",
                 "name": "second-level-sub",
-                "namespace": "git-sub-ns",
+                "namespace": "parentsub",
                 "matcher": "byname",
                 "args": {}
         },
@@ -162,7 +161,7 @@
                 "apiversion": "apps.open-cluster-management.io/v1",
                 "kind": "subscription",
                 "name": "second-level-sub-local",
-                "namespace": "git-sub-ns",
+                "namespace": "parentsub",
                 "matcher": "byname",
                 "args": {}
         }

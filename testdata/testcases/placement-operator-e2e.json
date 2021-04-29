@@ -1,0 +1,21 @@
+
+[
+{
+  "test_id": "plc-001",
+  "desc": "subscription deployed with placement rule for all clusters",
+  "urls": ["https://raw.githubusercontent.com/open-cluster-management/multicloud-operators-placementrule/main/examples/e2e_example/select_cluster_all_e2e.yaml"],
+  "target_cluster": "hub"
+},
+{
+  "test_id": "plc-002",
+  "desc": "subscription deployed with placement rule by cluster label",
+  "urls": ["https://raw.githubusercontent.com/open-cluster-management/multicloud-operators-placementrule/main/examples/e2e_example/select_cluster_by_label_e2e.yaml"],
+  "target_cluster": "hub"
+},
+{
+  "test_id": "plc-003",
+  "desc": "subscription deployed with placement rule by condition",
+  "urls": ["https://raw.githubusercontent.com/open-cluster-management/multicloud-operators-placementrule/main/examples/e2e_example/select_cluster_condition_all_avail_e2e.yaml"],
+  "target_cluster": "hub"
+}
+]
