@@ -12,3 +12,4 @@ KUBECTL_CMD="kubectl --kubeconfig /opt/e2e/default-kubeconfigs/hub"
 $KUBECTL_CMD delete -f gogs.yaml
 
 echo "E2E CANARY TEST - DONE"
+exit 0
