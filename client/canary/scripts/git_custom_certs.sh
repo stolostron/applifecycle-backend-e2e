@@ -68,3 +68,4 @@ done
 $KUBECTL_CMD delete -f application.yaml -n e2e-001
 
 echo "E2E CANARY TEST - DONE"
+exit 0

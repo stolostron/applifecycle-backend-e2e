@@ -221,3 +221,4 @@ if [ $? -ne 0 ]; then
 fi
 
 echo "E2E CANARY TEST - DONE"
+exit 0
