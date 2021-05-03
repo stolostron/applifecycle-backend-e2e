@@ -20,8 +20,8 @@ waitForRes() {
     running="\([0-9]\+\)\/\1"
     printf "\n#####\nWait for ${resNamespace}/${resName} to reach running state (4min).\n"
     while [ ${FOUND} -eq 1 ]; do
-        # Wait up to 4min, should only take about 20-30s
-        if [ $MINUTE -gt 240 ]; then
+        # Wait up to 10min, should only take about 20-30s
+        if [ $MINUTE -gt 600 ]; then
             echo "Timeout waiting for the ${resNamespace}\/${resName}."
             echo "List of current resources:"
             kubectl --kubeconfig ${kubeConfig} -n ${resNamespace} get ${resKinds}
@@ -48,8 +48,8 @@ waitForRes() {
             operatorRes="Waiting"
         fi
         echo "* STATUS: $operatorRes"
-        sleep 3
-        (( MINUTE = MINUTE + 3 ))
+        sleep 15
+        (( MINUTE = MINUTE + 15 ))
     done
 }
 
