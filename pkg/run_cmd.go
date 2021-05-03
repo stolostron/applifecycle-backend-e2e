@@ -19,6 +19,10 @@ func RunCMD(scriptName string) int {
 	// Create Cmd with options
 	envCmd := cmd.NewCmdOptions(cmdOptions, "/bin/sh", scriptName)
 
+	// cmdDone will be set to true whenever the "E2E CANARY TEST - DONE" line is outputted, meaning the script is done
+	// This is to work around the exit code returns -1 even though the script is done correctly
+	cmdDone := false
+
 	// Print STDOUT and STDERR lines streaming from Cmd
 	doneChan := make(chan struct{})
 
@@ -40,6 +44,10 @@ func RunCMD(scriptName string) int {
 				fmt.Println(line)
 
 				if strings.Contains(line, "E2E CANARY TEST -") {
+					if strings.Contains(line, "E2E CANARY TEST - DONE") {
+						cmdDone = true
+					}
+
 					// For some reason, the Stdout and Stderr channels are not closed even after the script is done.
 					// Workaround: echo "E2E CANARY TEST - ***" as the last line of the script.
 					// Stop the cmd when standard output contains such keywords
@@ -54,6 +62,7 @@ func RunCMD(scriptName string) int {
 
 					continue
 				}
+
 				fmt.Fprintln(os.Stderr, line)
 			}
 		}
@@ -66,7 +75,11 @@ func RunCMD(scriptName string) int {
 	<-doneChan
 
 	finalStatus := <-statusChan
-	fmt.Println("Script: ", scriptName, ", Runtime: ", finalStatus.Runtime, " Seconds", ", ExitCode: ", finalStatus.Exit)
+	fmt.Println("Script: ", scriptName, ", Runtime: ", finalStatus.Runtime, " Seconds", ", ExitCode: ", finalStatus.Exit, ", cmdDone: ", cmdDone)
+
+	if cmdDone {
+		return 0
+	}
 
 	return finalStatus.Exit
 }

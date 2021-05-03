@@ -92,11 +92,26 @@ waitForRes $KUBECONFIG_HUB "pods" "argocd-redis" "argocd" ""
 waitForRes $KUBECONFIG_HUB "pods" "argocd-dex-server" "argocd" ""
 waitForRes $KUBECONFIG_HUB "pods" "argocd-application-controller" "argocd" ""
 
-for pid in $(ps aux | grep 'port-forward svc\/argocd-server' | awk '{print $2}'); do kill -9 $pid; done
+echo "==== port forward argocd server ===="
+MINUTE=0
+while [ true ]; do
+    # Wait up to 3min
+    if [ $MINUTE -gt 180 ]; then
+        echo "Timeout waiting for port forwarding argocd server."
+        echo "E2E CANARY TEST - EXIT WITH ERROR"
+        exit 1
+    fi
 
-$KUBECTL_HUB -n argocd port-forward svc/argocd-server -n argocd 8080:443 > /dev/null &
+    for pid in $(ps aux | grep 'port-forward svc\/argocd-server' | awk '{print $2}'); do kill -9 $pid; done
+    $KUBECTL_HUB -n argocd port-forward svc/argocd-server -n argocd 8080:443 > /dev/null &
+    if [ $? -eq 0 ]; then
+        break
+    fi
 
-sleep 5
+    echo "* STATUS: Port forwarding argocd server failed. Retry in 10 sec"
+    sleep 10
+    (( MINUTE = MINUTE + 10 ))
+done
 
 # install argocd cli
 # ARGO_VERSION=$(curl --silent "https://api.github.com/repos/argoproj/argo-cd/releases/latest" | grep '"tag_name"' | sed -E 's/.*"([^"]+)".*/\1/')
