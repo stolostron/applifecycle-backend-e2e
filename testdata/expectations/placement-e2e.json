@@ -1,0 +1,68 @@
+[
+{
+                "test_id": "plc-001",
+                "target_cluster": "hub",
+                "desc": "should have subscription deployed",
+                "apiversion": "apps.open-cluster-management.io/v1",
+                "kind": "subscription",
+                "name": "helm-sub",
+                "namespace": "helm-sub-ns",
+                "matcher": "byname",
+                "args": {}
+        },
+{
+                "test_id": "plc-001",
+                "target_cluster": "hub",
+                "desc": "should have subscription deployed on local cluster",
+                "apiversion": "apps.open-cluster-management.io/v1",
+                "kind": "subscription",
+                "name": "helm-sub-local",
+                "namespace": "helm-sub-ns",
+                "matcher": "byname",
+                "args": {}
+        },
+{
+                "test_id": "plc-002",
+                "target_cluster": "hub",
+                "desc": "should have subscription deployed",
+                "apiversion": "apps.open-cluster-management.io/v1",
+                "kind": "subscription",
+                "name": "helm-sub",
+                "namespace": "helm-sub-ns",
+                "matcher": "byname",
+                "args": {}
+        },
+{
+                "test_id": "plc-002",
+                "target_cluster": "hub",
+                "desc": "should have subscription deployed on local cluster",
+                "apiversion": "apps.open-cluster-management.io/v1",
+                "kind": "subscription",
+                "name": "helm-sub-local",
+                "namespace": "helm-sub-ns",
+                "matcher": "byname",
+                "args": {}
+        },
+{
+                "test_id": "plc-003",
+                "target_cluster": "hub",
+                "desc": "should have subscription deployed",
+                "apiversion": "apps.open-cluster-management.io/v1",
+                "kind": "subscription",
+                "name": "helm-sub",
+                "namespace": "helm-sub-ns",
+                "matcher": "byname",
+                "args": {}
+        },
+{
+                "test_id": "plc-003",
+                "target_cluster": "hub",
+                "desc": "should have subscription deployed on local cluster",
+                "apiversion": "apps.open-cluster-management.io/v1",
+                "kind": "subscription",
+                "name": "helm-sub-local",
+                "namespace": "helm-sub-ns",
+                "matcher": "byname",
+                "args": {}
+        }
+]
