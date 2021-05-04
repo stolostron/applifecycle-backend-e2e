@@ -184,7 +184,7 @@ echo "$SPOKE_CLUSTER cluster secrets imported to the argocd namespace successful
 sleep 10
 
 echo "==== verifying the the managed cluster secret in argocd cluster list ===="
-argocd cluster list  |grep -w $SPOKE_CLUSTER 
+argocd cluster list --grpc-web |grep -w $SPOKE_CLUSTER
 if [ $? -ne 0 ]; then
     echo "Managed cluster $SPOKE_CLUSTER is NOT in the ArgoCD cluster list"
     echo "E2E CANARY TEST - EXIT WITH ERROR"
@@ -192,10 +192,10 @@ if [ $? -ne 0 ]; then
 fi
 
 echo "==== submitting a argocd application to the ACM managed cluster  ===="
-SPOKE_CLUSTER_SERVER=$(argocd cluster list  |grep -w $SPOKE_CLUSTER |awk -F' ' '{print $1}')
+SPOKE_CLUSTER_SERVER=$(argocd cluster list --grpc-web |grep -w $SPOKE_CLUSTER |awk -F' ' '{print $1}')
 
-argocd app create guestbook --repo https://github.com/argoproj/argocd-example-apps.git --path guestbook --dest-server $SPOKE_CLUSTER_SERVER --dest-namespace default
-argocd app sync guestbook
+argocd app create guestbook --repo https://github.com/argoproj/argocd-example-apps.git --path guestbook --dest-server $SPOKE_CLUSTER_SERVER --dest-namespace default --grpc-web
+argocd app sync guestbook --grpc-web
 
 waitForRes $KUBECONFIG_HUB "deployments" "guestbook-ui" "default" ""
 
