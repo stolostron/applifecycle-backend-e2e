@@ -58,7 +58,7 @@ uninstallArgocd() {
     $KUBECTL_HUB get namespace argocd
     if [ $? -eq 0 ]; then
         echo "==== UnInstalling ArgoCd server ===="
-        $KUBECTL_HUB delete -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
+        $KUBECTL_HUB delete -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/v1.8.7/manifests/install.yaml
         $KUBECTL_HUB delete namespace argocd --ignore-not-found
         sleep 5
     fi
@@ -83,7 +83,7 @@ uninstallArgocd
 
 echo "==== Installing ArgoCd server ===="
 $KUBECTL_HUB create namespace argocd
-$KUBECTL_HUB apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
+$KUBECTL_HUB apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/v1.8.7/manifests/install.yaml
 sleep 5
 
 waitForRes $KUBECONFIG_HUB "pods" "argocd-server" "argocd" ""
@@ -117,7 +117,7 @@ done
 # ARGO_VERSION=$(curl --silent "https://api.github.com/repos/argoproj/argo-cd/releases/latest" | grep '"tag_name"' | sed -E 's/.*"([^"]+)".*/\1/')
 
 # apply the fixed version v 2.0.0. The latest v2.0.1 is not working.
-ARGO_VERSION=v2.0.0
+ARGO_VERSION=v1.8.7
 LOCAL_OS=$(uname)
 
 echo "$LOCAL_OS, $ARGO_VERSION"
@@ -133,7 +133,7 @@ fi
 chmod +x /usr/local/bin/argocd
 
 # login using the cli
-ARGOCD_PWD=$($KUBECTL_HUB -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d)
+ARGOCD_PWD=$($KUBECTL_HUB get pods -n argocd -l app.kubernetes.io/name=argocd-server -o name | cut -d'/' -f 2)
 ARGOCD_HOST="localhost:8080"
 
 echo "argocd login $ARGOCD_HOST --insecure --username admin --password $ARGOCD_PWD --grpc-web"
