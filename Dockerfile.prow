@@ -6,6 +6,7 @@ RUN  yum update -y \
         && yum install openssh-clients \
         && yum install curl \
         && yum install procps \
+        && yum install -y nc \
         && yum install tar
 
 ENV USER_UID=1001 \
