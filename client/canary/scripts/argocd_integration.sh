@@ -7,6 +7,12 @@ KUBECONFIG_SPOKE="/opt/e2e/default-kubeconfigs/import-kubeconfig"
 KUBECTL_HUB="kubectl --kubeconfig $KUBECONFIG_HUB"
 KUBECTL_SPOKE="kubectl --kubeconfig $KUBECONFIG_SPOKE"
 
+# apply the fixed version v 1.8.7 for argocd
+ARGO_VERSION=v2.0.0
+LOCAL_OS=$(uname)
+
+echo "$LOCAL_OS, $ARGO_VERSION"
+
 waitForRes() {
     FOUND=1
     MINUTE=0
@@ -58,10 +64,13 @@ uninstallArgocd() {
     $KUBECTL_HUB get namespace argocd
     if [ $? -eq 0 ]; then
         echo "==== UnInstalling ArgoCd server ===="
-        $KUBECTL_HUB delete -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/v1.8.7/manifests/install.yaml
+        $KUBECTL_HUB delete -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/$ARGO_VERSION/manifests/install.yaml
         $KUBECTL_HUB delete namespace argocd --ignore-not-found
         sleep 5
     fi
+
+    for pid in $(ps aux | grep 'port_forward\.sh' | awk '{print $2}'); do kill -9 $pid; done
+    for pid in $(ps aux | grep 'port-forward svc\/argocd-server' | awk '{print $2}'); do kill -9 $pid; done
 }
 
 echo "==== Validating hub and spoke cluster access ===="
@@ -83,7 +92,7 @@ uninstallArgocd
 
 echo "==== Installing ArgoCd server ===="
 $KUBECTL_HUB create namespace argocd
-$KUBECTL_HUB apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/v1.8.7/manifests/install.yaml
+$KUBECTL_HUB apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/$ARGO_VERSION/manifests/install.yaml
 sleep 5
 
 waitForRes $KUBECONFIG_HUB "pods" "argocd-server" "argocd" ""
@@ -92,35 +101,7 @@ waitForRes $KUBECONFIG_HUB "pods" "argocd-redis" "argocd" ""
 waitForRes $KUBECONFIG_HUB "pods" "argocd-dex-server" "argocd" ""
 waitForRes $KUBECONFIG_HUB "pods" "argocd-application-controller" "argocd" ""
 
-echo "==== port forward argocd server ===="
-MINUTE=0
-while [ true ]; do
-    # Wait up to 3min
-    if [ $MINUTE -gt 180 ]; then
-        echo "Timeout waiting for port forwarding argocd server."
-        echo "E2E CANARY TEST - EXIT WITH ERROR"
-        exit 1
-    fi
-
-    for pid in $(ps aux | grep 'port-forward svc\/argocd-server' | awk '{print $2}'); do kill -9 $pid; done
-    $KUBECTL_HUB -n argocd port-forward svc/argocd-server -n argocd 8080:443 > /dev/null &
-    if [ $? -eq 0 ]; then
-        break
-    fi
-
-    echo "* STATUS: Port forwarding argocd server failed. Retry in 10 sec"
-    sleep 10
-    (( MINUTE = MINUTE + 10 ))
-done
-
-# install argocd cli
-# ARGO_VERSION=$(curl --silent "https://api.github.com/repos/argoproj/argo-cd/releases/latest" | grep '"tag_name"' | sed -E 's/.*"([^"]+)".*/\1/')
-
-# apply the fixed version v 2.0.0. The latest v2.0.1 is not working.
-ARGO_VERSION=v1.8.7
-LOCAL_OS=$(uname)
-
-echo "$LOCAL_OS, $ARGO_VERSION"
+sleep 10
 
 rm -fr /usr/local/bin/argocd
 
@@ -132,8 +113,11 @@ fi
 
 chmod +x /usr/local/bin/argocd
 
+echo "==== port forward argocd server ===="
+sh ./scripts/argocd/port_forward.sh > /dev/null &
+
 # login using the cli
-ARGOCD_PWD=$($KUBECTL_HUB get pods -n argocd -l app.kubernetes.io/name=argocd-server -o name | cut -d'/' -f 2)
+ARGOCD_PWD=$($KUBECTL_HUB -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d)
 ARGOCD_HOST="localhost:8080"
 
 echo "argocd login $ARGOCD_HOST --insecure --username admin --password $ARGOCD_PWD --grpc-web"
