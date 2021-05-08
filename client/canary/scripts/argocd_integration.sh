@@ -73,6 +73,29 @@ uninstallArgocd() {
     for pid in $(ps aux | grep 'port-forward svc\/argocd-server' | awk '{print $2}'); do kill -9 $pid; done
 }
 
+waitForCMD() {
+    eval CMD="$1"
+    eval WAIT_MSG="$2"
+
+    MINUTE=0
+    while [ true ]; do
+        # Wait up to 5min
+        if [ $MINUTE -gt 300 ]; then
+            echo "Timeout waiting for ${CMD}"
+            echo "E2E CANARY TEST - EXIT WITH ERROR"
+            exit 1
+        fi
+        echo ${CMD}
+        eval ${CMD}
+        if [ $? -eq 0 ]; then
+            break
+        fi
+        echo "* STATUS: ${WAIT_MSG}. Retry in 10 sec"
+        sleep 10
+        (( MINUTE = MINUTE + 10 ))
+    done
+}
+
 echo "==== Validating hub and spoke cluster access ===="
 $KUBECTL_HUB cluster-info
 if [ $? -ne 0 ]; then
@@ -114,30 +137,19 @@ fi
 chmod +x /usr/local/bin/argocd
 
 echo "==== port forward argocd server ===="
+$KUBECTL_HUB -n argocd port-forward svc/argocd-server -n argocd --pod-running-timeout=5m0s 8080:443 > /dev/null &
+
+sleep 10
+
 sh ./scripts/argocd/port_forward.sh > /dev/null &
 
 # login using the cli
 ARGOCD_PWD=$($KUBECTL_HUB -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d)
 ARGOCD_HOST="localhost:8080"
 
-echo "argocd login $ARGOCD_HOST --insecure --username admin --password $ARGOCD_PWD --grpc-web"
-
-MINUTE=0
-while [ true ]; do
-    # Wait up to 5min, should only take about 1-2 min
-    if [ $MINUTE -gt 300 ]; then
-        echo "Timeout waiting for argocd cli login."
-        echo "E2E CANARY TEST - EXIT WITH ERROR"
-        exit 1
-    fi
-    argocd login $ARGOCD_HOST --insecure --username admin --password $ARGOCD_PWD --grpc-web
-    if [ $? -eq 0 ]; then
-        break
-    fi
-    echo "* STATUS: ArgoCD host NOT ready. Retry in 10 sec"
-    sleep 10
-    (( MINUTE = MINUTE + 10 ))
-done
+RUN_CMD="argocd login $ARGOCD_HOST --insecure --username admin --password $ARGOCD_PWD --grpc-web"
+WAIT_MSG="ArgoCD host NOT ready"
+waitForCMD "\${RUN_CMD}" "\${WAIT_MSG}"
 
 echo "==== Enabling ArgoCd cluster collection for the managed local-cluster ===="
 SPOKE_CLUSTER=$($KUBECTL_HUB get managedclusters -l local-cluster=true -o name |head -n 1 |awk -F/ '{print $2}')
@@ -146,40 +158,29 @@ echo "SPOKE_CLUSTER: $SPOKE_CLUSTER"
 
 $KUBECTL_HUB patch klusterletaddonconfig -n $SPOKE_CLUSTER $SPOKE_CLUSTER --type merge -p '{"spec":{"applicationManager":{"argocdCluster":true}}}'
 
-MINUTE=0
-while [ true ]; do
-    # Wait up to 5min, should only take about 1-2 min
-    if [ $MINUTE -gt 300 ]; then
-        echo "Timeout waiting for the spoke cluster token being imported to the argocd Namespace."
-        echo "E2E CANARY TEST - EXIT WITH ERROR"
-        exit 1
-    fi
-    $KUBECTL_HUB get secrets -n argocd "$SPOKE_CLUSTER-cluster-secret"
-    if [ $? -eq 0 ]; then
-        break
-    fi
-    echo "* STATUS: The spoke cluster token is NOT in the argocd Namespace. Re-check in 10 sec"
-    sleep 10
-    (( MINUTE = MINUTE + 10 ))
-done
+RUN_CMD="$KUBECTL_HUB get secrets -n argocd $SPOKE_CLUSTER-cluster-secret"
+WAIT_MSG="The spoke cluster token is NOT in the argocd Namespace"
+waitForCMD "\${RUN_CMD}" "\${WAIT_MSG}"
 
 echo "$SPOKE_CLUSTER cluster secrets imported to the argocd namespace successfully."
 
 sleep 10
 
 echo "==== verifying the the managed cluster secret in argocd cluster list ===="
-argocd cluster list --grpc-web |grep -w $SPOKE_CLUSTER
-if [ $? -ne 0 ]; then
-    echo "Managed cluster $SPOKE_CLUSTER is NOT in the ArgoCD cluster list"
-    echo "E2E CANARY TEST - EXIT WITH ERROR"
-    exit 1
-fi
+RUN_CMD="argocd cluster list --grpc-web |grep -w $SPOKE_CLUSTER"
+WAIT_MSG="failed to list argocd cluster"
+waitForCMD "\${RUN_CMD}" "\${WAIT_MSG}"
 
 echo "==== submitting a argocd application to the ACM managed cluster  ===="
 SPOKE_CLUSTER_SERVER=$(argocd cluster list --grpc-web |grep -w $SPOKE_CLUSTER |awk -F' ' '{print $1}')
 
-argocd app create guestbook --repo https://github.com/argoproj/argocd-example-apps.git --path guestbook --dest-server $SPOKE_CLUSTER_SERVER --dest-namespace default --grpc-web
-argocd app sync guestbook --grpc-web
+RUN_CMD="argocd app create guestbook --repo https://github.com/argoproj/argocd-example-apps.git --path guestbook --dest-server $SPOKE_CLUSTER_SERVER --dest-namespace default --grpc-web"
+WAIT_MSG="argocd application creation failed"
+waitForCMD "\${RUN_CMD}" "\${WAIT_MSG}"
+
+RUN_CMD="argocd app sync guestbook --grpc-web"
+WAIT_MSG="failed to sync  argocd application"
+waitForCMD "\${RUN_CMD}" "\${WAIT_MSG}"
 
 waitForRes $KUBECONFIG_HUB "deployments" "guestbook-ui" "default" ""
 
