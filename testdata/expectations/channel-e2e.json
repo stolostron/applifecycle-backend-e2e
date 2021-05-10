@@ -23,17 +23,6 @@
 		"args": {}
 	},
 {
-		"test_id": "chn-002",
-		"target_cluster": "hub",
-		"desc": "should have a deployable of the helm chart on hub",
-		"apiversion": "apps.open-cluster-management.io/v1",
-		"kind": "deployable",
-		"name": "helm-gbapp-0.1.0",
-		"namespace": "ch-helm",
-		"matcher": "byname",
-		"args": {}
-	},
-{
 		"test_id": "chn-003",
 		"target_cluster": "hub",
 		"desc": "should have a channel of the object bucket on hub",
