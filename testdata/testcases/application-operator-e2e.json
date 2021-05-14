@@ -1,0 +1,9 @@
+
+[
+{
+ "test_id": "app-001",
+ "desc": "application with subscription to a helm repo",
+ "urls": ["https://raw.githubusercontent.com/open-cluster-management/multicloud-operators-application/main/examples/nginx-app.yaml"],
+ "target_cluster": "hub"
+}
+]
