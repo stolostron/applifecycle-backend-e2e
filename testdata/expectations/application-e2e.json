@@ -52,7 +52,7 @@
 		"name": "nginx",
 		"namespace": "ns-sub-1",
 		"matcher": "bylabel",
-		"args": {"app":"nginx-app-3"}
+		"args": {"app.kubernetes.io/part-of":"nginx-app-3"}
 	}
 ]
 	
