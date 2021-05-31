@@ -333,7 +333,7 @@ sleep 10
 echo "$(date)  ====  verify that the managed cluster secrets are deleted from the second argocd instance"
 for element in "${MANAGED_CLUSTERS[@]}"
 do
-   verifySecretDeleted ${element} "argocdtest"
+   verifySecretDeleted ${element} "argocdtest2"
 done
 
 verifyClusterRegistrationInGitOpsOperator
@@ -362,4 +362,5 @@ echo "$(date) uninstalled ArgoCD from argocdtest2"
 uninstallOpenshiftGitopsOperator
 echo "$(date) uninstalled openshift-gitops operator"
 
+echo "E2E CANARY TEST - DONE"
 exit 0
