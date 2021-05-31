@@ -362,4 +362,5 @@ echo "$(date) uninstalled ArgoCD from argocdtest2"
 uninstallOpenshiftGitopsOperator
 echo "$(date) uninstalled openshift-gitops operator"
 
+echo "E2E CANARY TEST - DONE"
 exit 0
