@@ -333,7 +333,7 @@ sleep 10
 echo "$(date)  ====  verify that the managed cluster secrets are deleted from the second argocd instance"
 for element in "${MANAGED_CLUSTERS[@]}"
 do
-   verifySecretDeleted ${element} "argocdtest"
+   verifySecretDeleted ${element} "argocdtest2"
 done
 
 verifyClusterRegistrationInGitOpsOperator
