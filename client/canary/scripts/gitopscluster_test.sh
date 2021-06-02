@@ -348,7 +348,6 @@ done
 $KUBECTL_HUB apply -f scripts/argocd/managedclusterset.yaml
 echo "$(date) managedclusterset deleted"
 
-
 # Uninstall the ArgoCD servers
 uninstallArgocd argocdtest1
 echo "$(date) uninstalled ArgoCD from argocdtest1"
