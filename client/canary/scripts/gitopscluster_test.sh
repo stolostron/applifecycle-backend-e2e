@@ -71,7 +71,6 @@ installArgocd() {
     waitForRes $KUBECONFIG_HUB "pods" "argocd-application-controller" ${argoNamespace} ""
 
     $KUBECTL_HUB -n ${argoNamespace} patch deployment argocd-server -p '{"spec":{"template":{"spec":{"$setElementOrder/containers":[{"name":"argocd-server"}],"containers":[{"command":["argocd-server","--insecure","--staticassets","/shared/app"],"name":"argocd-server"}]}}}}'
-    $KUBECTL_HUB -n ${argoNamespace} create route edge argocd-server --service=argocd-server --port=http --insecure-policy=Redirect
 }
 
 installGitopsOperator() {
@@ -101,6 +100,10 @@ uninstallArgocd() {
         $KUBECTL_HUB delete namespace ${argoNamespace} --ignore-not-found
         sleep 5
     fi
+
+    # stop port forwarding service if exists
+    for pid in $(ps aux | grep 'port_forward\.sh' | awk '{print $2}'); do kill -9 $pid; done
+    for pid in $(ps aux | grep 'port-forward svc\/argocd-server' | awk '{print $2}'); do kill -9 $pid; done
 }
 
 waitForCMD() {
@@ -129,9 +132,14 @@ waitForCMD() {
 verifyClusterRegistrationInArgo() {
     argoNamespace=$1
 
+    # port forward argocd server
+    $KUBECTL_HUB -n ${argoNamespace} port-forward svc/argocd-server --pod-running-timeout=5m0s 8080:443 > /dev/null &
+    sleep 10
+    sh ./scripts/argocd/port_forward.sh > /dev/null &
+
     # Log into argocd
     ARGOCD_PWD=$($KUBECTL_HUB -n ${argoNamespace} get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d)
-    ARGOCD_HOST=$($KUBECTL_HUB get route argocd-server -n ${argoNamespace} -o jsonpath='{.spec.host}')
+    ARGOCD_HOST="localhost:8080"
 
     RUN_CMD="argocd login $ARGOCD_HOST --insecure --username admin --password $ARGOCD_PWD --grpc-web"
     WAIT_MSG="ArgoCD host NOT ready"
@@ -147,7 +155,11 @@ verifyClusterRegistrationInArgo() {
         RUN_CMD="argocd cluster list --grpc-web |grep -w $element"
         WAIT_MSG="failed to list argocd cluster"
         waitForCMD "\${RUN_CMD}" "\${WAIT_MSG}"
-    done    
+    done
+
+    # stop port forwarding
+    for pid in $(ps aux | grep 'port_forward\.sh' | awk '{print $2}'); do kill -9 $pid; done
+    for pid in $(ps aux | grep 'port-forward svc\/argocd-server' | awk '{print $2}'); do kill -9 $pid; done
 }
 
 verifyClusterRegistrationInGitOpsOperator() {
@@ -247,15 +259,13 @@ fi
 # Make sure we start with no ArgoCD server
 uninstallArgocd argocdtest1
 uninstallArgocd argocdtest2
-uninstallOpenshiftGitopsOperator
 
 # Install two ArgoCD servers in namespace argocdtest1 and argocdtest2
 installArgocd argocdtest1
 echo "$(date) installed ArgoCD instance in argocdtest1"
+
 installArgocd argocdtest2
 echo "$(date) installed ArgoCD instance in argocdtest2"
-installGitopsOperator openshift-gitops
-echo "$(date) installed openshift-gitops operator in openshift-gitops"
 
 # Create managedclusterset
 $KUBECTL_HUB apply -f scripts/argocd/managedclusterset.yaml
@@ -267,7 +277,7 @@ MANAGED_CLUSTERS=( $($KUBECTL_HUB get managedclusters -o name |awk -F/ '{print $
 for element in "${MANAGED_CLUSTERS[@]}"
 do
    echo "$(date) Adding ${element} to managed cluster set clusterset1"
-   $KUBECTL_HUB label managedclusters ${element} cluster.open-cluster-management.io/clusterset=clusterset1
+   $KUBECTL_HUB label --overwrite managedclusters ${element} cluster.open-cluster-management.io/clusterset=clusterset1
 done
 
 # Create ManagedClusterSetBinding
@@ -323,21 +333,6 @@ done
 
 verifyClusterRegistrationInArgo "argocdtest2"
 
-# Change the target the default ArgoCD instance in openshift-gitops operator
-$KUBECTL_HUB -n default patch gitopscluster gitops-cluster-test -p '{"spec": {"argoServer": {"argoNamespace": "openshift-gitops"}}}' --type merge
-
-# Sleep for GitOpsCluster reconcile
-sleep 10
-
-# Verify that the managed cluster secrets are deleted from the second argocd instance
-echo "$(date)  ====  verify that the managed cluster secrets are deleted from the second argocd instance"
-for element in "${MANAGED_CLUSTERS[@]}"
-do
-   verifySecretDeleted ${element} "argocdtest2"
-done
-
-verifyClusterRegistrationInGitOpsOperator
-
 # Remove all test resources
 $KUBECTL_HUB delete -f scripts/argocd/placement.yaml
 echo "$(date) placement deleted"
@@ -347,7 +342,7 @@ echo "$(date) managedclustersetbinding deleted"
 for element in "${MANAGED_CLUSTERS[@]}"
 do
    echo "$(date) Removing ${element} from managed cluster set clusterset1"
-   $KUBECTL_HUB label managedclusters ${element} cluster.open-cluster-management.io/clusterset-
+   $KUBECTL_HUB label --overwrite managedclusters ${element} cluster.open-cluster-management.io/clusterset-
 done
 
 $KUBECTL_HUB apply -f scripts/argocd/managedclusterset.yaml
@@ -359,8 +354,6 @@ uninstallArgocd argocdtest1
 echo "$(date) uninstalled ArgoCD from argocdtest1"
 uninstallArgocd argocdtest2
 echo "$(date) uninstalled ArgoCD from argocdtest2"
-uninstallOpenshiftGitopsOperator
-echo "$(date) uninstalled openshift-gitops operator"
 
 echo "E2E CANARY TEST - DONE"
 exit 0
