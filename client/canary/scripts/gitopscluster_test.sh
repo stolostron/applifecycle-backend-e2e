@@ -210,6 +210,33 @@ verifySecretDeleted() {
 
 }
 
+verifySecretAdded() {
+    managedCluster=$1
+    namespace=$2
+
+    # Wait for the managed cluster secret to be deleted
+    MINUTE=0
+    while [ true ]; do
+        # Wait up to 2min
+        if [ $MINUTE -gt 120 ]; then
+            echo "$(date) Timeout waiting for the managed cluster secret ${managedCluster}-cluster-secret to be added into ${namespace}"
+            echo "E2E CANARY TEST - EXIT WITH ERROR"
+            exit 1
+        fi
+        $KUBECTL_HUB get secret ${managedCluster}-cluster-secret -n ${namespace}
+        if [ $? -eq 0 ]; then
+            break
+        fi
+
+        echo "$(date) waiting for the managed cluster secret ${managedCluster}-cluster-secret to be added into ${namespace}"
+
+        sleep 10
+        (( MINUTE = MINUTE + 10 ))
+    done
+
+}
+
+
 uninstallOpenshiftGitopsOperator() {
     echo "$(date) ==== Uninstalling openshift-gitops operator ===="
 
@@ -316,7 +343,12 @@ echo "$(date) gitopscluster created"
 # Sleep for GitOpsCluster reconcile
 sleep 10
 
-verifyClusterRegistrationInArgo "argocdtest1"
+# Verify that the managed cluster secrets are added into the first argocd instance
+echo "$(date)  ====  verify that the managed cluster secrets are added into the first argocd instance"
+for element in "${MANAGED_CLUSTERS[@]}"
+do
+   verifySecretAdded ${element} "argocdtest1"
+done
 
 # Change the target the second ArgoCD instance in argocdtest2
 $KUBECTL_HUB -n default patch gitopscluster gitops-cluster-test -p '{"spec": {"argoServer": {"argoNamespace": "argocdtest2"}}}' --type merge
@@ -331,7 +363,12 @@ do
    verifySecretDeleted ${element} "argocdtest1"
 done
 
-verifyClusterRegistrationInArgo "argocdtest2"
+# Verify that the managed cluster secrets are added into the second argocd instance
+echo "$(date)  ====  verify that the managed cluster secrets are added into the second argocd instance"
+for element in "${MANAGED_CLUSTERS[@]}"
+do
+   verifySecretAdded ${element} "argocdtest2"
+done
 
 # Remove all test resources
 $KUBECTL_HUB delete -f scripts/argocd/placement.yaml
