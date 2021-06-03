@@ -299,7 +299,7 @@ $KUBECTL_HUB apply -f scripts/argocd/managedclusterset.yaml
 echo "$(date) managedclusterset created"
 
 # Add all managed clusters to managedclusterset clusterset1
-MANAGED_CLUSTERS=( $($KUBECTL_HUB get managedclusters -o name |awk -F/ '{print $2}') )
+MANAGED_CLUSTERS=( $($KUBECTL_HUB get managedclusters -l local-cluster=true -o name |awk -F/ '{print $2}') )
 
 for element in "${MANAGED_CLUSTERS[@]}"
 do
