@@ -54,11 +54,11 @@ log level (default 1)
     # with your own test cases defined at testdata
     applifecycle-backend-e2e -cfg cluster_config -data testdata &
     ```
-    **Note: your own `testdata` directory should have the same structure as the default one.**
+    **Note: Your own `testdata` directory should have the same structure as the default one.**
     
 
 
-    **Note: the above is how the operator e2e test runs the test server**
+    **Note: The above is how the operator e2e test runs the test server**
  [Subscription e2e test](https://github.com/open-cluster-management/multicloud-operators-subscription/blob/master/build/run-e2e-tests.sh)
  
 - Query test server for running/checking tests
