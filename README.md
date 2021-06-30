@@ -163,9 +163,9 @@ log level (default 1)
 etc.
 ```
 
-## Test the output and put your case into test server
+## Test the output and put your test case into the test server
 
-You can test your new case by doing:(assuming you install the server)
+You can test your new test case by doing:(assuming you install the server)
 1. start the server with your new test case locations
 
       `applifecycle-backend-e2e -cfg <your kubeconfig> -data default-e2e-test-data`
