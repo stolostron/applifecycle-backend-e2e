@@ -120,7 +120,7 @@ func (s *Processor) CasesRunnerHandler(w http.ResponseWriter, r *http.Request) {
 		time.Sleep(10 * time.Second)
 	}()
 
-	tr, err = s.Check(testID, s.timeout, s.expectations)
+	tr, err = s.Check(testID, s.timeout, s.expectations, applied)
 	if err != nil {
 		err = gerr.Wrap(err, "failed to run checker")
 	}
