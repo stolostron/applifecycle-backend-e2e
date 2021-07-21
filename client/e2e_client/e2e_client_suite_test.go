@@ -5,10 +5,12 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"path/filepath"
 	"testing"
 	"time"
 
 	. "github.com/onsi/ginkgo"
+	"github.com/onsi/ginkgo/reporters"
 	. "github.com/onsi/gomega"
 	"github.com/onsi/gomega/gexec"
 	clt "github.com/open-cluster-management/applifecycle-backend-e2e/client"
@@ -26,6 +28,8 @@ const (
 	testTimeout    = 90
 	pullInterval   = 3 * time.Second
 	evnKubeConfig  = "KUBE_DIR"
+	JUnitDir       = "./results"
+	JUnitName      = "app-backend-e2e.xml"
 )
 
 var (
@@ -36,9 +40,11 @@ var (
 func TestAppLifecycle_API_E2E(t *testing.T) {
 	RegisterFailHandler(Fail)
 
+	resultDest := filepath.Join(JUnitDir, JUnitName)
+
 	RunSpecsWithDefaultAndCustomReporters(t,
 		"Applifecycle-API-Test",
-		[]Reporter{printer.NewlineReporter{}})
+		[]Reporter{printer.NewlineReporter{}, reporters.NewJUnitReporter(resultDest)})
 }
 
 var DefaultRunner = clt.NewRunner(defaultAddr, "/run")

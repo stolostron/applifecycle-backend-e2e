@@ -31,7 +31,7 @@ var _ = Describe("test byName matcher", func() {
 			APIVersion: "v1",
 			Kind:       "ConfigMap",
 			Name:       key.Name,
-			Namepsace:  key.Namespace,
+			Namespace:  key.Namespace,
 			Matcher:    "byname",
 		}
 
@@ -57,7 +57,7 @@ var _ = Describe("test byName matcher", func() {
 			APIVersion: "v1",
 			Kind:       "ConfigMap",
 			Name:       key.Name + "a",
-			Namepsace:  key.Namespace,
+			Namespace:  key.Namespace,
 			Matcher:    "byname",
 		}
 
@@ -89,7 +89,7 @@ var _ = Describe("test ByAnnotation matcher", func() {
 			APIVersion: "v1",
 			Kind:       "ConfigMap",
 			Name:       key.Name + "a",
-			Namepsace:  key.Namespace,
+			Namespace:  key.Namespace,
 			Matcher:    "byannotation",
 			Args:       map[string]string{"configmap-test": "byAnnotation"},
 		}
@@ -120,7 +120,7 @@ var _ = Describe("test ByAnnotation matcher", func() {
 			APIVersion: "v1",
 			Kind:       "ConfigMap",
 			Name:       key.Name + "a",
-			Namepsace:  key.Namespace,
+			Namespace:  key.Namespace,
 			Matcher:    "byannotation",
 			Args:       map[string]string{"a-configmap-test": "byAnnotation"},
 		}

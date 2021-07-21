@@ -80,14 +80,14 @@ type Expectation struct {
 	APIVersion    string            `json:"apiversion"`
 	Kind          string            `json:"kind"`
 	Name          string            `json:"name"`
-	Namepsace     string            `json:"namespace"`
+	Namespace     string            `json:"namespace"`
 	Matcher       string            `json:"matcher"`
 	Args          map[string]string `json:"args"`
 }
 
 func (e *Expectation) String() string {
 	return fmt.Sprintf("id %s, desc %s, on cluster %s, kind %s, resource %s/%s\n",
-		e.TestID, e.Desc, e.TargetCluster, e.Kind, e.Namepsace, e.Name)
+		e.TestID, e.Desc, e.TargetCluster, e.Kind, e.Namespace, e.Name)
 }
 
 type Expectations []Expectation
@@ -116,11 +116,11 @@ func (e Expectation) GetInstance() *unstructured.Unstructured {
 	ins.SetAPIVersion(e.APIVersion)
 	ins.SetKind(e.Kind)
 	ins.SetName(e.Name)
-	if e.Namepsace == "" {
-		e.Namepsace = "default"
+	if e.Namespace == "" {
+		e.Namespace = "default"
 	}
 
-	ins.SetNamespace(e.Namepsace)
+	ins.SetNamespace(e.Namespace)
 
 	return ins
 }
@@ -134,11 +134,11 @@ func (e Expectation) GetInstanceList() *unstructured.UnstructuredList {
 }
 
 func (e Expectation) GetKey() types.NamespacedName {
-	if e.Namepsace == "" {
-		e.Namepsace = "default"
+	if e.Namespace == "" {
+		e.Namespace = "default"
 	}
 
-	return types.NamespacedName{Name: e.Name, Namespace: e.Namepsace}
+	return types.NamespacedName{Name: e.Name, Namespace: e.Namespace}
 }
 
 func (e Expectation) IsEqual(b Expectation) bool {
@@ -154,7 +154,7 @@ func (e Expectation) IsEqual(b Expectation) bool {
 		return false
 	}
 
-	if e.Namepsace != b.Namepsace {
+	if e.Namespace != b.Namespace {
 		return false
 	}
 

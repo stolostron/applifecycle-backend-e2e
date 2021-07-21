@@ -53,7 +53,7 @@ func (b ByName) Match(clt client.Client, ep Expectation, logger logr.Logger) err
 	key := ep.GetKey()
 
 	if err := clt.Get(context.TODO(), key, ins); err != nil {
-		return gerr.Wrapf(err, "failed to get instance %s/%s of kind %s", ep.Namepsace, ep.Name, ep.Kind)
+		return gerr.Wrapf(err, "failed to get instance %s/%s of kind %s", ep.Namespace, ep.Name, ep.Kind)
 	}
 
 	logger.Info(fmt.Sprintf("found %s of kind %s", key.String(), ep.Kind))
@@ -108,7 +108,7 @@ func (b ByAnnotationCount) Match(clt client.Client, ep Expectation, logger logr.
 	insList := ep.GetInstanceList()
 	key := ep.GetKey()
 
-	if err := clt.List(context.TODO(), insList, &client.ListOptions{Namespace: ep.Namepsace}); err != nil {
+	if err := clt.List(context.TODO(), insList, &client.ListOptions{Namespace: ep.Namespace}); err != nil {
 		return gerr.Wrapf(err, "failed to get instanceList %s of kind %s", key.String(), ep.Kind)
 	}
 
