@@ -48,10 +48,10 @@ log level (default 1)
     ```go
     go get github.com/open-cluster-management/applifecycle-backend-e2e@v0.1.6
 
-    # with default test cases
+    # With default test cases
     applifecycle-backend-e2e -cfg cluster_config &
     
-    # with your own test cases defined at testdata
+    # With your own test cases defined in testdata
     applifecycle-backend-e2e -cfg cluster_config -data testdata &
     ```
     **Note: Your own `testdata` directory should have the same structure as the default one.**
