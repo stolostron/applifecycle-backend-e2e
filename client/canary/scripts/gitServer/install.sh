@@ -98,7 +98,7 @@ echo "$pod"
 DESC_POD=`$KUBECTL_CMD describe pod $GOGS_POD_NAME`
 echo "$DESC_POD"
 
-sleep 10
+sleep 60
 
 echo "Adding testadmin user in Gogs"
 # Run script in Gogs container to add Git admin user
@@ -130,9 +130,9 @@ if [ ${RESPONSE} -eq 500 ] || [ ${RESPONSE} -eq 501 ] || [ ${RESPONSE} -eq 502 ]
     $KUBECTL_CMD logs $GOGS_POD_NAME -n default
     echo
 
-    sleep 60
+    sleep 300
 
-    echo "trying to create testrepo again after 1 minute sleep"
+    echo "trying to create testrepo again after 5 minute sleep"
     RESPONSE2=$(curl -u testadmin:testadmin -X POST -H "content-type: application/json" -d '{"name": "testrepo", "description": "test repo", "private": false}' --write-out %{http_code} --silent --output /dev/null https://${GIT_HOSTNAME}/api/v1/admin/users/testadmin/repos --insecure)
     if [ $? -ne 0 ]; then
         echo "failed to create testrepo"
