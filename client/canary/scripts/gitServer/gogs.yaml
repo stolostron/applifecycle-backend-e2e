@@ -102,6 +102,7 @@ spec:
         - name: gogs-config-volume
           configMap:
             name: gogs-config
+            defaultMode: 0777
         - name: admin-user-add-script-volume
           configMap:
             name: gogs-admin-user
