@@ -14,6 +14,7 @@ var _ = Describe("e2e-server", func() {
 		Expect(ret).To(Equal(0))
 
 		ret = pkg.RunCMD("./scripts/gitServer/uninstall.sh")*/
+		// disabled temprarily
 		ret := 0
 		Expect(ret).To(Equal(0))
 	})
