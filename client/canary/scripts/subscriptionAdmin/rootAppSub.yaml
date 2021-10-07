@@ -1,0 +1,32 @@
+apiVersion: apps.open-cluster-management.io/v1
+kind: Channel
+metadata:
+  name: rootchannel
+  namespace: rootsub
+spec:
+  type: Git
+  pathname: https://github.com/rokej/testrepo.git
+---
+apiVersion: apps.open-cluster-management.io/v1
+kind: Subscription
+metadata:
+  name: root-level-sub
+  namespace: rootsub
+  annotations:
+    apps.open-cluster-management.io/git-path: secondsub
+    apps.open-cluster-management.io/git-branch: test-branch
+spec:
+  channel: rootsub/rootchannel
+  placement:
+    placementRef:
+      name: dev-cluster-root
+---
+apiVersion: apps.open-cluster-management.io/v1
+kind: PlacementRule
+metadata:
+  name: dev-cluster-root
+  namespace: rootsub
+spec:
+  clusterSelector:
+    matchLabels:
+      name: "local-cluster"
