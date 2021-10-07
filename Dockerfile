@@ -1,6 +1,6 @@
 # Start from a Debian image with the latest version of Go installed
 # and a workspace (GOPATH) configured at /go.
-FROM  registry.ci.openshift.org/open-cluster-management/builder:go1.16-linux-amd64
+FROM  registry.ci.openshift.org/open-cluster-management/builder:go1.16-linux
 
 RUN  yum update -y \
         && yum install openssh-clients \
@@ -16,7 +16,7 @@ ENV USER_UID=1001 \
 
 COPY COMPONENT_VERSION /COMPONENT_VERSION
 
-RUN export COMPONENT_VERSION=$(cat /COMPONENT_VERSION); git clone -b release-${COMPONENT_VERSION} --single-branch https://github.com/open-cluster-management/applifecycle-backend-e2e.git /opt/e2e
+RUN export VERSION=$(cat /COMPONENT_VERSION); export COMPONENT_VERSION=${VERSION%.0}; git clone -b release-${COMPONENT_VERSION} --single-branch https://github.com/open-cluster-management/applifecycle-backend-e2e.git /opt/e2e
 
 WORKDIR /opt/e2e/client/canary
 
