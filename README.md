@@ -43,7 +43,7 @@ log level (default 1)
 
 - Run test server
 
-    To run the test server(at background), you can:
+    To run the test server(at background), you can: 
 
     ```go
     go get github.com/open-cluster-management/applifecycle-backend-e2e@v0.1.6
