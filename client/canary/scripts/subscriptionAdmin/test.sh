@@ -51,6 +51,16 @@ while [ ${FOUND} -eq 1 ]; do
     # Wait up to 5min
     if [ $SECONDS -gt 300 ]; then
         echo "Timeout waiting for configmap perf-configmap in multins namespace"
+
+        CLUSTERROLEBINDING=`$KUBECTL_CMD get clusterrolebinding open-cluster-management:subscription-admin -o yaml`
+        echo "$CLUSTERROLEBINDING"
+
+        ROOT_APPSUB=`$KUBECTL_CMD get appsub root-level-sub -n rootsub -o yaml`
+        echo "$ROOT_APPSUB"
+
+        SECOND_APPSUB=`$KUBECTL_CMD get appsub second-level-sub -n secondsub -o yaml`
+        echo "$SECOND_APPSUB"
+
         echo "E2E CANARY TEST - EXIT WITH ERROR"
         exit 1
     fi
