@@ -1,33 +1,27 @@
 
 [
 {
-  "test_id": "sub-001",
-  "desc": "subscription standalone deploy a namespace type with a configmap",
-  "urls": ["https://raw.githubusercontent.com/ianzhang366/acm-applifecycle-samples/e2e/e2e-test-simple/namespace_channel_e2e.yaml"],
-  "target_cluster": "hub"
-},
-{
   "test_id": "sub-002",
   "desc": "subscription standalone deploy a helm type with a guestbook",
-  "urls": ["https://raw.githubusercontent.com/ianzhang366/acm-applifecycle-samples/e2e/helm-ops/local-guestbook-helm-sub.yaml"],
+  "urls": ["https://raw.githubusercontent.com/philipwu08/acm-applifecycle-samples/master/subs/local-guestbook-helm-sub.yaml"],
   "target_cluster": "hub"
 },
 {
   "test_id": "sub-003",
   "desc": "subscribe to a release tag of Git repo",
-  "urls": ["https://raw.githubusercontent.com/stolostron/multicloud-operators-subscription/main/examples/e2e_example/git-tag-subscription-e2e.yaml"],
+  "urls": ["https://raw.githubusercontent.com/philipwu08/acm-applifecycle-samples/master/subs/git-tag-subscription-e2e.yaml"],
   "target_cluster": "hub"
 },
 {
   "test_id": "sub-004",
   "desc": "subscribe to a commit of Git repo",
-  "urls": ["https://raw.githubusercontent.com/stolostron/multicloud-operators-subscription/main/examples/e2e_example/git-commit-subscription-e2e.yaml"],
+  "urls": ["https://raw.githubusercontent.com/philipwu08/acm-applifecycle-samples/master/subs/git-commit-subscription-e2e.yaml"],
   "target_cluster": "hub"
 },
 {
   "test_id": "sub-005",
   "desc": "standalone subscription to Git repo with a nested subscription",
-  "urls": ["https://raw.githubusercontent.com/stolostron/multicloud-operators-subscription/main/examples/e2e_example/git-nested-subscription-e2e.yaml"],
+  "urls": ["https://raw.githubusercontent.com/philipwu08/acm-applifecycle-samples/master/subs/git-nested-subscription-e2e.yaml"],
   "target_cluster": "hub"
 }
 ]

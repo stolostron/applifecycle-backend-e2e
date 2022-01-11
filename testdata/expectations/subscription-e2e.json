@@ -1,88 +1,11 @@
 [
 {
-		"test_id": "sub-001",
-		"target_cluster": "hub",
-		"desc": "should have a secret on hub",
-		"apiversion": "v1",
-		"kind": "secret",
-		"name": "dev-test",
-		"namespace": "ch-sub-ns",
-		"matcher": "byname",
-		"args": {}
-	},
-{
-		"test_id": "sub-001",
-		"target_cluster": "hub",
-		"desc": "should have a deployable on hub",
-		"apiversion": "apps.open-cluster-management.io/v1",
-		"kind": "deployable",
-		"name": "payload-cfg-namespace-channel",
-		"namespace": "ch-sub-ns",
-		"matcher": "byname",
-		"args": {}
-	},
-{
-		"test_id": "sub-001",
-		"target_cluster": "hub",
-		"desc": "should have a channel on hub",
-		"apiversion": "apps.open-cluster-management.io/v1",
-		"kind": "channel",
-		"name": "ns",
-		"namespace": "ch-sub-ns",
-		"matcher": "byname",
-		"args": {}
-	},
-{
-		"test_id": "sub-001",
-		"target_cluster": "hub",
-		"desc": "should have subscription",
-		"apiversion": "apps.open-cluster-management.io/v1",
-		"kind": "subscription",
-		"name": "ns-sub",
-		"namespace": "ns-sub-ns",
-		"matcher": "byname",
-		"args": {}
-	},
-{
-		"test_id": "sub-001",
-		"target_cluster": "hub",
-		"desc": "should have a duplicate secret in subscription namespace",
-		"apiversion": "v1",
-		"kind": "secret",
-		"name": "dev-test",
-		"namespace": "ns-sub-ns",
-		"matcher": "byname",
-		"args": {}
-	},
-{
-		"test_id": "sub-001",
-		"target_cluster": "hub",
-		"desc": "should have a configmap in subscription namespace",
-		"apiversion": "v1",
-		"kind": "configmap",
-		"name": "cfg-from-ch-qa",
-		"namespace": "ns-sub-ns",
-		"matcher": "byname",
-		"args": {}
-	},
-{
 		"test_id": "sub-002",
 		"target_cluster": "hub",
 		"desc": "should have subscription deployed",
 		"apiversion": "apps.open-cluster-management.io/v1",
 		"kind": "subscription",
 		"name": "local-sub-test",
-		"namespace": "helm-local",
-		"matcher": "byname",
-		"args": {}
-	},
-{
-		"test_id": "sub-002",
-		"target_cluster": "hub",
-		"desc": "should have deployable",
-		"apiversion": "apps.open-cluster-management.io/v1",
-		"kind": "deployable",
-		"name": "sample-guestbook",
 		"namespace": "helm-local",
 		"matcher": "byname",
 		"args": {}

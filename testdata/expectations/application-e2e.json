@@ -13,17 +13,6 @@
 {
 		"test_id": "app-001",
 		"target_cluster": "hub",
-		"desc": "should have a deployable on hub",
-		"apiversion": "apps.open-cluster-management.io/v1",
-		"kind": "deployable",
-		"name": "example-configmap",
-		"namespace": "ns-sub-1",
-		"matcher": "byname",
-		"args": {}
-	},
-{
-		"test_id": "app-001",
-		"target_cluster": "hub",
 		"desc": "should have a channel on hub",
 		"apiversion": "apps.open-cluster-management.io/v1",
 		"kind": "channel",

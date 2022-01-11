@@ -250,6 +250,6 @@
                 "name": "guestbook",
                 "namespace": "helmrelease-git-test",
                 "matcher": "bygeneration",
-                "args": {"generation":"1"}
+                "args": {"generation":"2"}
         }
 ]

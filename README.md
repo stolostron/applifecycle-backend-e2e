@@ -296,12 +296,8 @@ default-e2e-test-data
 
 # Progress
 This repo is set up for testing the following operators:
-- [Application](https://github.com/stolostron/multicloud-operators-application)
 - [Channel](https://github.com/stolostron/multicloud-operators-channel)
-- [Deployable](https://github.com/stolostron/multicloud-operators-deployable)
-- [Placementrule](https://github.com/stolostron/multicloud-operators-placementrule)
 - [Subscription](https://github.com/stolostron/multicloud-operators-subscription)
-- [Subscription-release](https://github.com/stolostron/multicloud-operators-subscription-release)
 - [Canary integration](https://github.com/stolostron/canary-scripts)
 
 
@@ -310,6 +306,4 @@ Initial Set up:
 - [x] Channel
 - [x] Subscription
 - [x] Subscription-release
-- [ ] Application
-- [ ] Deployable
-- [ ] Placementrule
+- [x] Placementrule

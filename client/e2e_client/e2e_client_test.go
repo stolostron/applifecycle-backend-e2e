@@ -9,9 +9,6 @@ var _ = Describe("helmrelease-test", func() {
 	It("RHACM4K-2346", func() {
 		Eventually(func() error { return DefaultRunner.Run("RHACM4K-2346") }, 5*pullInterval, pullInterval).Should(Succeed())
 	})
-	It("RHACM4K-1680", func() {
-		Eventually(func() error { return DefaultRunner.Run("RHACM4K-1680") }, 5*pullInterval, pullInterval).Should(Succeed())
-	})
 	It("RHACM4K-1701", func() {
 		Eventually(func() error { return DefaultRunner.Run("RHACM4K-1701") }, 5*pullInterval, pullInterval).Should(Succeed())
 	})
@@ -62,9 +59,6 @@ var _ = Describe("channel-test", func() {
 })
 
 var _ = Describe("subscription-test", func() {
-	It("sub-001", func() {
-		Eventually(func() error { return DefaultRunner.Run("sub-001") }, 5*pullInterval, pullInterval).Should(Succeed())
-	})
 	It("sub-002", func() {
 		Eventually(func() error { return DefaultRunner.Run("sub-002") }, 5*pullInterval, pullInterval).Should(Succeed())
 	})
