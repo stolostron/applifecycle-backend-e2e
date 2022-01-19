@@ -5,10 +5,8 @@ import (
 	"io/ioutil"
 	"strings"
 
-	chnapis "github.com/open-cluster-management/multicloud-operators-channel/pkg/apis"
-	dplapis "github.com/open-cluster-management/multicloud-operators-deployable/pkg/apis"
-	plrapis "github.com/open-cluster-management/multicloud-operators-placementrule/pkg/apis"
-	subapis "github.com/open-cluster-management/multicloud-operators-subscription/pkg/apis"
+	chnapis "open-cluster-management.io/multicloud-operators-channel/pkg/apis"
+	subapis "open-cluster-management.io/multicloud-operators-subscription/pkg/apis"
 
 	"k8s.io/client-go/kubernetes/scheme"
 	"k8s.io/client-go/tools/clientcmd"
@@ -37,9 +35,7 @@ func LoadKubeConfigs(dir string) (KubeConfigs, error) {
 		return KubeConfigs{}, err
 	}
 
-	dplapis.AddToScheme(scheme.Scheme)
 	chnapis.AddToScheme(scheme.Scheme)
-	plrapis.AddToScheme(scheme.Scheme)
 	subapis.AddToScheme(scheme.Scheme)
 
 	out := KubeConfigs{}

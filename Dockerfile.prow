@@ -15,7 +15,7 @@ ENV USER_UID=1001 \
 
 COPY COMPONENT_VERSION /COMPONENT_VERSION
 
-RUN export VERSION=$(cat /COMPONENT_VERSION); export COMPONENT_VERSION=${VERSION%.0}; git clone -b release-${COMPONENT_VERSION} --single-branch https://github.com/open-cluster-management/applifecycle-backend-e2e.git /opt/e2e
+RUN export VERSION=$(cat /COMPONENT_VERSION); export COMPONENT_VERSION=${VERSION%.0}; git clone -b release-${COMPONENT_VERSION} --single-branch https://github.com/stolostron/applifecycle-backend-e2e.git /opt/e2e
 
 WORKDIR /opt/e2e/client/canary
 

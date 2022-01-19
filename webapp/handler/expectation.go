@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/open-cluster-management/applifecycle-backend-e2e/pkg"
+	"github.com/stolostron/applifecycle-backend-e2e/pkg"
 )
 
 func (s *Processor) dispatchExpectation(testID string, exps pkg.Expectations) (*TResponse, error) {
