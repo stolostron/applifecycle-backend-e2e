@@ -13,8 +13,8 @@ import (
 	"github.com/onsi/ginkgo/reporters"
 	. "github.com/onsi/gomega"
 	"github.com/onsi/gomega/gexec"
-	clt "github.com/open-cluster-management/applifecycle-backend-e2e/client"
-	"github.com/open-cluster-management/applifecycle-backend-e2e/webapp/server"
+	clt "github.com/stolostron/applifecycle-backend-e2e/client"
+	"github.com/stolostron/applifecycle-backend-e2e/webapp/server"
 	"sigs.k8s.io/controller-runtime/pkg/envtest/printer"
 )
 

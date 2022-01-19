@@ -6,8 +6,8 @@ import (
 	"time"
 
 	"github.com/go-logr/logr"
-	"github.com/open-cluster-management/applifecycle-backend-e2e/pkg"
-	"github.com/open-cluster-management/applifecycle-backend-e2e/webapp/storage"
+	"github.com/stolostron/applifecycle-backend-e2e/pkg"
+	"github.com/stolostron/applifecycle-backend-e2e/webapp/storage"
 	gerr "github.com/pkg/errors"
 )
 
