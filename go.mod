@@ -1,4 +1,4 @@
-module github.com/open-cluster-management/applifecycle-backend-e2e
+module github.com/stolostron/applifecycle-backend-e2e
 
 go 1.16
 
@@ -21,4 +21,10 @@ require (
 	sigs.k8s.io/controller-runtime v0.6.3
 )
 
-replace k8s.io/client-go => k8s.io/client-go v0.21.3
+replace (
+	github.com/open-cluster-management/multicloud-operators-channel => github.com/stolostron/multicloud-operators-channel v1.2.2-2-20201130-37b47
+	github.com/open-cluster-management/multicloud-operators-deployable => github.com/stolostron/multicloud-operators-deployable v1.2.2-2-20201130-7bc3c
+	github.com/open-cluster-management/multicloud-operators-placementrule => github.com/stolostron/multicloud-operators-placementrule v1.2.2-2-20201130-98cfd
+	github.com/open-cluster-management/multicloud-operators-subscription => github.com/stolostron/multicloud-operators-subscription v1.2.2-2-20201130-59f96
+	k8s.io/client-go => k8s.io/client-go v0.21.3
+)
