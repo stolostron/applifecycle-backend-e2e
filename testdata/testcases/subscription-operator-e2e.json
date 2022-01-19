@@ -15,19 +15,19 @@
 {
   "test_id": "sub-003",
   "desc": "subscribe to a release tag of Git repo",
-  "urls": ["https://raw.githubusercontent.com/open-cluster-management/multicloud-operators-subscription/main/examples/e2e_example/git-tag-subscription-e2e.yaml"],
+  "urls": ["https://raw.githubusercontent.com/stolostron/multicloud-operators-subscription/main/examples/e2e_example/git-tag-subscription-e2e.yaml"],
   "target_cluster": "hub"
 },
 {
   "test_id": "sub-004",
   "desc": "subscribe to a commit of Git repo",
-  "urls": ["https://raw.githubusercontent.com/open-cluster-management/multicloud-operators-subscription/main/examples/e2e_example/git-commit-subscription-e2e.yaml"],
+  "urls": ["https://raw.githubusercontent.com/stolostron/multicloud-operators-subscription/main/examples/e2e_example/git-commit-subscription-e2e.yaml"],
   "target_cluster": "hub"
 },
 {
   "test_id": "sub-005",
   "desc": "standalone subscription to Git repo with a nested subscription",
-  "urls": ["https://raw.githubusercontent.com/open-cluster-management/multicloud-operators-subscription/main/examples/e2e_example/git-nested-subscription-e2e.yaml"],
+  "urls": ["https://raw.githubusercontent.com/stolostron/multicloud-operators-subscription/main/examples/e2e_example/git-nested-subscription-e2e.yaml"],
   "target_cluster": "hub"
 }
 ]

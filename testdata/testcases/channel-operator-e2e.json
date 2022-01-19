@@ -2,28 +2,28 @@
 {
   "test_id": "chn-001",
   "desc": "git channel test",
-  "urls": ["https://raw.githubusercontent.com/open-cluster-management/multicloud-operators-channel/main/examples/channel-alone/github_channel_e2e.yaml"],
+  "urls": ["https://raw.githubusercontent.com/stolostron/multicloud-operators-channel/main/examples/channel-alone/github_channel_e2e.yaml"],
   "target_cluster": "hub"
 },
 
 {
   "test_id": "chn-002",
   "desc": "helm channel test",
-  "urls": ["https://raw.githubusercontent.com/open-cluster-management/multicloud-operators-channel/main/examples/channel-alone/helmchart_channel_e2e.yaml"],
+  "urls": ["https://raw.githubusercontent.com/stolostron/multicloud-operators-channel/main/examples/channel-alone/helmchart_channel_e2e.yaml"],
   "target_cluster": "hub"
 },
 
 {
   "test_id": "chn-003",
   "desc": "object bucket channel test",
-  "urls": ["https://raw.githubusercontent.com/open-cluster-management/multicloud-operators-channel/main/examples/channel-alone/objectstore_channel_e2e.yaml"],
+  "urls": ["https://raw.githubusercontent.com/stolostron/multicloud-operators-channel/main/examples/channel-alone/objectstore_channel_e2e.yaml"],
   "target_cluster": "hub"
 },
 
 {
   "test_id": "chn-004",
   "desc": "namespace channel test",
-  "urls": ["https://raw.githubusercontent.com/open-cluster-management/multicloud-operators-channel/main/examples/channel-alone/namepsace_channel_e2e.yaml"],
+  "urls": ["https://raw.githubusercontent.com/stolostron/multicloud-operators-channel/main/examples/channel-alone/namepsace_channel_e2e.yaml"],
   "target_cluster": "hub"
 }
 ]
