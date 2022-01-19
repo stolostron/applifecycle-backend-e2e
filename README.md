@@ -46,7 +46,7 @@ log level (default 1)
     To run the test server(at background), you can: 
 
     ```go
-    go get github.com/open-cluster-management/applifecycle-backend-e2e@v0.1.6
+    go get github.com/stolostron/applifecycle-backend-e2e@v0.1.6
 
     # With default test cases 
     applifecycle-backend-e2e -cfg cluster_config &
@@ -59,7 +59,7 @@ log level (default 1)
 
 
     **Note: The above is how the operator e2e test runs the test server**
- [Subscription e2e test](https://github.com/open-cluster-management/multicloud-operators-subscription/blob/master/build/run-e2e-tests.sh)
+ [Subscription e2e test](https://github.com/stolostron/multicloud-operators-subscription/blob/master/build/run-e2e-tests.sh)
  
 - Query test server for running/checking tests
 
@@ -127,7 +127,7 @@ log level (default 1)
 {
   "test_id": "release-001",
   "desc": "helmrelease install test: guestbook deploy",
-  "urls": ["https://raw.githubusercontent.com/open-cluster-management/multicloud-operators-subscription-release/e2e-test-setup/examples/test-guestbook010.yaml"],
+  "urls": ["https://raw.githubusercontent.com/stolostron/multicloud-operators-subscription-release/e2e-test-setup/examples/test-guestbook010.yaml"],
   "target_cluster": "hub"
 }
 ]
@@ -181,7 +181,7 @@ You can test your new test case by doing:(assuming you install the server)
 4. add your test case to the test server e2e-test suite, so travis of the test server can run it for you
     just add another entry to the following:
     
-    https://github.com/open-cluster-management/applifecycle-backend-e2e/blob/main/client/e2e_client/e2e_client_test.go
+    https://github.com/stolostron/applifecycle-backend-e2e/blob/main/client/e2e_client/e2e_client_test.go
 
 5. PR your changes, after the PR merge, you can tag it  with semVer syntac(eg, `v0.1.x`), which will give us better dependency control when use your test cases
 
@@ -195,7 +195,7 @@ Once your test case is tagged, you can point to the specific tag in a repo and c
 # Leverage the new test case in an operator
 1. in our operator point to the new test server tag, by modify the `run-e2e-tests.sh`
     
-    [run-e2e-tests.sh](https://github.com/open-cluster-management/multicloud-operators-subscription/blob/master/build/run-e2e-tests.sh#L112)
+    [run-e2e-tests.sh](https://github.com/stolostron/multicloud-operators-subscription/blob/master/build/run-e2e-tests.sh#L112)
 
 2. adding the new test case id to the `testIDs` array
 
@@ -203,7 +203,7 @@ Once your test case is tagged, you can point to the specific tag in a repo and c
     
     for example:
 
-    https://github.com/open-cluster-management/multicloud-operators-subscription-release/blob/master/e2e/e2e_test.go
+    https://github.com/stolostron/multicloud-operators-subscription-release/blob/master/e2e/e2e_test.go
 
     ```go
     func TestE2ESuite(t *testing.T) {
@@ -231,13 +231,13 @@ Once your test case is tagged, you can point to the specific tag in a repo and c
 ## Canary integeration overview:
 - entry point: the canary env give us an entry point at:
 
-    https://github.com/open-cluster-management/canary-scripts/tree/2.2-integration/squad-tests
+    https://github.com/stolostron/canary-scripts/tree/2.2-integration/squad-tests
 
     As you can see per squad per folder, in the folder, there's `run_test.sh`, which will run a given test image via `docker run` command.
 
     For our team, the `run_test.sh` is defined as the following,
 
-    https://github.com/open-cluster-management/applifecycle-backend-e2e/blob/main/client/e2e_client/e2e_client_test.go
+    https://github.com/stolostron/applifecycle-backend-e2e/blob/main/client/e2e_client/e2e_client_test.go
 
     As the canary will only accept `JUnit` format output and the output needs to be in `$root_dir/results`.
 
@@ -247,7 +247,7 @@ Once your test case is tagged, you can point to the specific tag in a repo and c
 
     2. in the test server, we had the `NewJUnitReporter` to generate the result at the `Junit` format.
 
-        https://github.com/open-cluster-management/applifecycle-backend-e2e/blob/main/client/canary/e2e_canary_hello_world_suite_test.go
+        https://github.com/stolostron/applifecycle-backend-e2e/blob/main/client/canary/e2e_canary_hello_world_suite_test.go
 
     ```go=
     func TestAppLifecycle_API_E2E(t *testing.T) {
@@ -261,7 +261,7 @@ Once your test case is tagged, you can point to the specific tag in a repo and c
 
     3. we set up specific tests for canary
 
-        https://github.com/open-cluster-management/applifecycle-backend-e2e/blob/main/client/canary/e2e_canary_hello_world_test.go
+        https://github.com/stolostron/applifecycle-backend-e2e/blob/main/client/canary/e2e_canary_hello_world_test.go
         
     I added `KUBE_DIR` as kubeconfig directroy for canary, for better docker command set up... not sure it's a valid argument... might need to get rid of this logic
 
@@ -269,12 +269,12 @@ Once your test case is tagged, you can point to the specific tag in a repo and c
 ## Add your test case to canary
 1. test your cases in your local env, generate the binary data, then you need to add your test case to 
 
-    https://github.com/open-cluster-management/applifecycle-backend-e2e/blob/main/client/canary/e2e_canary_hello_world_test.go
+    https://github.com/stolostron/applifecycle-backend-e2e/blob/main/client/canary/e2e_canary_hello_world_test.go
 
 2. then PR your changes
 3. update the Dockerfile to the new tag/version 
 
-    [Dockerfile](https://github.com/open-cluster-management/applifecycle-backend-e2e/blob/0a60d8de754e3d144ebb300c41a480821e5bcfd3/Dockerfile#L19)
+    [Dockerfile](https://github.com/stolostron/applifecycle-backend-e2e/blob/0a60d8de754e3d144ebb300c41a480821e5bcfd3/Dockerfile#L19)
 4. make sure your change is merged to `release-2.2` branch of test server.
 
 
@@ -296,13 +296,9 @@ default-e2e-test-data
 
 # Progress
 This repo is set up for testing the following operators:
-- [Application](https://github.com/open-cluster-management/multicloud-operators-application)
-- [Channel](https://github.com/open-cluster-management/multicloud-operators-channel)
-- [Deployable](https://github.com/open-cluster-management/multicloud-operators-deployable)
-- [Placementrule](https://github.com/open-cluster-management/multicloud-operators-placementrule)
-- [Subscription](https://github.com/open-cluster-management/multicloud-operators-subscription)
-- [Subscription-release](https://github.com/open-cluster-management/multicloud-operators-subscription-release)
-- [Canary integration](https://github.com/open-cluster-management/canary-scripts)
+- [Channel](https://github.com/stolostron/multicloud-operators-channel)
+- [Subscription](https://github.com/stolostron/multicloud-operators-subscription)
+- [Canary integration](https://github.com/stolostron/canary-scripts)
 
 
 Initial Set up:
@@ -310,6 +306,4 @@ Initial Set up:
 - [x] Channel
 - [x] Subscription
 - [x] Subscription-release
-- [ ] Application
-- [ ] Deployable
-- [ ] Placementrule
+- [x] Placementrule

@@ -57,24 +57,14 @@ fi
 
 kind get kubeconfig > default-kubeconfigs/hub
 
-setup_application_operator() {
-	echo "Clone the application repo"
-	echo
-	if [ ! -d "multicloud-operators-application" ]; then
-		git clone https://github.com/open-cluster-management/multicloud-operators-application.git
-	fi
-
-	kubectl apply -f multicloud-operators-application/deploy/crds
-}
-
 setup_channel_operator() {
 	echo "Clone the channel repo"
 	echo
 	if [ ! -d "multicloud-operators-channel" ]; then
-		git clone https://github.com/open-cluster-management/multicloud-operators-channel.git
+		git clone https://github.com/stolostron/multicloud-operators-channel.git
 	fi
 
-	sed -i -e "s|image: .*$|image: quay.io/open-cluster-management/multicluster-operators-channel:${COMPONENT_VERSION}|" multicloud-operators-channel/deploy/standalone/operator.yaml
+	sed -i -e "s|image: .*$|image: quay.io/stolostron/multicluster-operators-channel:${COMPONENT_VERSION}|" multicloud-operators-channel/deploy/standalone/operator.yaml
 
 	kubectl apply -f multicloud-operators-channel/deploy/crds
 	kubectl apply -f multicloud-operators-channel/deploy/standalone
@@ -90,14 +80,14 @@ setup_subscription_operator() {
 	echo "Clone the subscription repo"
 	echo
 	if [ ! -d "multicloud-operators-subscription" ]; then
-		git clone https://github.com/open-cluster-management/multicloud-operators-subscription.git
+		git clone https://github.com/stolostron/multicloud-operators-subscription.git
 	fi
 
 	kubectl apply -f multicloud-operators-subscription/deploy/common
 	sleep 5
 
 	echo "before sed $COMPONENT_VERSION"
-	sed -i -e "s|image: .*$|image: quay.io/open-cluster-management/multicluster-operators-subscription:${COMPONENT_VERSION}|" multicloud-operators-subscription/deploy/standalone/operator.yaml
+	sed -i -e "s|image: .*$|image: quay.io/stolostron/multicluster-operators-subscription:${COMPONENT_VERSION}|" multicloud-operators-subscription/deploy/standalone/operator.yaml
 
 	kubectl apply -f multicloud-operators-subscription/deploy/standalone
 
@@ -108,47 +98,11 @@ setup_subscription_operator() {
 	fi
 }
 
-setup_placementrule_operator() {
-	echo "Clone the placementrule repo"
-	echo
-	if [ ! -d "multicloud-operators-placementrule" ]; then
-		git clone https://github.com/open-cluster-management/multicloud-operators-placementrule.git
-	fi
-
-	kubectl apply -f https://raw.githubusercontent.com/open-cluster-management/multicloud-operators-placementrule/master/deploy/crds/apps.open-cluster-management.io_placementrules_crd.yaml
-}
-
-setup_helmrelease_operator() {
-	echo "Clone the helmrelease repo"
-	echo
-	if [ ! -d "multicloud-operators-subscription-release" ]; then
-		git clone https://github.com/open-cluster-management/multicloud-operators-subscription-release.git
-	fi
-
-	sed -i -e "s|image: .*$|image: quay.io/open-cluster-management/multicluster-operators-subscription-release:${COMPONENT_VERSION}|" multicloud-operators-subscription-release/deploy/operator.yaml
-
-	kubectl apply -f multicloud-operators-subscription-release/deploy/crds
-	kubectl apply -f multicloud-operators-subscription-release/deploy
-
-	kubectl rollout status deployment/multicluster-operators-subscription-release
-	if [ $? != 0 ]; then
-		echo "failed to deploy the subscription operator"
-		exit $?
-	fi
-
-	echo -e "\nApply the Apache service with basic auth and helm chart\n"
-	kubectl apply -f apache-basic-auth/apache-basic-auth-service.yaml
-}
-
 setup_operators() {
-	kubectl apply -f https://raw.githubusercontent.com/open-cluster-management/multicloud-operators-placementrule/master/hack/test/crds/clusters.open-cluster-management.io_managedclusters.crd.yaml
-
-	setup_application_operator
-	setup_placementrule_operator
+	kubectl apply -f https://raw.githubusercontent.com/stolostron/multicloud-operators-placementrule/master/hack/test/crds/clusters.open-cluster-management.io_managedclusters.crd.yaml
 
 	setup_subscription_operator
 	setup_channel_operator
-	setup_helmrelease_operator
 
 	if [ "$TRAVIS_BUILD" != 1 ]; then
 		sleep 90
