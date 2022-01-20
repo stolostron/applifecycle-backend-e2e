@@ -8,8 +8,8 @@ import (
 	"time"
 
 	"github.com/go-logr/logr"
-	"github.com/open-cluster-management/applifecycle-backend-e2e/pkg"
 	gerr "github.com/pkg/errors"
+	"github.com/stolostron/applifecycle-backend-e2e/pkg"
 )
 
 type ocCommand string

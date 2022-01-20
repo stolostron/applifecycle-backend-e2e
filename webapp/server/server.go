@@ -6,7 +6,7 @@ import (
 	"os"
 
 	"github.com/go-logr/zapr"
-	"github.com/open-cluster-management/applifecycle-backend-e2e/webapp/handler"
+	"github.com/stolostron/applifecycle-backend-e2e/webapp/handler"
 	"go.uber.org/zap"
 )
 

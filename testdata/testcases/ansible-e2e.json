@@ -2,20 +2,20 @@
 {
   "test_id": "ansible-001",
   "desc": "pre and post ansible job should be created(note a secret with tower access should be created a the subscription namespace(ansible-pre-post) before this test case is run)",
-  "urls": ["https://raw.githubusercontent.com/ianzhang366/acm-applifecycle-samples/e2e/git-ops/ansible/appsub-with-post/appsub/00-namespace.yaml",
-    "https://raw.githubusercontent.com/ianzhang366/acm-applifecycle-samples/e2e/git-ops/ansible/appsub-with-post/appsub/01-placement-rule.yaml",
-    "https://raw.githubusercontent.com/ianzhang366/acm-applifecycle-samples/e2e/git-ops/ansible/appsub-with-post/appsub/02-channel.yaml",
-    "https://raw.githubusercontent.com/ianzhang366/acm-applifecycle-samples/e2e/git-ops/ansible/appsub-with-post/appsub/03-subscription.yaml"
+  "urls": ["https://raw.githubusercontent.com/philipwu08/acm-applifecycle-samples/e2e/git-ops/ansible/appsub-with-post/appsub/00-namespace.yaml",
+    "https://raw.githubusercontent.com/philipwu08/acm-applifecycle-samples/e2e/git-ops/ansible/appsub-with-post/appsub/01-placement-rule.yaml",
+    "https://raw.githubusercontent.com/philipwu08/acm-applifecycle-samples/e2e/git-ops/ansible/appsub-with-post/appsub/02-channel.yaml",
+    "https://raw.githubusercontent.com/philipwu08/acm-applifecycle-samples/e2e/git-ops/ansible/appsub-with-post/appsub/03-subscription.yaml"
   ],
   "target_cluster": "hub"
 },
 {
   "test_id": "ansible-002",
   "desc": "post ansible job should be created(note a secret with tower access should be created a the subscription namespace(ansible-post) before this test case is run)",
-  "urls": ["https://raw.githubusercontent.com/ianzhang366/acm-applifecycle-samples/e2e/git-ops/ansible/appsub-with-post/appsub/00-namespace.yaml",
-    "https://raw.githubusercontent.com/ianzhang366/acm-applifecycle-samples/e2e/git-ops/ansible/appsub-with-post/appsub/01-placement-rule.yaml",
-    "https://raw.githubusercontent.com/ianzhang366/acm-applifecycle-samples/e2e/git-ops/ansible/appsub-with-post/appsub/02-channel.yaml",
-    "https://raw.githubusercontent.com/ianzhang366/acm-applifecycle-samples/e2e/git-ops/ansible/appsub-with-post/appsub/03-subscription.yaml"
+  "urls": ["https://raw.githubusercontent.com/philipwu08/acm-applifecycle-samples/e2e/git-ops/ansible/appsub-with-post/appsub/00-namespace.yaml",
+    "https://raw.githubusercontent.com/philipwu08/acm-applifecycle-samples/e2e/git-ops/ansible/appsub-with-post/appsub/01-placement-rule.yaml",
+    "https://raw.githubusercontent.com/philipwu08/acm-applifecycle-samples/e2e/git-ops/ansible/appsub-with-post/appsub/02-channel.yaml",
+    "https://raw.githubusercontent.com/philipwu08/acm-applifecycle-samples/e2e/git-ops/ansible/appsub-with-post/appsub/03-subscription.yaml"
   ],
   "target_cluster": "hub"
 }

@@ -6,7 +6,7 @@ import (
 	"io/ioutil"
 	"net/http"
 
-	"github.com/open-cluster-management/applifecycle-backend-e2e/webapp/handler"
+	"github.com/stolostron/applifecycle-backend-e2e/webapp/handler"
 )
 
 func IsSeverUp(addr, cluster string) error {

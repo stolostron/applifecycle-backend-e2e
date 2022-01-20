@@ -16,6 +16,7 @@ results
 bin
 build/_output
 .DS_Store
+.go/*
 
 .build-harness-bootstrap
 

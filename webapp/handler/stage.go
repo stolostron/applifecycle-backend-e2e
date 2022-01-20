@@ -7,8 +7,8 @@ import (
 	"os/exec"
 	"time"
 
-	"github.com/open-cluster-management/applifecycle-backend-e2e/pkg"
 	gerr "github.com/pkg/errors"
+	"github.com/stolostron/applifecycle-backend-e2e/pkg"
 )
 
 type StageRunner interface {
