@@ -13,6 +13,7 @@ require (
 	github.com/open-cluster-management/multicloud-operators-subscription v1.2.2-2-20201130-59f96
 	github.com/pkg/errors v0.9.1
 	go.uber.org/zap v1.14.1
+	golang.org/x/crypto v0.0.0-20220112180741-5e0467b6c7ce // indirect
 	k8s.io/api v0.19.4
 	k8s.io/apiextensions-apiserver v0.19.3
 	k8s.io/apimachinery v0.19.4

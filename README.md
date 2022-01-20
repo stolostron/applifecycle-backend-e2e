@@ -46,7 +46,7 @@ log level (default 1)
     To run the test server(at background), you can:
 
     ```go
-    go get github.com/stolostron/applifecycle-backend-e2e@v0.1.6
+    go get github.com/stolostron/applifecycle-backend-e2e@v0.2.7
 
     # with default test cases
     applifecycle-backend-e2e -cfg cluster_config &
