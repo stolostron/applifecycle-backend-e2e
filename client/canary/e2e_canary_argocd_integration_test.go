@@ -3,7 +3,7 @@ package client_test
 import (
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
-	"github.com/open-cluster-management/applifecycle-backend-e2e/pkg"
+	"github.com/stolostron/applifecycle-backend-e2e/pkg"
 )
 
 var _ = Describe("e2e-server", func() {
