@@ -115,6 +115,16 @@ setup_placementrule_operator(){
     kubectl apply -f https://raw.githubusercontent.com/stolostron/multicloud-operators-placementrule/master/deploy/crds/apps.open-cluster-management.io_placementrules_crd.yaml
 }
 
+setup_deployable_operator(){
+    echo "Clone the deployable repo"
+    echo
+    if [ ! -d "multicloud-operators-deployable" ]; then
+        git clone -b release-2.2 https://github.com/stolostron/multicloud-operators-deployable.git
+    fi
+
+    kubectl apply -f https://raw.githubusercontent.com/stolostron/multicloud-operators-deployable/master/deploy/crds/apps.open-cluster-management.io_deployables_crd.yaml
+}
+
 setup_helmrelease_operator(){
     echo "Clone the helmrelease repo"
     echo
@@ -137,6 +147,7 @@ setup_helmrelease_operator(){
 setup_operators(){
     setup_application_operator
 	setup_placementrule_operator
+	setup_deployable_operator
 
 	setup_subscription_operator
     setup_channel_operator
