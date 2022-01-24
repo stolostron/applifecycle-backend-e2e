@@ -19,13 +19,6 @@ var _ = Describe("channel-test", func() {
 	It("chn-002", func() {
 		Eventually(func() error { return DefaultRunner.Run("chn-002") }, 5*pullInterval, pullInterval).Should(Succeed())
 	})
-
-	It("chn-003", func() {
-		Eventually(func() error { return DefaultRunner.Run("chn-003") }, 5*pullInterval, pullInterval).Should(Succeed())
-	})
-	It("chn-004", func() {
-		Eventually(func() error { return DefaultRunner.Run("chn-004") }, 5*pullInterval, pullInterval).Should(Succeed())
-	})
 })
 
 var _ = Describe("subscription-test", func() {

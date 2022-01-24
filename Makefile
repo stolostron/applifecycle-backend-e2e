@@ -2,7 +2,7 @@
 # Use your own docker registry and image name for dev/test by overridding the IMG and REGISTRY environment variable.
 IMG ?= $(shell cat COMPONENT_NAME 2> /dev/null)
 # Build the details for the remote destination repo for the image
-REGISTRY ?= quay.io/open-cluster-management
+REGISTRY ?= quay.io/stolostron
 
 TRAVIS_BUILD_DIR ?= $(shell pwd)
 
@@ -14,7 +14,7 @@ IMAGE_NAME_AND_VERSION ?= $(REGISTRY)/$(IMG)
 
 # Github host to use for checking the source tree;
 # Override this variable ue with your own value if you're working on forked repo.
-GIT_HOST ?= github.com/open-cluster-management
+GIT_HOST ?= github.com/stolostron
 
 PWD := $(shell pwd)
 BASE_DIR := $(shell basename $(PWD))
@@ -47,7 +47,7 @@ TRAVIS_BUILD ?= 1
 
 # GITHUB_USER containing '@' char must be escaped with '%40'
 ifeq ($(TRAVIS_BUILD),1)
-	-include $(shell [ -f ".build-harness-bootstrap" ] || curl --fail -sSL -o .build-harness-bootstrap -H "Authorization: token $(GITHUB_TOKEN)" -H "Accept: application/vnd.github.v3.raw" "https://raw.github.com/open-cluster-management/build-harness-extensions/master/templates/Makefile.build-harness-bootstrap"; echo .build-harness-bootstrap)
+	-include $(shell [ -f ".build-harness-bootstrap" ] || curl --fail -sSL -o .build-harness-bootstrap -H "Authorization: token $(GITHUB_TOKEN)" -H "Accept: application/vnd.github.v3.raw" "https://raw.github.com/stolostron/build-harness-extensions/master/templates/Makefile.build-harness-bootstrap"; echo .build-harness-bootstrap)
 endif
 
 

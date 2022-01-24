@@ -10,7 +10,7 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/open-cluster-management/applifecycle-backend-e2e/webapp/server"
+	"github.com/stolostron/applifecycle-backend-e2e/webapp/server"
 )
 
 const (

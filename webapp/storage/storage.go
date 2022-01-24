@@ -2,7 +2,7 @@
 package storage
 
 import (
-	"github.com/open-cluster-management/applifecycle-backend-e2e/pkg"
+	"github.com/stolostron/applifecycle-backend-e2e/pkg"
 )
 
 type embedData struct {
