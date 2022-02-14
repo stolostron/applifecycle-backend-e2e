@@ -3,11 +3,13 @@ package pkg
 import (
 	"context"
 	"fmt"
+	"os"
 	"strconv"
 
 	"github.com/go-logr/logr"
-	tlogr "github.com/go-logr/logr/testing"
+	"github.com/go-logr/zerologr"
 	gerr "github.com/pkg/errors"
+	"github.com/rs/zerolog"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 )
 
@@ -17,7 +19,18 @@ func checkExpectation(clt client.Client, ep Expectation) error {
 		return gerr.New(fmt.Sprintf("expectation %v failed to find a matcher", ep))
 	}
 
-	t := tlogr.TestLogger{}
+	type testLogSink struct {
+		fnInit       func(ri logr.RuntimeInfo)
+		fnEnabled    func(lvl int) bool
+		fnInfo       func(lvl int, msg string, kv ...interface{})
+		fnError      func(err error, msg string, kv ...interface{})
+		fnWithValues func(kv ...interface{})
+		fnWithName   func(name string)
+	}
+
+	zl := zerolog.New(os.Stderr)
+	zl = zl.With().Caller().Timestamp().Logger()
+	t := zerologr.New(&zl)
 	return fn.Match(clt, ep, t)
 }
 
