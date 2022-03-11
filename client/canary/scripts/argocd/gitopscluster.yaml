@@ -9,6 +9,6 @@ spec:
     argoNamespace: argocdtest1
   placementRef:
     kind: Placement
-    apiVersion: cluster.open-cluster-management.io/v1alpha1
+    apiVersion: cluster.open-cluster-management.io/v1beta1
     name: test-placement
     namespace: default
