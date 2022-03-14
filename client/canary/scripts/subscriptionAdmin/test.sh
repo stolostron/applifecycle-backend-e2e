@@ -16,6 +16,7 @@ KUBECTL_CMD="oc --kubeconfig $KUBECONFIG --insecure-skip-tls-verify=true"
 $KUBECTL_CMD create ns rootsub
 $KUBECTL_CMD create ns secondsub
 $KUBECTL_CMD create ns multins
+$KUBECTL_CMD create ns mergeown
 
 USER=`$KUBECTL_CMD whoami`
 echo "The current user is $USER"
@@ -46,8 +47,9 @@ if [ $? -ne 0 ]; then
 fi
 
 # Keep track of this for clean up
-SUB_ADMIN_INDEX=$(($(kubectl get clusterrolebinding open-cluster-management:subscription-admin -o=jsonpath='{.subjects}' | grep -o '"apiGroup"' | wc -l) - 1))
+SUB_ADMIN_INDEX=$(($($KUBECTL_CMD get clusterrolebinding open-cluster-management:subscription-admin -o=jsonpath='{.subjects}' | grep -o '"apiGroup"' | wc -l) - 1))
 
+echo "==== Test nested subscriptions ===="
 # Create a root subscription which will apply a nested subscription from Git
 $KUBECTL_CMD apply -f rootAppSub.yaml
 if [ $? -ne 0 ]; then
@@ -87,6 +89,85 @@ while [ ${FOUND} -eq 1 ]; do
     (( SECONDS = SECONDS + 3 ))
 done
 
+echo "==== Test mergeAndOwn option ===="
+
+# Create a config map
+$KUBECTL_CMD apply -f configmap.yaml
+if [ $? -ne 0 ]; then
+    echo "failed to create the config map"
+    echo "E2E CANARY TEST - EXIT WITH ERROR"
+    exit 1
+fi
+
+sleep 3
+
+# Create a subscription with mergeAndOwn option to take ownership of the existing config map
+$KUBECTL_CMD apply -f mergeOwnSub.yaml
+if [ $? -ne 0 ]; then
+    echo "failed to apply the mergeAndOwn subscription YAML"
+    echo "E2E CANARY TEST - EXIT WITH ERROR"
+    exit 1
+fi
+
+sleep 3
+
+# Verify that the configmap has the hosting subscription annotation
+FOUND=1
+SECONDS=0
+while [ ${FOUND} -eq 1 ]; do
+    # Wait up to 5min
+    if [ $SECONDS -gt 300 ]; then
+        echo "Timeout waiting for configmap mergeown-configmap in mergeown namespace with the hosting-subscription annotation"
+
+        echo "E2E CANARY TEST - EXIT WITH ERROR"
+        exit 1
+    fi
+
+    configMapAnnotation=`$KUBECTL_CMD get configmap mergeown-configmap -n mergeown -o=jsonpath='{.metadata.annotations.apps\.open-cluster-management\.io/hosting-subscription}'`
+
+    if [ "$configMapAnnotation" == "rootsub/mergeown-sub-local" ]; then
+        echo "The hosting-subscription annotation found in the configmap. SUCCESSFUL"
+        break
+    fi
+
+    echo "The hosting-subscription annotation not found in the configmap yet. Check again in 3 seconds.."
+
+    sleep 3
+    (( SECONDS = SECONDS + 3 ))
+done
+
+# Delete the subscription and verify that the config map is removed
+$KUBECTL_CMD delete -f mergeOwnSub.yaml
+if [ $? -ne 0 ]; then
+    echo "failed to delete the mergeAndOwn subscription"
+    echo "E2E CANARY TEST - EXIT WITH ERROR"
+    exit 1
+fi
+
+# Verify that the configmap is deleted
+while [ ${FOUND} -eq 1 ]; do
+    # Wait up to 5min
+    if [ $SECONDS -gt 300 ]; then
+        echo "Timeout waiting for configmap mergeown-configmap in mergeown namespace to be deleted"
+
+        echo "E2E CANARY TEST - EXIT WITH ERROR"
+        exit 1
+    fi
+
+    $KUBECTL_CMD get configmap mergeown-configmap -n mergeown
+
+    if [ $? -ne 0 ]; then 
+        echo "mergeown-configmap deleted from mergeown namespace. SUCCESSFUL"
+        break
+    fi
+    sleep 3
+    (( SECONDS = SECONDS + 3 ))
+done
+
+$KUBECTL_CMD delete -f rootAppSub.yaml
+
+sleep 5
+
 # Remove kube:admin from the subscription-admin clustrerolebinding
 $KUBECTL_CMD patch clusterrolebinding open-cluster-management:subscription-admin \
     --type=json \
@@ -101,6 +182,7 @@ fi
 $KUBECTL_CMD delete ns rootsub
 $KUBECTL_CMD delete ns secondsub
 $KUBECTL_CMD delete ns multins
+$KUBECTL_CMD delete ns mergeown
 
 echo "E2E CANARY TEST - DONE"
 exit 0
