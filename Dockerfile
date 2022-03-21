@@ -7,7 +7,7 @@ RUN  yum update -y \
         && yum install curl \
         && yum install procps \
         && yum install -y nc \
-        && yum remove -y python3-urllib3 \
+        && yum remove -y python3-urllib3 python38 \
         && yum install tar
 
 
