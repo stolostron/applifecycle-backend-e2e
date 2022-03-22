@@ -2,6 +2,8 @@
 # and a workspace (GOPATH) configured at /go.
 FROM registry.access.redhat.com/ubi8/ubi-minimal:latest
 
+RUN python3 -m pip install --upgrade pip && python3 -m pip install --upgrade urllib3
+
 RUN  yum update -y --nobest \
         && yum install openssh-clients \
         && yum install curl \

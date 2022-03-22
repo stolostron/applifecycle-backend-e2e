@@ -2,6 +2,8 @@
 # and a workspace (GOPATH) configured at /go.
 FROM  registry.ci.openshift.org/stolostron/builder:go1.17-linux
 
+RUN python3 -m pip install --upgrade pip && python3 -m pip install --upgrade urllib3
+
 RUN  yum update -y \
         && yum install openssh-clients \
         && yum install curl \
