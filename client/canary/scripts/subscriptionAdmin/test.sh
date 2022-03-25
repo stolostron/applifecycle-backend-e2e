@@ -21,33 +21,21 @@ $KUBECTL_CMD create ns mergeown
 USER=`$KUBECTL_CMD whoami`
 echo "The current user is $USER"
 
-# Add the current user to the subscription-admin clustrerolebinding
-# IMPORTANT: Use patches to not interfere with the GRC Policy Generator tests.
-#
-# A strategic merge patch is required when there are no subjects since the Kubernetes API
-# rejects a JSON patch when there are no subjects set. Setting it first to an empty array
-# also does not work since Kubernetes discards the empty array. The strategic
-# merge patch works in this case, however, it does not work for the case when subjects
-# is already set to one or more values. The Kubernetes API will just overwrite the
-# entire subjects array in this case. This is why both patch types must be used.
-SUBJECT="{\"apiGroup\": \"rbac.authorization.k8s.io\", \"kind\": \"User\", \"name\": \"$USER\"}"
-if [[ $($KUBECTL_CMD get clusterrolebinding open-cluster-management:subscription-admin -o=jsonpath='{.subjects}') ]]; then
-    $KUBECTL_CMD patch clusterrolebinding open-cluster-management:subscription-admin \
-        --type=json \
-        -p="[{\"op\": \"add\", \"path\": \"/subjects/-\", \"value\": $SUBJECT}]"
-else
-    $KUBECTL_CMD patch clusterrolebinding open-cluster-management:subscription-admin \
-        -p "{\"subjects\": [$SUBJECT]}"
-fi
-
+# Add thte current user in the YAML
+sed -i -e "s/__USER__/$USER/" addSubAdmin.yaml
 if [ $? -ne 0 ]; then
-    echo "failed to add kubeadmin user to open-cluster-management:subscription-admin clusterrolebinding"
+    echo "failed to substitue __USER__ in addSubAdmin.yaml"
     echo "E2E CANARY TEST - EXIT WITH ERROR"
     exit 1
 fi
 
-# Keep track of this for clean up
-SUB_ADMIN_INDEX=$(($($KUBECTL_CMD get clusterrolebinding open-cluster-management:subscription-admin -o=jsonpath='{.subjects}' | grep -o '"apiGroup"' | wc -l) - 1))
+# Add the current user to the subscription-admin clustrerolebinding
+$KUBECTL_CMD apply -f addSubAdmin.yaml
+if [ $? -ne 0 ]; then
+    echo "failed to create app-canary-test:subscription-admin clusterrolebinding"
+    echo "E2E CANARY TEST - EXIT WITH ERROR"
+    exit 1
+fi
 
 echo "==== Test nested subscriptions ===="
 # Create a root subscription which will apply a nested subscription from Git
@@ -169,11 +157,9 @@ $KUBECTL_CMD delete -f rootAppSub.yaml
 sleep 5
 
 # Remove kube:admin from the subscription-admin clustrerolebinding
-$KUBECTL_CMD patch clusterrolebinding open-cluster-management:subscription-admin \
-    --type=json \
-    -p="[{\"op\": \"remove\", \"path\": \"/subjects/$SUB_ADMIN_INDEX\", \"value\": $SUBJECT}]"
+$KUBECTL_CMD delete -f addSubAdmin.yaml
 if [ $? -ne 0 ]; then
-    echo "failed to remove kubeadmin user from open-cluster-management:subscription-admin clusterrolebinding"
+    echo "failed to remove app-canary-test:subscription-admin clusterrolebinding"
     echo "E2E CANARY TEST - EXIT WITH ERROR"
     exit 1
 fi
