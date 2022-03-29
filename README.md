@@ -29,7 +29,7 @@ https://hackmd.io/d50Lam9hS2eM4w-PburJWA?view
 # Usage
 `applifecyce-backend-e2e` is a web server which provides a few endpoints, to help you ease the test burden and serve some automation needs.  
 ```
-Usage of applifecycle-backend-e2e:
+Usage of applifecycle-backend-e2e: 
 -cfg string
 the path to clusters config files (default "default-kubeconfigs")
 -data string
