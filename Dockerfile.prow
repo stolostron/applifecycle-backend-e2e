@@ -7,6 +7,7 @@ RUN  yum update -y --nobest \
         && yum install curl \
         && yum install procps \
         && yum install -y nc \
+        && yum remove -y python3-urllib3 python38 \
         && yum install tar
 
 ENV USER_UID=1001 \
