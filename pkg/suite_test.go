@@ -17,7 +17,7 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/envtest/printer"
 	mgr "sigs.k8s.io/controller-runtime/pkg/manager"
 
-	"open-cluster-management.io/multicloud-operators-subscription/pkg/apis"
+	apis "github.com/stolostron/applifecycle-backend-e2e/pkg/subapis"
 )
 
 const (
