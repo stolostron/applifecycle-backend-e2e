@@ -5,8 +5,8 @@ import (
 	"io/ioutil"
 	"strings"
 
-	chnapis "open-cluster-management.io/multicloud-operators-channel/pkg/apis"
-	subapis "open-cluster-management.io/multicloud-operators-subscription/pkg/apis"
+	chnapis "github.com/stolostron/applifecycle-backend-e2e/pkg/chnapis"
+	subapis "github.com/stolostron/applifecycle-backend-e2e/pkg/subapis"
 
 	"k8s.io/client-go/kubernetes/scheme"
 	"k8s.io/client-go/tools/clientcmd"
