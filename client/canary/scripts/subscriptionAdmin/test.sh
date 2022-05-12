@@ -174,8 +174,6 @@ $KUBECTL_CMD patch clusterrolebinding open-cluster-management:subscription-admin
     -p="[{\"op\": \"remove\", \"path\": \"/subjects/$SUB_ADMIN_INDEX\", \"value\": $SUBJECT}]"
 if [ $? -ne 0 ]; then
     echo "failed to remove kubeadmin user from open-cluster-management:subscription-admin clusterrolebinding"
-    echo "E2E CANARY TEST - EXIT WITH ERROR"
-    exit 1
 fi
 
 # Delete test namespaces
