@@ -35,7 +35,7 @@ if [ "$TRAVIS_BUILD" != 1 ]; then
 	fi
 
 	echo -e "\nDownload and install KinD\n"
-	go get sigs.k8s.io/kind@v0.9.0
+	go get sigs.k8s.io/kind@v0.13.0
 
 fi
 
@@ -44,7 +44,7 @@ if [ $? != 0 ]; then
 	exit $?
 fi
 
-kind create cluster --image=kindest/node:v1.19.1
+kind create cluster --image=kindest/node:v1.21.1
 if [ $? != 0 ]; then
 	exit $?
 fi
