@@ -159,13 +159,9 @@ sleep 5
 # Remove kube:admin from the subscription-admin clustrerolebinding
 $KUBECTL_CMD delete -f addSubAdmin.yaml
 if [ $? -ne 0 ]; then
-<<<<<<< HEAD
-    echo "failed to remove kubeadmin user from open-cluster-management:subscription-admin clusterrolebinding"
-=======
     echo "failed to remove app-canary-test:subscription-admin clusterrolebinding"
     echo "E2E CANARY TEST - EXIT WITH ERROR"
     exit 1
->>>>>>> 9fc92b4 (fix subscription admin test (#158))
 fi
 
 # Delete test namespaces
