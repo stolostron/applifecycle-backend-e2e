@@ -2,7 +2,7 @@
 tags: redhat, test
 ---
 
-Table of Contents 
+Table of Contents
 =================
 
    * [Design](#design)
