@@ -91,7 +91,7 @@ setup_subscription_operator() {
 
 	kubectl apply -f multicloud-operators-subscription/deploy/standalone
 
-	kubectl rollout status deployment/multicluster-operators-subscription -n multicluster-operators
+	kubectl rollout status deployment/multicluster-operators-subscription -n open-cluster-management 
 	if [ $? != 0 ]; then
 		echo "failed to deploy the subscription operator"
 		exit $?
