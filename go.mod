@@ -1,6 +1,6 @@
 module github.com/stolostron/applifecycle-backend-e2e
 
-go 1.18
+go 1.19
 
 require (
 	github.com/go-cmd/cmd v1.4.1
