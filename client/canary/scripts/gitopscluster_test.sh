@@ -296,7 +296,8 @@ echo "$(date) installed ArgoCD instance in argocdtest2"
 
 # Create managedclusterset
 $KUBECTL_HUB apply -f scripts/argocd/managedclusterset.yaml
-echo "$(date) managedclusterset created"
+echo "$(date) managedclusterset created, checking its status:"
+$KUBECTL_HUB get managedclusterset clusterset1 -o yaml
 
 # Add all managed clusters to managedclusterset clusterset1
 MANAGED_CLUSTERS=( $($KUBECTL_HUB get managedclusters -l local-cluster=true -o name |awk -F/ '{print $2}') )
@@ -309,7 +310,8 @@ done
 
 # Create ManagedClusterSetBinding
 $KUBECTL_HUB apply -f scripts/argocd/managedclustersetbinding.yaml
-echo "$(date) managedclustersetbinding created"
+echo "$(date) managedclustersetbinding created, checking its status:"
+$KUBECTL_HUB get managedclustersetbinding -n default clusterset1 -o yaml
 
 # Create placement to choose all managed clusters
 sed -i -e "s/__NUM__/${#MANAGED_CLUSTERS[@]}/" scripts/argocd/placement.yaml
@@ -319,7 +321,8 @@ if [ $? -ne 0 ]; then
     exit 1
 fi
 $KUBECTL_HUB apply -f scripts/argocd/placement.yaml
-echo "$(date) placement created"
+echo "$(date) placement created, checking its status"
+$KUBECTL_HUB get placement -n default  test-placement -o yaml
 
 # Sleep for placement decision
 sleep 10
