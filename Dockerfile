@@ -1,6 +1,6 @@
 # Start from a Debian image with the latest version of Go installed
 # and a workspace (GOPATH) configured at /go.
-FROM  registry.ci.openshift.org/stolostron/builder:go1.19-linux
+FROM  registry.ci.openshift.org/stolostron/builder:go1.20-linux
 
 RUN  yum update -y \
         && yum install openssh-clients \
