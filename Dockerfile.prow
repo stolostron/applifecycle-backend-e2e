@@ -1,5 +1,11 @@
 # Start from a Debian image with the latest version of Go installed
 # and a workspace (GOPATH) configured at /go.
+FROM registry.ci.openshift.org/open-cluster-management/builder:go1.16-linux AS builder
+
+WORKDIR /go/src/github.com/open-cluster-management/applifecycle-backend-e2e
+COPY . .
+RUN make -f Makefile.prow build
+
 FROM registry.access.redhat.com/ubi8/ubi-minimal:latest
 
 RUN  yum update -y --nobest \
